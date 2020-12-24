@@ -1,0 +1,105 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{physics}
+\usepackage{qcircuit}
+\usepackage{bbold}
+
+\title{Nielsen and Chuang Solutions}
+\author{Jacob Watkins}
+\date{December 2020}
+
+\begin{document}
+
+\maketitle
+\section{Outline and plan}
+There exist other partial solution manuals to N\&C, most of them on github. It appears, taken together, they have covered chapters 2,3,4 and 9 almost completely, with scattered solutions for other chapters. Here, we wish to help fill in the gaps, and perhaps ultimately create the most comprehensive solution manual to date. The strategy here is as follows:
+\begin{itemize}
+    \item Create solution manuals for chapters 5-8
+    \item Create solutions for chapters 10-12
+    \item (If motivated) Fill in remaining problems in chapters already covered by others (in chapters 2-4 for example.)
+    \item (If REALLY motivated) Compile together solutions already created, and bring them into a common format, so that we may come closer to a universal solutions manual!
+\end{itemize}
+
+\section*{Chapter 5: The Quantum Fourier Transform and its applications}
+
+\subsection*{5.1: Give a direct proof that the linear transformation defined by Equation (5.2) is unitary.}
+It suffices to show that, for any two computational basis states $\ket{j}, \ket{k}$,
+
+\begin{align} \label{eq:5.1:QFT_unitary}
+    \bra{j}(QFT)^\dagger(QFT)\ket{k} = \braket{j}{k} = \delta_{ij}.
+\end{align}
+
+To do this, we substitute the definition into the above equation. 
+\begin{align} \label{eq:5.1:expand_and_simplify}
+\begin{aligned}
+    \bra{k}(QFT)^\dagger(QFT)\ket{j} &= \Big(\frac{1}{\sqrt{N}}\sum_{p=0}^{N-1}e^{-2\pi ikp/N}\bra{p}\Big)\Big(\frac{1}{\sqrt{N}}\sum_{q=0}^{N-1}e^{2\pi ijq/N}\ket{q}\Big) \\
+    &= \frac{1}{N}\sum_{p=0}^{N-1}\sum_{q=0}^{N-1}e^{2\pi i(jq-kp)/N}\braket{p}{q} \\
+    &= \frac{1}{N}\sum_{p=0}^{N-1} e^{2\pi i (j-k)p/N}
+\end{aligned}
+\end{align}
+where in the last step we used the orthonormality of the $p,q$ states to eliminate one of the sums. Clearly, if $j=k$, the result is exactly one, as desired. Otherwise, $j-k$ is a nonzero integer, say $n$, such that $\abs{n}<N$. We will show that in this case the sum above is zero. 
+
+The basic idea is that we are taking a sum over phases which are symmetrically distributed around the unit circle, so the result must be zero. To make this argument rigorous, multiply the sum by $e^{2\pi i n/N}$.
+\begin{align}
+    e^{2\pi i n/N}\sum_{p=0}^{N-1}\big(e^{2\pi i n/N}\big)^p = \sum_{p=0}^{N-1}\big(e^{2\pi i n/N}\big)^{p+1} = \sum_{p=1}^{N}\big(e^{2\pi i n/N}\big)^{p}
+\end{align}
+In the last equation we simply reindexed. Because of the $N$-periodicity, $\big(e^{2\pi i n/N}\big)^N = 1 = \big(e^{2\pi i n/N}\big)^0$. Hence, we see that the sum is left unchanged by the multiplication. Since $e^{2\pi i n/N} \neq 1$, the sum must in fact be zero. This completes the proof.
+
+\subsection*{5.2 Explicitly compute the Fourier transform of the $n$ qubit state $\ket{00...0}$.}
+Suppose there are $n$ qubits, so that $N=2^n$. Using the definition given directly above in the textbook,
+\begin{align}
+    \ket{00...0} &\rightarrow \frac{1}{2^{n/2}} \sum_{k=0}^{2^n-1}e^0 \ket{k} \\
+    &= \frac{1}{2^{n/2}}\sum_{k=0}^{2^n-1}\ket{k},
+\end{align}
+which is simply a uniform superposition over the computational basis states. Evidently, the QFT on the zero state simply acts the same as Hadamards on all the qubits!
+
+We remark that this result is consistent with the interpretation that the Fourier transform decomposes a ``signal" into its frequency components. Here, the signal was a sharp spike, which requires an large spread in frequency to construct. Conversely, a uniform superposition without phases is like a constant function signal, which has a frequency of zero. 
+
+\subsection*{5.3:(Classical fast Fourier transform) Suppose we wish to perform a Fourier transform of a vector containing $2^n$ complex numbers on a classical computer. Verify that the straightforward method for performing the Fourier transform, based upon direct evaluation of Equation (5.1) requires $\Theta(2^{2n})$ elementary arithmetic operations. Find a method for reducing this to $\Theta(n2^n)$ operations, based upon Equation (5.4).}
+
+There are $2^n$ complex numbers we need to compute, which are the output amplitudes of the Fourier transform. If we compute each one using (5.1), each such amplitude involves a sum which contains $2^n$ terms. Thus, there will be $2^n \times 2^n = 2^{2n}$ summations and therefore at least as many arithmetic operations.
+
+Let's now consider a computation based on the factored form of the QFT, Equation (5.4). As before, this involves a computation of $2^n$ amplitudes, one for each bitstring $k = k_1k_2...k_n$. Using (5.4) the amplitude $a_{k}$ corresponding to the state $\ket{k}$ is given by
+\begin{align}
+    \bra{k}QFT\ket{j} = \frac{1}{2^{n/2}}\big(\delta_{k_1 0}+e^{2\pi i0.j_n}\delta_{k_1 2}\big)\big(\delta_{k_2 0}+e^{2\pi i0.j_{n-1}j_n}\delta_{k_2 2}\big)...\big(\delta_{k_n 0}+e^{2\pi i0.j_1...j_n}\delta_{k_n 2}\big).
+\end{align}
+where $\ket{j}$ is our input state. This involves a multiplication of $n$ terms, hence there are $n\times 2^n$ total multiplications. This is a lower bound for the number of operations. 
+
+\subsection{5.4: Give a decomposition of the controlled-$R_k$ gate into single qubit and \text{CNOT} gates.}
+
+We use the $ABC$ construction of Corollary 4.2 to make our controlled $R_k$ according to Figure 4.6. First, note that
+\begin{align}
+    R_k = 
+    \begin{pmatrix}
+        1 & 0\\
+        0 & e^{2\pi i/2^k}\\
+    \end{pmatrix} = e^{2\pi i/2^{k+1}}
+    \begin{pmatrix}
+        e^{-2\pi i/2^{k+1}} & 0 \\
+        0 & e^{2\pi i/2^{k+1}}
+    \end{pmatrix} = e^{i\alpha}R_z(\beta)
+\end{align}
+where $\alpha = 2\pi/2^{k+1}$ and $\beta = 2\pi/2^k$. Comparing this to the Euler decomposition formula of Theorem 4.1, we set $\gamma =\delta = 0$. Following through the steps, this implies,
+\begin{align}
+\begin{aligned}
+    A &= R_z(\beta) \\
+    B &= R_z(-\beta/2)\\
+    C &= R_z(-\beta/2)
+\end{aligned}
+\end{align}
+can be used in the $ABC$ construction of $R_k$. As a final step, primarily one of cosmetics, we notice these gates are related to the $R_k$ through global phases which cancel each other out. Thus, the following circuit implements the controlled-$R_k$, as is easy to verify.
+\begin{align}
+    \Qcircuit @C=1em @R=1.6em {
+        \qw & \ctrl{1} & \qw & & & \qw & \qw & \ctrl{1} & \qw & \ctrl{1} & \gate{R_{k+1}} & \qw\\
+        \qw & \gate{R_k} & \qw & \raisebox{2.2em}{=} & & \qw & \gate{R_{k+1}^\dagger} & \targ & \gate{R_{k+1}^\dagger} & \targ & \gate{R_k} & \qw
+    } 
+\end{align}
+
+
+\end{document}
