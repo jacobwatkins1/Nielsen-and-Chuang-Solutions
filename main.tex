@@ -9,6 +9,11 @@
 \usepackage{physics}
 \usepackage{qcircuit}
 \usepackage{bbold}
+\usepackage{indentfirst}
+
+\setlength{\parskip}{1em}
+
+\newcommand{\mc}[1]{\mathcal{#1}}
 
 \title{Nielsen and Chuang Solutions}
 \author{Jacob Watkins}
@@ -28,8 +33,10 @@ There exist other partial solution manuals to N\&C, most of them on github. It a
 
 \section*{Chapter 5: The Quantum Fourier Transform and its applications}
 
-\subsection*{5.1: Give a direct proof that the linear transformation defined by Equation (5.2) is unitary.}
-It suffices to show that, for any two computational basis states $\ket{j}, \ket{k}$,
+\subsection*{5.1}
+\textbf{Problem:} Give a direct proof that the linear transformation defined by Equation (5.2) is unitary.
+
+\textbf{Solution:} It suffices to show that, for any two computational basis states $\ket{j}, \ket{k}$,
 
 \begin{align} \label{eq:5.1:QFT_unitary}
     \bra{j}(QFT)^\dagger(QFT)\ket{k} = \braket{j}{k} = \delta_{ij}.
@@ -51,8 +58,10 @@ The basic idea is that we are taking a sum over phases which are symmetrically d
 \end{align}
 In the last equation we simply reindexed. Because of the $N$-periodicity, $\big(e^{2\pi i n/N}\big)^N = 1 = \big(e^{2\pi i n/N}\big)^0$. Hence, we see that the sum is left unchanged by the multiplication. Since $e^{2\pi i n/N} \neq 1$, the sum must in fact be zero. This completes the proof.
 
-\subsection*{5.2 Explicitly compute the Fourier transform of the $n$ qubit state $\ket{00...0}$.}
-Suppose there are $n$ qubits, so that $N=2^n$. Using the definition given directly above in the textbook,
+\subsection*{5.2}
+\textbf{Problem:} Explicitly compute the Fourier transform of the $n$ qubit state $\ket{00...0}$.
+
+\textbf{Solution:} Suppose there are $n$ qubits, so that $N=2^n$. Using the definition given directly above in the textbook,
 \begin{align}
     \ket{00...0} &\rightarrow \frac{1}{2^{n/2}} \sum_{k=0}^{2^n-1}e^0 \ket{k} \\
     &= \frac{1}{2^{n/2}}\sum_{k=0}^{2^n-1}\ket{k},
@@ -61,19 +70,20 @@ which is simply a uniform superposition over the computational basis states. Evi
 
 We remark that this result is consistent with the interpretation that the Fourier transform decomposes a ``signal" into its frequency components. Here, the signal was a sharp spike, which requires an large spread in frequency to construct. Conversely, a uniform superposition without phases is like a constant function signal, which has a frequency of zero. 
 
-\subsection*{5.3:(Classical fast Fourier transform) Suppose we wish to perform a Fourier transform of a vector containing $2^n$ complex numbers on a classical computer. Verify that the straightforward method for performing the Fourier transform, based upon direct evaluation of Equation (5.1) requires $\Theta(2^{2n})$ elementary arithmetic operations. Find a method for reducing this to $\Theta(n2^n)$ operations, based upon Equation (5.4).}
-
+\subsection*{5.3} 
+\textbf{Problem (Classical fast Fourier transform)}: Suppose we wish to perform a Fourier transform of a vector containing $2^n$ complex numbers on a classical computer. Verify that the straightforward method for performing the Fourier transform, based upon direct evaluation of Equation (5.1) requires $\Theta(2^{2n})$ elementary arithmetic operations. Find a method for reducing this to $\Theta(n2^n)$ operations, based upon Equation (5.4).
 There are $2^n$ complex numbers we need to compute, which are the output amplitudes of the Fourier transform. If we compute each one using (5.1), each such amplitude involves a sum which contains $2^n$ terms. Thus, there will be $2^n \times 2^n = 2^{2n}$ summations and therefore at least as many arithmetic operations.
 
-Let's now consider a computation based on the factored form of the QFT, Equation (5.4). As before, this involves a computation of $2^n$ amplitudes, one for each bitstring $k = k_1k_2...k_n$. Using (5.4) the amplitude $a_{k}$ corresponding to the state $\ket{k}$ is given by
+\textbf{Solution:} Let's now consider a computation based on the factored form of the QFT, Equation (5.4). As before, this involves a computation of $2^n$ amplitudes, one for each bitstring $k = k_1k_2...k_n$. Using (5.4) the amplitude $a_{k}$ corresponding to the state $\ket{k}$ is given by
 \begin{align}
     \bra{k}QFT\ket{j} = \frac{1}{2^{n/2}}\big(\delta_{k_1 0}+e^{2\pi i0.j_n}\delta_{k_1 2}\big)\big(\delta_{k_2 0}+e^{2\pi i0.j_{n-1}j_n}\delta_{k_2 2}\big)...\big(\delta_{k_n 0}+e^{2\pi i0.j_1...j_n}\delta_{k_n 2}\big).
 \end{align}
 where $\ket{j}$ is our input state. This involves a multiplication of $n$ terms, hence there are $n\times 2^n$ total multiplications. This is a lower bound for the number of operations. 
 
-\subsection{5.4: Give a decomposition of the controlled-$R_k$ gate into single qubit and \text{CNOT} gates.}
+\subsection*{5.4}
+\textbf{Problem:} Give a decomposition of the controlled-$R_k$ gate into single qubit and \text{CNOT} gates.
 
-We use the $ABC$ construction of Corollary 4.2 to make our controlled $R_k$ according to Figure 4.6. First, note that
+\textbf{Solution:} We use the $ABC$ construction of Corollary 4.2 to make our controlled $R_k$ according to Figure 4.6. First, note that
 \begin{align}
     R_k = 
     \begin{pmatrix}
@@ -101,5 +111,185 @@ can be used in the $ABC$ construction of $R_k$. As a final step, primarily one o
     } 
 \end{align}
 
+\subsection*{5.5} 
+\textbf{Problem:} Give a quantum circuit to perform the inverse quantum Fourier transform.
 
+\textbf{Solution:} Here is the circuit for six qubits (generated using qiskit).
+\begin{equation*}
+    \Qcircuit @C=1.0em @R=0.0em @!R {
+	 	\lstick{ {q}_{0} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{5} & \dstick{\frac{-\pi}{32}}\qw & \qw & \qw & \qw & \ctrl{4} & \dstick{\frac{-\pi}{16}}\qw & \qw & \qw & \ctrl{3} & \dstick{\frac{-\pi}{8}}\qw & \qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw\\
+	 	\lstick{ {q}_{1} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{4} & \dstick{\frac{-\pi}{16}}\qw & \qw & \qw & \ctrl{3} & \dstick{\frac{-\pi}{8}}\qw & \qw & \qw & \qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \qw & \qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \qw & \qw & \gate{H} & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw\\
+	 	\lstick{ {q}_{2} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{3} & \dstick{\frac{-\pi}{8}}\qw & \qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \qw & \qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \qw & \qw & \qw & \qw & \gate{H} & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\lstick{ {q}_{3} :  } & \qw & \qw & \qw & \qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \qw & \qw & \gate{H} & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\lstick{ {q}_{4} :  } & \qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\lstick{ {q}_{5} :  } & \gate{H} & \control \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 }
+\end{equation*}
+Here, the vertical line segments are the $R_k$ gates, where the number alongside indicate angle of phase rotated. Like the inverse to any quantum circuit, can be obtained by reversing the order of the gates and taking the inverse of each gate. Note the Hadamard $H$ is self-inverse.
+
+\subsection*{5.6}
+\textbf{Problem (Approximate quantum Fourier transform):} The quantum circuit construction of the quantum Fourier transform apparently requires gates of exponential precision in the number of qubits used. However, such precision is never required in any quantum circuit of polynomial size. For example, let $U$ be the ideal quantum Fourier transform on $n$ qubits, and $V$ be the transform which results if the controlled-$R_k$ gates are performed to a precision $\Delta = 1/p(n)$ for some polynomial $p(n)$. Show that the error $E(U, V) \equiv max_{\ket{\psi}} \left\|(U - V)\ket{\psi}\right\|$ scales as $\Theta(n^2/p(n))$, and thus polynomial precision in each gate is sufficient to guarantee polynomial accuracy in the output state.
+
+\textbf{Solution:} First we will show a more general result (one which will be further generalized in part 3 of the book, when discussing quantum channels). Let $\mc{X}$ and $\mc{Y}$ be quantum gates, and let $X$ and $Y$ be gates which we will think of as approximating $\mc{X}$ and $\mc{Y}$ respectively. We will show that
+\begin{align}
+    E(\mc{XY},XY) \leq E(\mc{X},X) + E(\mc{Y},Y).
+\end{align}
+To proceed, we set things up to make use of our friend: the triangle inequality. For any state $\ket{\psi}$ we have
+\begin{align}
+    \left\|(\mc{XY}-XY)\ket{\psi}\right\|&=\left\|(\mc{X}\mc{Y}-X\mc{Y}+X\mc{Y}-XY)\ket{\psi}\right\| \\
+    &= \left\|(\mc{X}-X)\mc{Y}\ket{\psi}+X(\mc{Y}-Y)\ket{\psi}\right\| \\
+    &\leq \left\|(\mc{X}-X)\mc{Y}\ket{\psi}\right\|+\left\|X(\mc{Y}-Y)\ket{\psi}\right\|
+\end{align}
+Since this inequality holds for any $\ket{\psi}$, it certainly holds if we take the max of both sides. Hence,
+\begin{align}
+    E(\mc{XY},XY) \leq \max_{\ket{\psi}} \left(\left\|(\mc{X}-X)\mc{Y}\ket{\psi}\right\|+\left\|X(\mc{Y}-Y)\ket{\psi}\right\|\right)
+\end{align}
+Certainly, the maximum of a sum $A+B$ is less than (or equal to) maximizing each individual piece $A,B$, so we may distribute the $\max$ function and maintain the inequality. Let's consider each term on the left hand side. Since $\mc{Y}$ is unitary, it is a bijection on the space of valid states. Hence, we can maximize over $\ket{\phi} = \mc{Y}\ket{\psi}$ instead. Now consider the rightmost term. Since $X$ is unitary, it preserves norm. Altogether,
+\begin{align}
+     E(\mc{XY},XY) &\leq \max_{\ket{\phi}}\left\|(\mc{X}-X)\ket{\phi}\right\| + \max_{\ket{\psi}}\left\|(\mc{Y}-Y)\ket{\psi}\right\|\\
+     &= E(\mc{X},X) + E(\mc{Y},Y).
+\end{align}
+This places a bound on the error when composing imperfect gates. Moreover, this bound is tight, since if $X=\mc{X}$ and $Y=\mc{Y}$ we get strict equality. 
+We can generalize this result, by simple induction, to arbitrary sequences of gates with corresponding approximations. Thus, in our present case, if each controlled $R_k$ has precision $\Delta$, 
+\begin{align}
+    E(U,V) \leq \frac{n(n+1)}{2}\Delta \in \Theta(n^2 \Delta).
+\end{align}
+Here, the use of $\Theta$ is appropriate rather than $\mc{O}$ since our bound is tight.
+
+\subsection*{5.7}
+\textbf{Problem:} Additional insight into the circuit in Figure 5.2 may be obtained by showing, as you should now do, that the effect of the sequence of controlled-$U$ operations like that in Figure 5.2 is to take the state $\ket{j}\ket{u}$ to $\ket{j}U^j\ket{u}$. (Note that this does not depend on $\ket{u}$ being an eigenstate of $U$.)
+
+\textbf{Solution:} Suppose there are $t$ qubits in the first register, so the integer $j$ can be expressed in binary as $j_{t-1}...j_1j_0$, with $j_k \in \{0,1\}$ for every $0\leq k < t$. By definition, this means $j = j_0 + 2j_1 + ... + 2^{t-1}j_{t-1}$. The state $\ket{j}$ has tensor product form
+\begin{align}
+    \ket{j} = \bigotimes_{k=0}^{t-1} \ket{j_k} \equiv \ket{j_{t-1}}...\ket{j_{0}}.
+\end{align}
+The action of the controlled-$U^2k$ controlled on the $k$th qubitis given by
+\begin{align}
+    \ket{j_k}\ket{u} \longrightarrow  \ket{j_k} U^{2^k j_k}\ket{u}
+\end{align}
+as can be readily verified. Thus, the full sequence of controlled gates acts as follows.
+\begin{align}
+\begin{aligned}
+    \ket{j}\ket{u} = \bigotimes_{k=0}^{t-1} \ket{j_k}\ket{u} \longrightarrow &\ket{j}U^{2^{t-1}j_{t-1}}...U^{2^0 j_0}\ket{u} \\
+    = &\ket{j}U^{2^0 j_0 + ... + 2^{t-1} j_{t-1}}\ket{u} \\
+    = &\ket{j}U^j\ket{u}
+\end{aligned}
+\end{align}
+In the last step we reused the definition of $j$ being expressed in binary. This gives the desired result, which, as we see, did not rely on particular knowledge of the state $\ket{u}$.
+
+\subsection*{5.8}
+\textbf{Problem:} Suppose the phase estimation algorithm takes the state $\ket{0}\ket{u}$ to the state $\ket{\tilde{\varphi}_u}\ket{u}$, so that the input $\ket{0}\big(\sum_u c_u\ket{u}\big)$, the algorithm outputs $\sum_u c_u\ket{\tilde{\varphi}_u}\ket{u}$. Show that if $t$ is chosen according to (5.35), then the probability for measuring $\varphi_u$ accurate to $n$ bits at the conclusion of the phase estimation algorithm is at least $\abs{c_u}^2(1-\epsilon)$.
+
+\textbf{Solution:} If $t$ is chosen as such, then $\tilde{\varphi}_u$ is an $n$-bit approximation to $\varphi_u$ with probability $p_{succ} \geq (1-\epsilon)$. Meanwhile, the probability of measuring $\tilde{\varphi}_u$ on the first register is given by the Born rule: $p_u = \abs{c_u}^2$. These two events are independent, hence, the probability of measuring $\tilde{\varphi}_u$ \emph{and} having it be an $n$-bit approximation is
+\begin{align} \label{eq:lower bound}
+    p_u p_{succ} \geq \abs{c_u}^2 (1-\epsilon).
+\end{align}
+Moreover, any other eigenstate $\ket{v}$ of $U$ such that $\varphi_v \neq \varphi_u$ might still result in an $n$-bit approximation to $\varphi_u$, provided they are sufficiently close (it may even be that $\tilde{\varphi}_v = \tilde{\varphi}_u$). This will only further increase the probability of success. In any case, the right side of \eqref{eq:lower bound} remains a lower bound. 
+
+\subsection*{5.9}
+\textbf{Problem:} Let $U$ be a unitary transform with eigenvalues $\pm 1$, which acts on a state $\ket{\psi}$. Using the phase estimation procedure, construct a quantum circuit to collapse $\ket{\psi}$ into one or the other of the two eigenspaces of $U$, giving also a classical indicator as to which space the final state is in. Compare your result with Exercise 4.34.
+
+\textbf{Solution:} If the eigenvalues of $U$ are $1$ and $-1$, the corresponding phases are $0.0$ and $0.1$ respectively. Because these phases are finite bitstrings, there is no possibility of error and, in fact, we can take $t = n$, which in our case is $1$. The inverse-QFT on one qubit is simply the Hadamard, and our circuit reduces to the following.
+\begin{align}
+    \Qcircuit @C=1.0em @R=1.6em{
+        \lstick{\ket{0}} & \gate{H} & \ctrl{1} & \gate{H} & \meter & \qw \\
+        \lstick{\ket{\psi}} & \qw & \gate{U} & \qw & \qw & \qw
+    }
+\end{align}
+If a $0$ ($1$) is measured, the final state is known to be in the plus (minus) subspace. The probability of each outcome is simply related to the initial overlap with each subspace via the Born rule. 
+
+\subsection*{5.10}
+\textbf{Problem:} Show that the order of $x=5$ modulo $N=21$ is 6.
+
+\textbf{Solution:} We proceed by exhaustive calculation.
+\begin{align}
+\begin{aligned}
+    5^1 \bmod 21 &= 5 \\
+    5^2 \bmod 21 &= 4 \\
+    5^3 \bmod 21 &= 20\\
+    5^4 \bmod 21 &= 16\\
+    5^5 \bmod 21 &= 17\\
+    5^6 \bmod 21 &= 1
+\end{aligned}
+\end{align}
+Hence, 6 is the smallest positive integer $r$ such that $5^r \bmod 21 = 1$. Thus, 6 is the order of 5 modulo 21.
+
+\subsection*{5.11}
+\textbf{Problem:} Show that the order of $x$ satisfies $r\leq N$.
+
+\textbf{Solution:} Consider the set $\{x^n \bmod N\}_{n=1}^N$. Because we assume $x$ and $N$ share no common factors, it is not possible for $x^n \bmod N = 0$. Hence, $0< x^n < N$. By the pigeonhole principle, not all the values for $x^n$ can be unique. There must exist some $x^i = x^j \bmod N$ for some $1\leq i,j \leq N$ and $j\neq i$. Assume $j>i$ without loss of generality. Then, we have
+\begin{align}
+\begin{aligned}
+    x^j-x^i &= 0 \bmod N \\
+    x^i(x^{j-i}-1) &=0 \bmod N.
+\end{aligned}
+\end{align}
+This implies $N|x^i(x^{j-i}-1)$. But $N\nmid x^i$, again by assumption of no common factors. Hence, we must have $N|(x^{j-i}-1)$, or $x^{j-i} = 1 \bmod N$. Since $r$ is the smallest integer satisfying this condition, we must have $r\leq j-i < N$. Note this is a strict inequality, unlike what is given in the text.
+\section*{Chapter 6: Quantum Search Algorithms}
+\subsection*{6.1} 
+\textbf{Problem:} Show that the unitary operator corresponding to the phase shift in the Grover iteration is $(2\ket{0}\bra{0}-I)$.
+
+\textbf{Solution:} For $\ket{x} = \ket{0}$,
+\begin{align}
+    (2\ket{0}\bra{0}-I)\ket{0} = 2\ket{0}-\ket{0} = \ket{0}
+\end{align}
+Meanwhile, for $\ket{x} \neq \ket{0}$,
+\begin{align}
+    (2\ket{0}\bra{0}-I)\ket{x} = 2\ket{0}\braket{0}{x}-\ket{x} = -\ket{x}
+\end{align}
+Altogether,
+\begin{align}
+    (2\ket{0}\bra{0}-I)\ket{x} = (-1)^{\delta_{0x}}\ket{x}
+\end{align}
+
+\subsection*{6.2}
+\textbf{Problem:} Show that the operation $(2\ket{\psi}\bra{\psi}-I)$ applied to a general state $\sum_k \alpha_k \ket{k}$ produces
+\begin{align}
+    \sum_k \left(-\alpha_k+2\langle\alpha\rangle\right)\ket{k}
+\end{align}
+where $\langle\alpha\rangle \equiv \sum_k\alpha_k/N$ is the mean value of the $\alpha_k$. For this reason, $(2\ket{\psi}\bra{\psi}-I)$ is sometimes referred to as the \emph{inversion about mean} operation.
+
+\textbf{Solution:} By linearity,
+\begin{align*}
+    (2\ket{\psi}\bra{\psi}-I)\sum_k \alpha_k\ket{k} &= \sum_k 2 \alpha_k\left(\ket{\psi}\bra{\psi}\right)\ket{k} - \sum_k \alpha_k\ket{k} \\
+    &= 2\ket{\psi}\sum_k\alpha_k\braket{\psi}{k}-\sum_k\alpha_k\ket{k}
+\end{align*}
+Because $\ket{\psi}$ is uniform superposition over the computational basis states, for all $k$ we have $\braket{\psi}{k}=1/\sqrt{N}$. Hence,
+\begin{align}
+(2\ket{\psi}\bra{\psi}-I)\sum_k \alpha_k\ket{k} &= \frac{2}{\sqrt{N}}\left(\sum_k\alpha_k\right)\ket{\psi} - \sum_k \alpha_k\ket{k} \\
+&= 2\sqrt{N} \langle\alpha\rangle\ket{\psi} - \sum_k\alpha_k\ket{k}
+\end{align}
+Finally, we expand out the definition of $\ket{\psi}$ and cancel the factors of $\sqrt{N}$.This gives our result. 
+\begin{align}
+    2\sqrt{N} \langle\alpha\rangle\ket{\psi} - \sum_k\alpha_k\ket{k} &= \sum_k\left(2\langle\alpha\rangle-\alpha_k\right)\ket{k}
+\end{align}
+
+\subsection*{6.3}
+\textbf{Problem:} Show that in the $\ket{\alpha}, \ket{\beta}$ basis, we may write the Grover iteration as
+\begin{align}
+    G = 
+    \begin{bmatrix} \label{eq:matrix_G}
+        \cos\theta & -\sin\theta \\
+        \sin\theta & \cos\theta
+    \end{bmatrix}
+\end{align}
+where $\theta$ is a real number in the range 0 to $\pi/2$ (assuming for simplicity that $M\leq N/2$; this limitation will be lifted shortly), chosen so that
+\begin{align} \label{eq:theta_value}
+    \sin\theta =\frac{2\sqrt{M(N-M)}}{N}
+\end{align}
+
+\textbf{Solution:} As discussed in the text, both the oracle $O$ and the reflection $2\ket{\psi}\bra{\psi}-I$ leave the subspace $V = span\left(\ket{\alpha},\ket{\beta}\right)$ invariant. Hence, so does the product $G$. Therefore, we will from here on speak of $G$ only in terms of its action on the 2-dimensional subspace $V = span\left(\ket{\alpha},\ket{\beta}\right)$, and consider the matrix representation in the orthonormal basis $\{\ket{\alpha},\ket{\beta}\}$. This representation is unitary (since $G$ itself is), and in fact it is orthogonal, since both $O$ and $(2\ket{\psi}\bra{\psi}-I)$ have real matrix elements. More specifically, $G$ is \emph{special} orthogonal, meaning it has determinant one, because it is the product of two reflections. All of this implies $G$ is a proper rotation in the plane, and any such matrix may be parametrized as equation \eqref{eq:matrix_G} for \emph{some} angle $\theta$. It remains to show $\theta$ satisfies relation \eqref{eq:theta_value}. To do this, we simply compute the matrix element $\bra{\beta}G\ket{\alpha}$.
+\begin{align}
+\begin{aligned}
+    \bra{\beta}G\ket{\alpha} &= \bra{\beta}\left(2\ket{\psi}\bra{\psi}-I\right)O\ket{\alpha} \\
+    &=\bra{\beta}\left(2\ket{\psi}\bra{\psi}-I\right)\ket{\alpha}\\
+    &=\bra{\beta}\left(2\ket{\psi}\braket{\psi}{\alpha}-\ket{\alpha}\right) \\
+    &=2\braket{\beta}{\psi}\braket{\psi}{\alpha},
+\end{aligned}
+\end{align}
+where, along the way, we used the orthogonality of $\ket{\alpha},\ket{\beta}$ and the fact that $O\ket{\alpha} = \ket{\alpha}$. Finally, using the expression given in the text for $\ket{\psi}$ expanded in the $\ket{\alpha},\ket{\beta}$ basis, we arrive at our result. 
+\begin{align}
+    \bra{\beta}G\ket{\alpha} = \sin\theta = \frac{2\sqrt{M(N-M)}}{N}
+\end{align}
+Note that, in fact, we did not require the assumption that $M\leq N/2$ in our derivation.
 \end{document}
