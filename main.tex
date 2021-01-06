@@ -30,6 +30,11 @@ There exist other partial solution manuals to N\&C, most of them on github. It a
     \item (If motivated) Fill in remaining problems in chapters already covered by others (in chapters 2-4 for example.)
     \item (If REALLY motivated) Compile together solutions already created, and bring them into a common format, so that we may come closer to a universal solutions manual!
 \end{itemize}
+\section{To-do}
+\begin{itemize}
+    \item Fix QFT circuit, recreate it in Qiskit and set barrier option to True
+    \item Double check circuit shown in problem 5.4
+\end{itemize}
 
 \section*{Chapter 5: The Quantum Fourier Transform and its applications}
 
@@ -117,12 +122,12 @@ can be used in the $ABC$ construction of $R_k$. As a final step, primarily one o
 \textbf{Solution:} Here is the circuit for six qubits (generated using qiskit).
 \begin{equation*}
     \Qcircuit @C=1.0em @R=0.0em @!R {
-	 	\lstick{ {q}_{0} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{5} & \dstick{\frac{-\pi}{32}}\qw & \qw & \qw & \qw & \ctrl{4} & \dstick{\frac{-\pi}{16}}\qw & \qw & \qw & \ctrl{3} & \dstick{\frac{-\pi}{8}}\qw & \qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw\\
-	 	\lstick{ {q}_{1} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{4} & \dstick{\frac{-\pi}{16}}\qw & \qw & \qw & \ctrl{3} & \dstick{\frac{-\pi}{8}}\qw & \qw & \qw & \qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \qw & \qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \qw & \qw & \gate{H} & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw\\
-	 	\lstick{ {q}_{2} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{3} & \dstick{\frac{-\pi}{8}}\qw & \qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \qw & \qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \qw & \qw & \qw & \qw & \gate{H} & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
-	 	\lstick{ {q}_{3} :  } & \qw & \qw & \qw & \qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \qw & \qw & \gate{H} & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
-	 	\lstick{ {q}_{4} :  } & \qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
-	 	\lstick{ {q}_{5} :  } & \gate{H} & \control \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\lstick{ {q}_{0} :  } \barrier[0em]{5} & \qw & \qw \barrier[0em]{5} & \qw & \qw & \qw & \qw \barrier[0em]{5} & \qw & \qw & \qw & \qw & \qw & \qw \barrier[0em]{5} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw \barrier[0em]{5} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw \barrier[0em]{5} & \qw & \ctrl{5} & \dstick{\frac{-\pi}{32}}\qw & \ctrl{4} & \dstick{\frac{-\pi}{16}}\qw & \ctrl{3} & \dstick{\frac{-\pi}{8}}\qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw\\
+	 	\lstick{ {q}_{1} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{4} & \dstick{\frac{-\pi}{16}}\qw & \ctrl{3} & \dstick{\frac{-\pi}{8}}\qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw\\
+	 	\lstick{ {q}_{2} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{3} & \dstick{\frac{-\pi}{8}}\qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\lstick{ {q}_{3} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\lstick{ {q}_{4} :  } & \qw & \qw & \qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+	 	\lstick{ {q}_{5} :  } & \qw & \gate{H} & \qw & \control \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
 	 }
 \end{equation*}
 Here, the vertical line segments are the $R_k$ gates, where the number alongside indicate angle of phase rotated. Like the inverse to any quantum circuit, can be obtained by reversing the order of the gates and taking the inverse of each gate. Note the Hadamard $H$ is self-inverse.
@@ -217,7 +222,7 @@ Hence, 6 is the smallest positive integer $r$ such that $5^r \bmod 21 = 1$. Thus
 \subsection*{5.11}
 \textbf{Problem:} Show that the order of $x$ satisfies $r\leq N$.
 
-\textbf{Solution:} Consider the set $\{x^n \bmod N\}_{n=1}^N$. Because we assume $x$ and $N$ share no common factors, it is not possible for $x^n \bmod N = 0$. Hence, $0< x^n < N$. By the pigeonhole principle, not all the values for $x^n$ can be unique. There must exist some $x^i = x^j \bmod N$ for some $1\leq i,j \leq N$ and $j\neq i$. Assume $j>i$ without loss of generality. Then, we have
+\textbf{Solution:} Consider the set $\{x^n \bmod N\}_{n=1}^N$. Because we assume $x$ and $N$ share no common factors, it is not possible for $x^n \bmod N = 0$. Hence, $0< x^n \bmod N < N$. By the pigeonhole principle, not all the values for $x^n \bmod N$ can be unique. There must exist some $x^i = x^j \bmod N$ for some $1\leq i,j \leq N$ and $j\neq i$. Assume $j>i$ without loss of generality. Then, we have
 \begin{align}
 \begin{aligned}
     x^j-x^i &= 0 \bmod N \\
@@ -225,6 +230,56 @@ Hence, 6 is the smallest positive integer $r$ such that $5^r \bmod 21 = 1$. Thus
 \end{aligned}
 \end{align}
 This implies $N|x^i(x^{j-i}-1)$. But $N\nmid x^i$, again by assumption of no common factors. Hence, we must have $N|(x^{j-i}-1)$, or $x^{j-i} = 1 \bmod N$. Since $r$ is the smallest integer satisfying this condition, we must have $r\leq j-i < N$. Note this is a strict inequality, unlike what is given in the text.
+
+\subsection*{5.12}
+\textbf{Problem:} Show that $U$ is unitary (Hint: $x$ is co-prime to $N$, and therefore has an inverse modulo $N$).
+
+\textbf{Solution:} Since $U$ acts as a map on the computational basis states, it suffices to show this map is injective (one-to-one). If $y\geq N$, then $\ket{y}$ is mapped to itself. On the other hand, if $0\leq y < N$, then $\ket{y}$ is certainly mapped to some $\ket{z}$ where $z< N$. Hence, $U$ is injective on the subspace where $y\geq N$, and it suffices to focus on the case where $y< N$. To this end, suppose $U\ket{y} = U\ket{z}$ for $y,z < N$. Then,
+\begin{align}
+\begin{aligned}
+    xy\bmod{N} &= xz\bmod{N} \\
+    x(y-z) &= 0 \pmod{N}
+\end{aligned}
+\end{align}
+This implies $N$ divides $x(y-z)$. However, since $N$ and $x$ are coprime, they share no common factors. This implies $N|(y-z)$. But $|y-z| < N$, so it must be that $y-z = 0$. Hence
+\begin{align}
+    \ket{y} = \ket{z}
+\end{align}
+which proves that $U$ is injective on the basis, as desired.
+
+\subsection*{5.13}
+\textbf{Problem:} Prove (5.44). (\emph{Hint}:$\sum_{s=0}^{r-1}\exp(-2\pi i sk/r)=r\delta_{k0}$). In fact, prove that
+\begin{align}
+    \frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}e^{2\pi isk/r}\ket{u_s} = \ket{x^k\bmod N}
+\end{align}
+
+\textbf{Solution:} Let us crank the wheel: putting in the definition of $\ket{u_s}$ to the left side of (5.44) and regrouping.
+\begin{align}
+    \frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}e^{2\pi isk/r}\ket{u_s} &= \frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}e^{2\pi isk/r} \frac{1}{\sqrt{r}}\sum_{t=0}^{r-1}e^{-2\pi ist/r}\ket{x^t\bmod N} \\
+    &= \frac{1}{r}\sum_{s=0}^{r-1}\sum_{t=0}^{r-1}e^{2\pi is(k-t)/r}\ket{x^t\bmod N} \\
+    &=\frac{1}{r}\sum_{t=0}^{r-1}\ket{x^t\bmod N}\Big(\sum_{s=0}^{r-1}e^{2\pi is(k-t)/r}\Big)
+\end{align}
+Making gracious use of the hint, we see the rightmost sum on the last line equals $r\delta_{kt}$. Hence,
+\begin{align}
+    \frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}e^{2\pi isk/r}\ket{u_s} &= \sum_{t=0}^{r-1}\delta_{tk}\ket{x^t \bmod N} \\
+    &= \ket{x^k \bmod N}.
+\end{align}
+To obtain (5.44) from the text, simply set $k=0$.
+
+\subsection*{5.14}
+\textbf{Problem:} The quantum state produced in the order-finding algorithm, before
+the inverse Fourier transform, is
+\begin{align}
+    \ket{\psi} =\sum_{j=0}^{2^t-1}\ket{j}U^j\ket{1} =\sum_{j=0}^{2^t-1}\ket{j}\ket{x^j\bmod N}
+\end{align}
+if we initialize the second register as $\ket{1}$. Show that the same state is obtained if we replace $U^j$ with a \emph{different} unitary transform $V$, which computes
+\begin{align}
+    V\ket{j}\ket{k} = \ket{j}\ket{k+x^j\bmod N},
+\end{align}
+and start the second register in the state $\ket{0}$. Also show how to construct $V$ using $O(L^3)$ gates.
+
+\textbf{Solution:} It is obvious that, by setting $k=0$, we obtain the same output using $V$ as we would if $k=1$ and we had acted with $U$. Finding $V$ is going to require techniques in reversible computation. 
+
 \section*{Chapter 6: Quantum Search Algorithms}
 \subsection*{6.1} 
 \textbf{Problem:} Show that the unitary operator corresponding to the phase shift in the Grover iteration is $(2\ket{0}\bra{0}-I)$.
@@ -292,4 +347,61 @@ where, along the way, we used the orthogonality of $\ket{\alpha},\ket{\beta}$ an
     \bra{\beta}G\ket{\alpha} = \sin\theta = \frac{2\sqrt{M(N-M)}}{N}
 \end{align}
 Note that, in fact, we did not require the assumption that $M\leq N/2$ in our derivation.
+
+\section*{Appendix 1: Notes on basic probability theory}
+\subsection*{A1.1} 
+\textbf{Problem:} Prove Bayes' rule.
+
+\textbf{Solution:} From the definition of conditional probability, we have
+\begin{align}
+    p(x,y) = p(y|x)p(x) = p(x|y)p(y)
+\end{align}
+Rearranging the last of these equations gives the desired result.
+
+\subsection*{A1.2}
+\textbf{Problem:} Prove the law of total probability.
+
+\textbf{Solution:} We start with the notion that, in the joint probability distribution for $(X,Y)$, one sums over all outcomes of $X$ to get a probability distribution on $Y$ alone.
+\begin{align}
+    p(y) = \sum_x p(x,y)
+\end{align}
+We arrive at our result by noting that, from the definition of conditional probability, $p(x,y) = p(y|x)p(x)$.
+
+\subsection*{A1.3}
+\textbf{Problem:} Prove there exists a value of $x\geq\textbf{E}(X)$ such that $p(x)>0$.
+
+\textbf{Solution:} Suppose, for sake of contradiction, that every value $x$ of $X$ with nonzero probability has the property $x < \textbf{E}(X)$. Intuitively, we'd expect that the expectation value would have to be less then $\textbf{E}(X)$. Indeed, using the inequality in the definition of expectation value,
+\begin{align}
+    \textbf{E}(X) = \sum_{x\in X} x\p(x) < \textbf{E}(X)\sum_{x\in X}p(x) = \textbf{E}(X)
+\end{align}
+Hence, $\textbf{E}(X)<\textbf{E}(x)$, a clear contradiction. We conclude our premise was false, hence there does exist a value of $x\in X$ such that $x \geq \textbf{E}(X)$ and $p(x)>0$.
+
+\subsection*{A1.4} 
+\textbf{Problem:} Prove that $\textbf{E}(X)$ is linear in $X$.
+
+\textbf{Solution:} The following computation gives us the result.
+\begin{align}
+\begin{aligned}
+    \textbf{E}(aX+bY) &= \sum_{(x,y)\in(X,Y)}(ax+by)p(x,y) \\
+    &= \sum_{x\in X}\sum_{y\in Y}axp(x,y) + byp(x,y) \\
+    &=\sum_{x\in X}ax\sum_{y\in Y}p(x,y) + \sum_{y\in Y}by\sum_{x\in X}p(x,y) \\
+    &=a\sum_{x\in X}x p(x) + b\sum_{y\in Y}yp(y) \\
+    &=a\textbf{E}(X) + b\textbf{E}(Y).
+\end{aligned}
+\end{align}
+Here, $a,b$ are constants. Along the way, we used $p(x) = \sum_y p(x,y)$ and the definition of expectation value.
+
+\subsection*{A1.5}
+\textbf{Problem:} Prove that for independent random variables $X$ and $Y$, \textbf{E}(XY) = \textbf{E}(X)\textbf{E}(Y).
+
+\textbf{Solution:} Recall that, for independent random variables, the joint probability distribution breaks into a product of individual probabilities. This yields the following computation.
+\begin{align}
+\begin{aligned}
+    \textbf{E}(XY) &= \sum_x\sum_y xy\,p(x,y)\\
+    &= \sum_x\sum_y xy\,p(x)p(y) \\
+    &= \sum_x p(x) \sum_y p(y) \\
+    &= \textbf{E}(X)\textbf{E}(Y)
+\end{aligned}
+\end{align}
+
 \end{document}
