@@ -278,7 +278,7 @@ if we initialize the second register as $\ket{1}$. Show that the same state is o
 \end{align}
 and start the second register in the state $\ket{0}$. Also show how to construct $V$ using $O(L^3)$ gates.
 
-\textbf{Solution:} It is obvious that, by setting $k=0$, we obtain the same output using $V$ as we would if $k=1$ and we had acted with $U$. Finding $V$ is going to require techniques in reversible computation. 
+\textbf{Solution:} It is obvious that, by setting $k=0$, we obtain the same output using $V$ as we would if $k=1$ and we had acted with $U$. To construct $V$ we can simply use the $U^j$ as before and store the result in an ancillary register whose initial value was one, then \emph{add} that result to the register initialized to 0. The addition step can be carried out bitwise, and only takes $O(L^2)$ gates naively. Hence, the algorithm remains $O(L^3)$ after this addition step.
 
 \section*{Chapter 6: Quantum Search Algorithms}
 \subsection*{6.1} 
@@ -372,9 +372,9 @@ We arrive at our result by noting that, from the definition of conditional proba
 
 \textbf{Solution:} Suppose, for sake of contradiction, that every value $x$ of $X$ with nonzero probability has the property $x < \textbf{E}(X)$. Intuitively, we'd expect that the expectation value would have to be less then $\textbf{E}(X)$. Indeed, using the inequality in the definition of expectation value,
 \begin{align}
-    \textbf{E}(X) = \sum_{x\in X} x\p(x) < \textbf{E}(X)\sum_{x\in X}p(x) = \textbf{E}(X)
+    \textbf{E}(X) = \sum_{x\in X} x p(x) < \textbf{E}(X)\sum_{x\in X}p(x) = \textbf{E}(X)
 \end{align}
-Hence, $\textbf{E}(X)<\textbf{E}(x)$, a clear contradiction. We conclude our premise was false, hence there does exist a value of $x\in X$ such that $x \geq \textbf{E}(X)$ and $p(x)>0$.
+Hence, $\textbf{E}(X)<\textbf{E}(X)$, a clear contradiction. We conclude our premise was false, hence there does exist a value of $x\in X$ such that $x \geq \textbf{E}(X)$ and $p(x)>0$.
 
 \subsection*{A1.4} 
 \textbf{Problem:} Prove that $\textbf{E}(X)$ is linear in $X$.
@@ -404,4 +404,186 @@ Here, $a,b$ are constants. Along the way, we used $p(x) = \sum_y p(x,y)$ and the
 \end{aligned}
 \end{align}
 
+\section*{Appendix 4: Number theory}
+
+\subsection*{A4.1}
+\textbf{Problem: (Transitivity)} Show that if $a|b$ and $b|c$, then $a|c$.
+
+\textbf{Solution:} The premises imply, by definition, that there exist integers $j, k$ such that $b = a j$ and $c = b k$. Substituting the first of these two equations into the second, we see $c = a j k = a l$, where $l = j k \in \mathbb{Z}$. Hence, there exists an integer, namely $l$, such that $c = a l$, proving $a |c$.
+
+\subsection*{A4.2}
+\textbf{Problem:} Show that if $d|a$ and $d|b$ then $d$ also divides a linear combination of $a$ and $b$, $ax+by$, where $x$ and $y$ are integers.
+
+\textbf{Solution:} From the definition of $d|a$ and $d|b$, there exist integers $j, k $ such that $a = d j$ and $b= dk$. Hence,
+\begin{align}
+    ax + by = djx + dky = d(jx + ky).
+\end{align}
+Define $m = jx +ky \in \mathbb{Z}$. Then we see $ax + by = dm$. From the definition of dividing, we have $d|(ax+by)$. 
+
+\subsection*{A4.3} 
+\textbf{Problem:} Suppose $a$ and $b$ are positive integers. Show that if $a|b$ then $a\leq b$. Conclude that if $a|b$ and $b|a$ then $a=b$.
+
+\textbf{Solution:} Suppose that $a|b$. Then there exists some $k\in \mathbb{Z}$ such that $b = ak$. By the hypothesis that $a$ and $b$ are positive, it must be that $k>0$. Hence, $k-1\geq0$. This, of course, implies
+\begin{align}
+    b(k-1) \geq 0
+\end{align}
+since, again, b is nonnegative (positive, in fact). The result we desire comes from basic manipulations of inequalities.
+\begin{align}
+\begin{aligned}
+    b(k-1) \geq 0 &\implies bk \geq b \\
+    &\implies a \geq b
+\end{aligned}
+\end{align}
+As an immediate corollary, if $a|b$ and $b|a$ (both being positive integers), we have $a\geq b$ and $b\geq a$. Of course, this implies $a = b$. Note that the assumption of positivity was crucial for the proof to hold, and indeed, it is easy to see how it can be broken if negative numbers are included.
+
+\subsection*{A4.4}
+\textbf{Problem:} Find the prime factorizations of 697 and 36 300.
+
+\textbf{Solution:} I do not pretend to solve these in any mechanical fashion. Looking online, I notice 697 is a product of 41 and 17. Each of these numbers are themselves prime, so the prime factorization is 
+\begin{align}
+    697 =41^1 17^1
+\end{align}
+
+Unlike the first, the second number is easier to do in your head. We can pull out two factors of 10 and easily prime factor those. Meanwhile, 363 is divisible by 3, and then if you cared to memorize some perfect squares, $121= 11^2$. Altogether.
+\begin{align}
+    36300 = 2^2 3^1 5^2 11^2.
+\end{align}
+
+\subsection*{A4.5}
+\textbf{Problem:} For $p$ a prime prove that all integers in the range 1 to $p-1$ have multiplicative inverses modulo $p$. Which integers in the range 1 to $p^2-1$ do not have multiplicative inverses modulo $p^2$?
+
+\textbf{Solution:} For any integer $a\in [1,p-1]$, $a$ is coprime with $p$. Hence, $a$ has an inverse modulo $p$. In the case of $p^2$, the only integer which is not coprime with $p^2$ in the range $[0,p^2-1]$ is $p$ itself. Every other integer in the range has a multiplicative inverse. 
+
+\subsection*{A4.6}
+\textbf{Problem:} Find the multiplicative inverse of 17 modulo 24.
+
+\textbf{Solution:} We seek an positive integer $n<24$ such that $17 * n = 1 \bmod 24$. Without yet an efficient method, we can perform an exhaustive check by hand or with a computer. It turns out the answer is $n=17$ itself. 
+
+\subsection*{A4.7}
+\textbf{Problem:} Find the multiplicative inverse of $n+1$ modulo $n^2$, where $n$ is any integer greater than 1.
+
+\textbf{Solution:} The answer, which might be reasonably guessed (or not). Is $n-1$.
+\begin{align}
+    (n+1)(n-1) = n^2 - 1 = 1 \pmod n^2.
+\end{align}
+
+\subsection*{A4.8}
+\textbf{Problem: (Uniqueness of the inverse)} Suppose $b$ and $b'$ are multiplicative inverses of $a$, modulo $n$. Prove that $b=b' \mod n$.
+
+\textbf{Solution:} If $b$ and $b'$ are both inverses of $a$, then $ab = ab' \pmod n$. This implies
+\begin{align}
+    a(b-b') = 0 \pmod n.
+\end{align}
+From this, we conclude $n|a(b-b')$. But we also know, by Corollary A4.4, that $n$ and $a$ are coprime. Hence, $n|(b-b')$, so $b=b' \pmod{n}$.
+
+\subsection*{A4.9}
+\textbf{Problem:} Explain how to find $\gcd(a,b)$ if the prime factorizations of $a$ and $b$ are known. Find the prime factorizations of 6825 and 1430, and use them to compute $\gcd(6825,1430)$.
+
+\textbf{Solution:} If the prime factorization of $a$ and $b$ are known, simply find the largest set (counting multiplicity) of shared prime factors. 
+
+The prime factorization of 6285 and 1430 are $3^1 5^1 15^1 419^1$ and $2^1 5^1 11^1 13^1$ respectively. The only shared prime factor is $5$, hence this is also the gcd.
+
+\subsection*{A4.10}
+\textbf{Problem:} What is $\varphi(187)$?
+
+\textbf{Solution:} The prime factorization of $187$ is $11\times17$. Hence,
+\begin{align}
+    \varphi(187) = \varphi(17\times 11) = \varphi(17)\varphi(11) = 16 \times 10 = 160
+\end{align}
+
+\subsection*{A4.11}
+\textbf{Problem:} Prove that
+\begin{align}
+    n = \sum_{d|n} \varphi(d)
+\end{align}
+where the sum is over all positive divisors $d$ of $n$, including 1 and $n$. (\emph{Hint:} Prove the result for $n=p^\alpha$ first, then use the multiplicative property (A4.22) of $\varphi$ to complete the proof.
+
+\textbf{Solution:} Follow the advice of the hint, suppose $n=p^\alpha$ where $p$ is prime. The divisors of $n$ are $p^j$, where $0\leq j \leq \alpha$. Hence, starting from the right hand side,
+\begin{align}
+\begin{aligned}
+    \sum_{d|n} \varphi(d) = \sum_{j=0}^\alpha \varphi(p^j) &=1 +  \sum_{j=1}^\alpha p^{j-1}(p-1)\\
+    &= 1+ (p-1)\sum_{j=1}^\alpha p^{j-1} \\
+    &= 1 + \sum_{j=0}^\alpha p^j -\sum_{j=0}^\alpha p^{j-1} \\
+    &= p^\alpha,
+\end{aligned}
+\end{align}
+where, in the last step, all but $p^\alpha$ cancel from subtractions. This proves the result when $n$ is a power of a prime.
+
+To generalize the argument, we use the fundamental theorem of arithmetic, which says any $n\in \mathbb{Z}$ has a prime factorization.
+\begin{align}
+    n = p_1^{\alpha_1}p_2^{\alpha_2}...p_m^{\alpha_m}.
+\end{align}
+Since all terms are powers of prime, they are coprime with each other, and we may use the multiplicative property of $\varphi$.
+\begin{align} \label{eq:n_to_primes}
+\begin{aligned}
+    \varphi(n) &= \prod_{j=1}^{m}\varphi(p_j^{\alpha_j}) \\
+    &= \prod_{j=1}^m \sum_{k_j=0}^{\alpha_j}\varphi(p^{k_j})
+\end{aligned}
+\end{align}
+In the second step we used the first result derived above for powers of primes. By repeated use of the distributive property, the sum and product in the second line of \eqref{eq:n_to_primes} can be reversed, and cast as a sum over $m$ variables.
+\begin{align}
+\begin{aligned}
+    \prod_{j=1}^m \sum_{k_j=0}^{\alpha_j}\varphi(p^{k_j}) &= \sum_{k_1=0}^{\alpha_1}\sum_{k_2=0}^{\alpha_2} \dots \sum_{k_m=0}^{\alpha_m} \prod_{j=1}^m \varphi(p^{k_j}) \\
+    &= \sum_{k_1=0}^{\alpha_1}\sum_{k_2=0}^{\alpha_2} \dots \sum_{k_m=0}^{\alpha_m} \varphi(p^{k_1}p^{k_2}...p^{k_m})
+\end{aligned}
+\end{align}
+A careful examination of this last equation reveals it is nothing more than a sum over all possible divisors $d$ of $n$, expressed via the prime factorization. Hence,
+\begin{align}
+    \varphi(n) = \sum_{d|n} \varphi(d)
+\end{align}
+as desired.
+
+\subsection*{A4.12}
+\textbf{Problem:} Verify that $\textbf{Z}_n^*$ forms a group of size $\varphi(n)$ under the operation of multiplication modulo $n$.
+
+\textbf{Solution:} That $\textbf{Z}_n^*$ is a set of size $\varphi(n)$ follows directly from the definition of $\varphi$. Let $a,b \in \textbf{Z}_n^*$, with inverses $a^{-1}, b^{-1}$. Then, the product $ab$ has inverse $a^{-1}b^{-1}$, hence is in $\textbf{Z}_n^*$ (note the order doesn't matter since multiplication is commutative). Thus, the set is closed under the binary operator. Moreover, multiplication modulo $n$ is associative. Finally, it is easy to see that $1\in \textbf{Z}_n^*$ (being its own inverse) and it acts as the identity operator. Of course inverses exist, by definition, therefore we have shown that $\textbf{Z}_n^*$ satisfies the properties of a group under multiplication modulo $n$.
+
+\subsection*{A4.13}
+\textbf{Problem:} Let $a$ be an arbitrary element of $\textbf{Z}_n^*$. Show that $S\equiv \{1,a,a^2,...\}$ forms a subgroup of $\textbf{Z}_n^*$, and that the size of $S$ is the least value of $r$ such that $a^r = 1\pmod{n}$.
+
+\textbf{Solution:} For any finite group G, if I take a single element $g\in G$ and generate a subset $S \subset G$ by repeatedly multiplying $g$ by itself, the result will be a subgroup (when I include the induced binary operation). More generally, I can have multiple generators $g_1, g_2, ..., g_m$ and the result will still be a subgroup. Note this does not hold for infinite groups such as $\mathbb{Z}$, unless we allow negative exponents.
+
+If $r$ is the smallest positive integer satisfying $a^r = 1\pmod{n}$, it follows that each $a^i$ is unique for $i=0,1,...,r-1$. Otherwise, $a^i = a^j$ for some $i,j <r$, which implies $a^{j-i}=1$. This contradicts the assertion that $r$ is the \emph{least} such value. Hence, $S$ has at least $r$ values. In fact, it cannot have more than $r$ unique values, since for any $k>r$ we have
+\begin{align}
+    k = qr + i
+\end{align}
+for some $q\in\mathbb{Z}^+$ and $i<r$. But this will give the same power of $a$ as $i$ does.
+\begin{align}
+    a^k = a^{qr + i} = (a^r)^q a^i = 1^q a^i = a^i
+\end{align}
+Here all powers are taken modulo $n$. Thus, $S$ has $r$ elements. 
+
+\subsection*{A4.14}
+\textbf{Problem:} Suppose $g$ is a generator for $\textbf{Z}_n^*$. Show that $g$ must have order $\varphi(n)$.
+
+\textbf{Solution:} If $g$ generates $\textbf{Z}_n^*$, then every $a\in \textbf{Z}_n^*$ must be some power of $g$. Hence, $\textbf{Z}_n^*$ is cyclic. By the results from the previous exercise, the size of $\textbf{Z}_n^*$, which is $\varphi(n)$ must equal the order of the generator $g$.
+
+\subsection*{A4.15}
+\textbf{Problem:} \emph{Lagrange's theorem} (Theorem A2.1 on page 610) is an elementary result of group theory stating that the size of a subgroup must divide the order of the group. Use Lagrange's theorem to provide an alternative proof of Theorem A4.9, that is, show that $a^{\varphi(n)}=1\pmod{n}$ for any $a\in \textbf{Z}_n^*$.
+
+\textbf{Solution:} Consider the subgroup $A\subset G$ generated by $a$. Then the size of $A$ is the order of $a$, say, $r$. By Lagrange's theorem, r must divide $\varphi(n)$, the size of $\textbf{Z}_n^*$. That is, $\varphi(n) = k r$ for some $k\in\mathbb{Z}^+$. Given this,
+\begin{align}
+    a^{\varphi(n)} = a^{kr} = (a^r)^k = 1^k = 1
+\end{align}
+where all values are taken modulo $n$. This proves Euler's generalization of the little theorem.
+
+\subsection*{A4.16}
+\textbf{Problem:} Use Theorem A4.9 to show that the order of $x$ modulo $N$ must divide $\varphi(N)$.
+
+\textbf{Solution:} This follows directly from Lagrange's theorem (see the previous cluster of exercises). We've already shown that the size of a cyclic subgroup of $\textbf{Z}_n^*$ is the order of a generating element. Lagrange's theorem says this order $r$ must divide the size of the larger group $\textbf{Z}_n^*$, which is $\varphi(n)$.
+
+\subsection*{A4.17}
+\textbf{Problem:} 
+
+\textbf{Solution:}
+
+\subsection*{A4.18}
+\textbf{Problem:} 
+
+\textbf{Solution:}
+
+\subsection*{A4.19}
+\textbf{Problem:} 
+
+\textbf{Solution:}
 \end{document}
