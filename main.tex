@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{book}
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1in]{geometry}
 \usepackage[utf8]{inputenc}
@@ -9,11 +9,14 @@
 \usepackage{physics}
 \usepackage{qcircuit}
 \usepackage{bbold}
-\usepackage{indentfirst}
+\usepackage{appendix}
+\usepackage[makeroom]{cancel}
+\usepackage[linesnumbered,ruled]{algorithm2e}
 
 \setlength{\parskip}{1em}
 
 \newcommand{\mc}[1]{\mathcal{#1}}
+\newcommand{\innerprod}[2]{\langle#1,#2\rangle}
 
 \title{Nielsen and Chuang Solutions}
 \author{Jacob Watkins}
@@ -22,7 +25,8 @@
 \begin{document}
 
 \maketitle
-\section{Outline and plan}
+\chapter{Plan and Progress}{0}
+\section{Goals of this project}
 There exist other partial solution manuals to N\&C, most of them on github. It appears, taken together, they have covered chapters 2,3,4 and 9 almost completely, with scattered solutions for other chapters. Here, we wish to help fill in the gaps, and perhaps ultimately create the most comprehensive solution manual to date. The strategy here is as follows:
 \begin{itemize}
     \item Create solution manuals for chapters 5-8
@@ -30,560 +34,1011 @@ There exist other partial solution manuals to N\&C, most of them on github. It a
     \item (If motivated) Fill in remaining problems in chapters already covered by others (in chapters 2-4 for example.)
     \item (If REALLY motivated) Compile together solutions already created, and bring them into a common format, so that we may come closer to a universal solutions manual!
 \end{itemize}
-\section{To-do}
+\section*{To-do}
 \begin{itemize}
     \item Fix QFT circuit, recreate it in Qiskit and set barrier option to True
     \item Double check circuit shown in problem 5.4
 \end{itemize}
 
-\section*{Chapter 5: The Quantum Fourier Transform and its applications}
+\section{Progress so far}
 
-\subsection*{5.1}
-\textbf{Problem:} Give a direct proof that the linear transformation defined by Equation (5.2) is unitary.
+This progress was last updated February 1st, 2021.
 
-\textbf{Solution:} It suffices to show that, for any two computational basis states $\ket{j}, \ket{k}$,
+\begin{itemize}
+    \item Chapter 2: Exercises 2.1-2.4 complete. Many exercises remain
+    \item Chapter 5: Exercises 5.1-5.14 complete. Exercises 5.15-5.29 remain, along with 6 practice problems
+    \item Chapter 6: Only first few problems completed
+    \item Appendix 1: All exercises complete!
+    \item Appendix 4: All exercises complete except A4.17 and part 2 of problem 1
+    \item Appendix 5: Almost done. Problem 1 needs to be cleaned up. 
+    \item Appendix 6: All exercises complete!
+\end{itemize}
 
-\begin{align} \label{eq:5.1:QFT_unitary}
-    \bra{j}(QFT)^\dagger(QFT)\ket{k} = \braket{j}{k} = \delta_{ij}.
-\end{align}
+\chapter{Introduction to quantum mechanics}{2}
 
-To do this, we substitute the definition into the above equation. 
-\begin{align} \label{eq:5.1:expand_and_simplify}
-\begin{aligned}
-    \bra{k}(QFT)^\dagger(QFT)\ket{j} &= \Big(\frac{1}{\sqrt{N}}\sum_{p=0}^{N-1}e^{-2\pi ikp/N}\bra{p}\Big)\Big(\frac{1}{\sqrt{N}}\sum_{q=0}^{N-1}e^{2\pi ijq/N}\ket{q}\Big) \\
-    &= \frac{1}{N}\sum_{p=0}^{N-1}\sum_{q=0}^{N-1}e^{2\pi i(jq-kp)/N}\braket{p}{q} \\
-    &= \frac{1}{N}\sum_{p=0}^{N-1} e^{2\pi i (j-k)p/N}
-\end{aligned}
-\end{align}
-where in the last step we used the orthonormality of the $p,q$ states to eliminate one of the sums. Clearly, if $j=k$, the result is exactly one, as desired. Otherwise, $j-k$ is a nonzero integer, say $n$, such that $\abs{n}<N$. We will show that in this case the sum above is zero. 
 
-The basic idea is that we are taking a sum over phases which are symmetrically distributed around the unit circle, so the result must be zero. To make this argument rigorous, multiply the sum by $e^{2\pi i n/N}$.
-\begin{align}
-    e^{2\pi i n/N}\sum_{p=0}^{N-1}\big(e^{2\pi i n/N}\big)^p = \sum_{p=0}^{N-1}\big(e^{2\pi i n/N}\big)^{p+1} = \sum_{p=1}^{N}\big(e^{2\pi i n/N}\big)^{p}
-\end{align}
-In the last equation we simply reindexed. Because of the $N$-periodicity, $\big(e^{2\pi i n/N}\big)^N = 1 = \big(e^{2\pi i n/N}\big)^0$. Hence, we see that the sum is left unchanged by the multiplication. Since $e^{2\pi i n/N} \neq 1$, the sum must in fact be zero. This completes the proof.
-
-\subsection*{5.2}
-\textbf{Problem:} Explicitly compute the Fourier transform of the $n$ qubit state $\ket{00...0}$.
-
-\textbf{Solution:} Suppose there are $n$ qubits, so that $N=2^n$. Using the definition given directly above in the textbook,
-\begin{align}
-    \ket{00...0} &\rightarrow \frac{1}{2^{n/2}} \sum_{k=0}^{2^n-1}e^0 \ket{k} \\
-    &= \frac{1}{2^{n/2}}\sum_{k=0}^{2^n-1}\ket{k},
-\end{align}
-which is simply a uniform superposition over the computational basis states. Evidently, the QFT on the zero state simply acts the same as Hadamards on all the qubits!
-
-We remark that this result is consistent with the interpretation that the Fourier transform decomposes a ``signal" into its frequency components. Here, the signal was a sharp spike, which requires an large spread in frequency to construct. Conversely, a uniform superposition without phases is like a constant function signal, which has a frequency of zero. 
-
-\subsection*{5.3} 
-\textbf{Problem (Classical fast Fourier transform)}: Suppose we wish to perform a Fourier transform of a vector containing $2^n$ complex numbers on a classical computer. Verify that the straightforward method for performing the Fourier transform, based upon direct evaluation of Equation (5.1) requires $\Theta(2^{2n})$ elementary arithmetic operations. Find a method for reducing this to $\Theta(n2^n)$ operations, based upon Equation (5.4).
-There are $2^n$ complex numbers we need to compute, which are the output amplitudes of the Fourier transform. If we compute each one using (5.1), each such amplitude involves a sum which contains $2^n$ terms. Thus, there will be $2^n \times 2^n = 2^{2n}$ summations and therefore at least as many arithmetic operations.
-
-\textbf{Solution:} Let's now consider a computation based on the factored form of the QFT, Equation (5.4). As before, this involves a computation of $2^n$ amplitudes, one for each bitstring $k = k_1k_2...k_n$. Using (5.4) the amplitude $a_{k}$ corresponding to the state $\ket{k}$ is given by
-\begin{align}
-    \bra{k}QFT\ket{j} = \frac{1}{2^{n/2}}\big(\delta_{k_1 0}+e^{2\pi i0.j_n}\delta_{k_1 2}\big)\big(\delta_{k_2 0}+e^{2\pi i0.j_{n-1}j_n}\delta_{k_2 2}\big)...\big(\delta_{k_n 0}+e^{2\pi i0.j_1...j_n}\delta_{k_n 2}\big).
-\end{align}
-where $\ket{j}$ is our input state. This involves a multiplication of $n$ terms, hence there are $n\times 2^n$ total multiplications. This is a lower bound for the number of operations. 
-
-\subsection*{5.4}
-\textbf{Problem:} Give a decomposition of the controlled-$R_k$ gate into single qubit and \text{CNOT} gates.
-
-\textbf{Solution:} We use the $ABC$ construction of Corollary 4.2 to make our controlled $R_k$ according to Figure 4.6. First, note that
-\begin{align}
-    R_k = 
+\section*{Exercise 2.1: (Linear dependence: example)}
+    Show that $(1,-1)$, $(1, 2)$ and $(2, 1)$ are linearly dependent.
+    
+    \textbf{Solution:} By inspection, one might be able to see that $(2,1)=(1,-1) + (1,2)$, hence,
+    \begin{align}
+        (1,-1)+(1,2) -(2,1) = 0.
+    \end{align}
+    This demonstrates linear dependence. A more systematic approach would be to cast this problem as a system of linear equations. A desired set of coefficients can be found by solving
+    \begin{align}
     \begin{pmatrix}
-        1 & 0\\
-        0 & e^{2\pi i/2^k}\\
-    \end{pmatrix} = e^{2\pi i/2^{k+1}}
+        1 & 1 & 2 \\
+        -2 & 2 & 1
+    \end{pmatrix}
     \begin{pmatrix}
-        e^{-2\pi i/2^{k+1}} & 0 \\
-        0 & e^{2\pi i/2^{k+1}}
-    \end{pmatrix} = e^{i\alpha}R_z(\beta)
-\end{align}
-where $\alpha = 2\pi/2^{k+1}$ and $\beta = 2\pi/2^k$. Comparing this to the Euler decomposition formula of Theorem 4.1, we set $\gamma =\delta = 0$. Following through the steps, this implies,
-\begin{align}
-\begin{aligned}
-    A &= R_z(\beta) \\
-    B &= R_z(-\beta/2)\\
-    C &= R_z(-\beta/2)
-\end{aligned}
-\end{align}
-can be used in the $ABC$ construction of $R_k$. As a final step, primarily one of cosmetics, we notice these gates are related to the $R_k$ through global phases which cancel each other out. Thus, the following circuit implements the controlled-$R_k$, as is easy to verify.
-\begin{align}
-    \Qcircuit @C=1em @R=1.6em {
-        \qw & \ctrl{1} & \qw & & & \qw & \qw & \ctrl{1} & \qw & \ctrl{1} & \gate{R_{k+1}} & \qw\\
-        \qw & \gate{R_k} & \qw & \raisebox{2.2em}{=} & & \qw & \gate{R_{k+1}^\dagger} & \targ & \gate{R_{k+1}^\dagger} & \targ & \gate{R_k} & \qw
-    } 
-\end{align}
-
-\subsection*{5.5} 
-\textbf{Problem:} Give a quantum circuit to perform the inverse quantum Fourier transform.
-
-\textbf{Solution:} Here is the circuit for six qubits (generated using qiskit).
-\begin{equation*}
-    \Qcircuit @C=1.0em @R=0.0em @!R {
-	 	\lstick{ {q}_{0} :  } \barrier[0em]{5} & \qw & \qw \barrier[0em]{5} & \qw & \qw & \qw & \qw \barrier[0em]{5} & \qw & \qw & \qw & \qw & \qw & \qw \barrier[0em]{5} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw \barrier[0em]{5} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw \barrier[0em]{5} & \qw & \ctrl{5} & \dstick{\frac{-\pi}{32}}\qw & \ctrl{4} & \dstick{\frac{-\pi}{16}}\qw & \ctrl{3} & \dstick{\frac{-\pi}{8}}\qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw\\
-	 	\lstick{ {q}_{1} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{4} & \dstick{\frac{-\pi}{16}}\qw & \ctrl{3} & \dstick{\frac{-\pi}{8}}\qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw\\
-	 	\lstick{ {q}_{2} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{3} & \dstick{\frac{-\pi}{8}}\qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
-	 	\lstick{ {q}_{3} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
-	 	\lstick{ {q}_{4} :  } & \qw & \qw & \qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
-	 	\lstick{ {q}_{5} :  } & \qw & \gate{H} & \qw & \control \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
-	 }
-\end{equation*}
-Here, the vertical line segments are the $R_k$ gates, where the number alongside indicate angle of phase rotated. Like the inverse to any quantum circuit, can be obtained by reversing the order of the gates and taking the inverse of each gate. Note the Hadamard $H$ is self-inverse.
-
-\subsection*{5.6}
-\textbf{Problem (Approximate quantum Fourier transform):} The quantum circuit construction of the quantum Fourier transform apparently requires gates of exponential precision in the number of qubits used. However, such precision is never required in any quantum circuit of polynomial size. For example, let $U$ be the ideal quantum Fourier transform on $n$ qubits, and $V$ be the transform which results if the controlled-$R_k$ gates are performed to a precision $\Delta = 1/p(n)$ for some polynomial $p(n)$. Show that the error $E(U, V) \equiv max_{\ket{\psi}} \left\|(U - V)\ket{\psi}\right\|$ scales as $\Theta(n^2/p(n))$, and thus polynomial precision in each gate is sufficient to guarantee polynomial accuracy in the output state.
-
-\textbf{Solution:} First we will show a more general result (one which will be further generalized in part 3 of the book, when discussing quantum channels). Let $\mc{X}$ and $\mc{Y}$ be quantum gates, and let $X$ and $Y$ be gates which we will think of as approximating $\mc{X}$ and $\mc{Y}$ respectively. We will show that
-\begin{align}
-    E(\mc{XY},XY) \leq E(\mc{X},X) + E(\mc{Y},Y).
-\end{align}
-To proceed, we set things up to make use of our friend: the triangle inequality. For any state $\ket{\psi}$ we have
-\begin{align}
-    \left\|(\mc{XY}-XY)\ket{\psi}\right\|&=\left\|(\mc{X}\mc{Y}-X\mc{Y}+X\mc{Y}-XY)\ket{\psi}\right\| \\
-    &= \left\|(\mc{X}-X)\mc{Y}\ket{\psi}+X(\mc{Y}-Y)\ket{\psi}\right\| \\
-    &\leq \left\|(\mc{X}-X)\mc{Y}\ket{\psi}\right\|+\left\|X(\mc{Y}-Y)\ket{\psi}\right\|
-\end{align}
-Since this inequality holds for any $\ket{\psi}$, it certainly holds if we take the max of both sides. Hence,
-\begin{align}
-    E(\mc{XY},XY) \leq \max_{\ket{\psi}} \left(\left\|(\mc{X}-X)\mc{Y}\ket{\psi}\right\|+\left\|X(\mc{Y}-Y)\ket{\psi}\right\|\right)
-\end{align}
-Certainly, the maximum of a sum $A+B$ is less than (or equal to) maximizing each individual piece $A,B$, so we may distribute the $\max$ function and maintain the inequality. Let's consider each term on the left hand side. Since $\mc{Y}$ is unitary, it is a bijection on the space of valid states. Hence, we can maximize over $\ket{\phi} = \mc{Y}\ket{\psi}$ instead. Now consider the rightmost term. Since $X$ is unitary, it preserves norm. Altogether,
-\begin{align}
-     E(\mc{XY},XY) &\leq \max_{\ket{\phi}}\left\|(\mc{X}-X)\ket{\phi}\right\| + \max_{\ket{\psi}}\left\|(\mc{Y}-Y)\ket{\psi}\right\|\\
-     &= E(\mc{X},X) + E(\mc{Y},Y).
-\end{align}
-This places a bound on the error when composing imperfect gates. Moreover, this bound is tight, since if $X=\mc{X}$ and $Y=\mc{Y}$ we get strict equality. 
-We can generalize this result, by simple induction, to arbitrary sequences of gates with corresponding approximations. Thus, in our present case, if each controlled $R_k$ has precision $\Delta$, 
-\begin{align}
-    E(U,V) \leq \frac{n(n+1)}{2}\Delta \in \Theta(n^2 \Delta).
-\end{align}
-Here, the use of $\Theta$ is appropriate rather than $\mc{O}$ since our bound is tight.
-
-\subsection*{5.7}
-\textbf{Problem:} Additional insight into the circuit in Figure 5.2 may be obtained by showing, as you should now do, that the effect of the sequence of controlled-$U$ operations like that in Figure 5.2 is to take the state $\ket{j}\ket{u}$ to $\ket{j}U^j\ket{u}$. (Note that this does not depend on $\ket{u}$ being an eigenstate of $U$.)
-
-\textbf{Solution:} Suppose there are $t$ qubits in the first register, so the integer $j$ can be expressed in binary as $j_{t-1}...j_1j_0$, with $j_k \in \{0,1\}$ for every $0\leq k < t$. By definition, this means $j = j_0 + 2j_1 + ... + 2^{t-1}j_{t-1}$. The state $\ket{j}$ has tensor product form
-\begin{align}
-    \ket{j} = \bigotimes_{k=0}^{t-1} \ket{j_k} \equiv \ket{j_{t-1}}...\ket{j_{0}}.
-\end{align}
-The action of the controlled-$U^2k$ controlled on the $k$th qubitis given by
-\begin{align}
-    \ket{j_k}\ket{u} \longrightarrow  \ket{j_k} U^{2^k j_k}\ket{u}
-\end{align}
-as can be readily verified. Thus, the full sequence of controlled gates acts as follows.
-\begin{align}
-\begin{aligned}
-    \ket{j}\ket{u} = \bigotimes_{k=0}^{t-1} \ket{j_k}\ket{u} \longrightarrow &\ket{j}U^{2^{t-1}j_{t-1}}...U^{2^0 j_0}\ket{u} \\
-    = &\ket{j}U^{2^0 j_0 + ... + 2^{t-1} j_{t-1}}\ket{u} \\
-    = &\ket{j}U^j\ket{u}
-\end{aligned}
-\end{align}
-In the last step we reused the definition of $j$ being expressed in binary. This gives the desired result, which, as we see, did not rely on particular knowledge of the state $\ket{u}$.
-
-\subsection*{5.8}
-\textbf{Problem:} Suppose the phase estimation algorithm takes the state $\ket{0}\ket{u}$ to the state $\ket{\tilde{\varphi}_u}\ket{u}$, so that the input $\ket{0}\big(\sum_u c_u\ket{u}\big)$, the algorithm outputs $\sum_u c_u\ket{\tilde{\varphi}_u}\ket{u}$. Show that if $t$ is chosen according to (5.35), then the probability for measuring $\varphi_u$ accurate to $n$ bits at the conclusion of the phase estimation algorithm is at least $\abs{c_u}^2(1-\epsilon)$.
-
-\textbf{Solution:} If $t$ is chosen as such, then $\tilde{\varphi}_u$ is an $n$-bit approximation to $\varphi_u$ with probability $p_{succ} \geq (1-\epsilon)$. Meanwhile, the probability of measuring $\tilde{\varphi}_u$ on the first register is given by the Born rule: $p_u = \abs{c_u}^2$. These two events are independent, hence, the probability of measuring $\tilde{\varphi}_u$ \emph{and} having it be an $n$-bit approximation is
-\begin{align} \label{eq:lower bound}
-    p_u p_{succ} \geq \abs{c_u}^2 (1-\epsilon).
-\end{align}
-Moreover, any other eigenstate $\ket{v}$ of $U$ such that $\varphi_v \neq \varphi_u$ might still result in an $n$-bit approximation to $\varphi_u$, provided they are sufficiently close (it may even be that $\tilde{\varphi}_v = \tilde{\varphi}_u$). This will only further increase the probability of success. In any case, the right side of \eqref{eq:lower bound} remains a lower bound. 
-
-\subsection*{5.9}
-\textbf{Problem:} Let $U$ be a unitary transform with eigenvalues $\pm 1$, which acts on a state $\ket{\psi}$. Using the phase estimation procedure, construct a quantum circuit to collapse $\ket{\psi}$ into one or the other of the two eigenspaces of $U$, giving also a classical indicator as to which space the final state is in. Compare your result with Exercise 4.34.
-
-\textbf{Solution:} If the eigenvalues of $U$ are $1$ and $-1$, the corresponding phases are $0.0$ and $0.1$ respectively. Because these phases are finite bitstrings, there is no possibility of error and, in fact, we can take $t = n$, which in our case is $1$. The inverse-QFT on one qubit is simply the Hadamard, and our circuit reduces to the following.
-\begin{align}
-    \Qcircuit @C=1.0em @R=1.6em{
-        \lstick{\ket{0}} & \gate{H} & \ctrl{1} & \gate{H} & \meter & \qw \\
-        \lstick{\ket{\psi}} & \qw & \gate{U} & \qw & \qw & \qw
-    }
-\end{align}
-If a $0$ ($1$) is measured, the final state is known to be in the plus (minus) subspace. The probability of each outcome is simply related to the initial overlap with each subspace via the Born rule. 
-
-\subsection*{5.10}
-\textbf{Problem:} Show that the order of $x=5$ modulo $N=21$ is 6.
-
-\textbf{Solution:} We proceed by exhaustive calculation.
-\begin{align}
-\begin{aligned}
-    5^1 \bmod 21 &= 5 \\
-    5^2 \bmod 21 &= 4 \\
-    5^3 \bmod 21 &= 20\\
-    5^4 \bmod 21 &= 16\\
-    5^5 \bmod 21 &= 17\\
-    5^6 \bmod 21 &= 1
-\end{aligned}
-\end{align}
-Hence, 6 is the smallest positive integer $r$ such that $5^r \bmod 21 = 1$. Thus, 6 is the order of 5 modulo 21.
-
-\subsection*{5.11}
-\textbf{Problem:} Show that the order of $x$ satisfies $r\leq N$.
-
-\textbf{Solution:} Consider the set $\{x^n \bmod N\}_{n=1}^N$. Because we assume $x$ and $N$ share no common factors, it is not possible for $x^n \bmod N = 0$. Hence, $0< x^n \bmod N < N$. By the pigeonhole principle, not all the values for $x^n \bmod N$ can be unique. There must exist some $x^i = x^j \bmod N$ for some $1\leq i,j \leq N$ and $j\neq i$. Assume $j>i$ without loss of generality. Then, we have
-\begin{align}
-\begin{aligned}
-    x^j-x^i &= 0 \bmod N \\
-    x^i(x^{j-i}-1) &=0 \bmod N.
-\end{aligned}
-\end{align}
-This implies $N|x^i(x^{j-i}-1)$. But $N\nmid x^i$, again by assumption of no common factors. Hence, we must have $N|(x^{j-i}-1)$, or $x^{j-i} = 1 \bmod N$. Since $r$ is the smallest integer satisfying this condition, we must have $r\leq j-i < N$. Note this is a strict inequality, unlike what is given in the text.
-
-\subsection*{5.12}
-\textbf{Problem:} Show that $U$ is unitary (Hint: $x$ is co-prime to $N$, and therefore has an inverse modulo $N$).
-
-\textbf{Solution:} Since $U$ acts as a map on the computational basis states, it suffices to show this map is injective (one-to-one). If $y\geq N$, then $\ket{y}$ is mapped to itself. On the other hand, if $0\leq y < N$, then $\ket{y}$ is certainly mapped to some $\ket{z}$ where $z< N$. Hence, $U$ is injective on the subspace where $y\geq N$, and it suffices to focus on the case where $y< N$. To this end, suppose $U\ket{y} = U\ket{z}$ for $y,z < N$. Then,
-\begin{align}
-\begin{aligned}
-    xy\bmod{N} &= xz\bmod{N} \\
-    x(y-z) &= 0 \pmod{N}
-\end{aligned}
-\end{align}
-This implies $N$ divides $x(y-z)$. However, since $N$ and $x$ are coprime, they share no common factors. This implies $N|(y-z)$. But $|y-z| < N$, so it must be that $y-z = 0$. Hence
-\begin{align}
-    \ket{y} = \ket{z}
-\end{align}
-which proves that $U$ is injective on the basis, as desired.
-
-\subsection*{5.13}
-\textbf{Problem:} Prove (5.44). (\emph{Hint}:$\sum_{s=0}^{r-1}\exp(-2\pi i sk/r)=r\delta_{k0}$). In fact, prove that
-\begin{align}
-    \frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}e^{2\pi isk/r}\ket{u_s} = \ket{x^k\bmod N}
-\end{align}
-
-\textbf{Solution:} Let us crank the wheel: putting in the definition of $\ket{u_s}$ to the left side of (5.44) and regrouping.
-\begin{align}
-    \frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}e^{2\pi isk/r}\ket{u_s} &= \frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}e^{2\pi isk/r} \frac{1}{\sqrt{r}}\sum_{t=0}^{r-1}e^{-2\pi ist/r}\ket{x^t\bmod N} \\
-    &= \frac{1}{r}\sum_{s=0}^{r-1}\sum_{t=0}^{r-1}e^{2\pi is(k-t)/r}\ket{x^t\bmod N} \\
-    &=\frac{1}{r}\sum_{t=0}^{r-1}\ket{x^t\bmod N}\Big(\sum_{s=0}^{r-1}e^{2\pi is(k-t)/r}\Big)
-\end{align}
-Making gracious use of the hint, we see the rightmost sum on the last line equals $r\delta_{kt}$. Hence,
-\begin{align}
-    \frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}e^{2\pi isk/r}\ket{u_s} &= \sum_{t=0}^{r-1}\delta_{tk}\ket{x^t \bmod N} \\
-    &= \ket{x^k \bmod N}.
-\end{align}
-To obtain (5.44) from the text, simply set $k=0$.
-
-\subsection*{5.14}
-\textbf{Problem:} The quantum state produced in the order-finding algorithm, before
-the inverse Fourier transform, is
-\begin{align}
-    \ket{\psi} =\sum_{j=0}^{2^t-1}\ket{j}U^j\ket{1} =\sum_{j=0}^{2^t-1}\ket{j}\ket{x^j\bmod N}
-\end{align}
-if we initialize the second register as $\ket{1}$. Show that the same state is obtained if we replace $U^j$ with a \emph{different} unitary transform $V$, which computes
-\begin{align}
-    V\ket{j}\ket{k} = \ket{j}\ket{k+x^j\bmod N},
-\end{align}
-and start the second register in the state $\ket{0}$. Also show how to construct $V$ using $O(L^3)$ gates.
-
-\textbf{Solution:} It is obvious that, by setting $k=0$, we obtain the same output using $V$ as we would if $k=1$ and we had acted with $U$. To construct $V$ we can simply use the $U^j$ as before and store the result in an ancillary register whose initial value was one, then \emph{add} that result to the register initialized to 0. The addition step can be carried out bitwise, and only takes $O(L^2)$ gates naively. Hence, the algorithm remains $O(L^3)$ after this addition step.
-
-\section*{Chapter 6: Quantum Search Algorithms}
-\subsection*{6.1} 
-\textbf{Problem:} Show that the unitary operator corresponding to the phase shift in the Grover iteration is $(2\ket{0}\bra{0}-I)$.
-
-\textbf{Solution:} For $\ket{x} = \ket{0}$,
-\begin{align}
-    (2\ket{0}\bra{0}-I)\ket{0} = 2\ket{0}-\ket{0} = \ket{0}
-\end{align}
-Meanwhile, for $\ket{x} \neq \ket{0}$,
-\begin{align}
-    (2\ket{0}\bra{0}-I)\ket{x} = 2\ket{0}\braket{0}{x}-\ket{x} = -\ket{x}
-\end{align}
-Altogether,
-\begin{align}
-    (2\ket{0}\bra{0}-I)\ket{x} = (-1)^{\delta_{0x}}\ket{x}
-\end{align}
-
-\subsection*{6.2}
-\textbf{Problem:} Show that the operation $(2\ket{\psi}\bra{\psi}-I)$ applied to a general state $\sum_k \alpha_k \ket{k}$ produces
-\begin{align}
-    \sum_k \left(-\alpha_k+2\langle\alpha\rangle\right)\ket{k}
-\end{align}
-where $\langle\alpha\rangle \equiv \sum_k\alpha_k/N$ is the mean value of the $\alpha_k$. For this reason, $(2\ket{\psi}\bra{\psi}-I)$ is sometimes referred to as the \emph{inversion about mean} operation.
-
-\textbf{Solution:} By linearity,
-\begin{align*}
-    (2\ket{\psi}\bra{\psi}-I)\sum_k \alpha_k\ket{k} &= \sum_k 2 \alpha_k\left(\ket{\psi}\bra{\psi}\right)\ket{k} - \sum_k \alpha_k\ket{k} \\
-    &= 2\ket{\psi}\sum_k\alpha_k\braket{\psi}{k}-\sum_k\alpha_k\ket{k}
-\end{align*}
-Because $\ket{\psi}$ is uniform superposition over the computational basis states, for all $k$ we have $\braket{\psi}{k}=1/\sqrt{N}$. Hence,
-\begin{align}
-(2\ket{\psi}\bra{\psi}-I)\sum_k \alpha_k\ket{k} &= \frac{2}{\sqrt{N}}\left(\sum_k\alpha_k\right)\ket{\psi} - \sum_k \alpha_k\ket{k} \\
-&= 2\sqrt{N} \langle\alpha\rangle\ket{\psi} - \sum_k\alpha_k\ket{k}
-\end{align}
-Finally, we expand out the definition of $\ket{\psi}$ and cancel the factors of $\sqrt{N}$.This gives our result. 
-\begin{align}
-    2\sqrt{N} \langle\alpha\rangle\ket{\psi} - \sum_k\alpha_k\ket{k} &= \sum_k\left(2\langle\alpha\rangle-\alpha_k\right)\ket{k}
-\end{align}
-
-\subsection*{6.3}
-\textbf{Problem:} Show that in the $\ket{\alpha}, \ket{\beta}$ basis, we may write the Grover iteration as
-\begin{align}
-    G = 
-    \begin{bmatrix} \label{eq:matrix_G}
-        \cos\theta & -\sin\theta \\
-        \sin\theta & \cos\theta
-    \end{bmatrix}
-\end{align}
-where $\theta$ is a real number in the range 0 to $\pi/2$ (assuming for simplicity that $M\leq N/2$; this limitation will be lifted shortly), chosen so that
-\begin{align} \label{eq:theta_value}
-    \sin\theta =\frac{2\sqrt{M(N-M)}}{N}
-\end{align}
-
-\textbf{Solution:} As discussed in the text, both the oracle $O$ and the reflection $2\ket{\psi}\bra{\psi}-I$ leave the subspace $V = span\left(\ket{\alpha},\ket{\beta}\right)$ invariant. Hence, so does the product $G$. Therefore, we will from here on speak of $G$ only in terms of its action on the 2-dimensional subspace $V = span\left(\ket{\alpha},\ket{\beta}\right)$, and consider the matrix representation in the orthonormal basis $\{\ket{\alpha},\ket{\beta}\}$. This representation is unitary (since $G$ itself is), and in fact it is orthogonal, since both $O$ and $(2\ket{\psi}\bra{\psi}-I)$ have real matrix elements. More specifically, $G$ is \emph{special} orthogonal, meaning it has determinant one, because it is the product of two reflections. All of this implies $G$ is a proper rotation in the plane, and any such matrix may be parametrized as equation \eqref{eq:matrix_G} for \emph{some} angle $\theta$. It remains to show $\theta$ satisfies relation \eqref{eq:theta_value}. To do this, we simply compute the matrix element $\bra{\beta}G\ket{\alpha}$.
-\begin{align}
-\begin{aligned}
-    \bra{\beta}G\ket{\alpha} &= \bra{\beta}\left(2\ket{\psi}\bra{\psi}-I\right)O\ket{\alpha} \\
-    &=\bra{\beta}\left(2\ket{\psi}\bra{\psi}-I\right)\ket{\alpha}\\
-    &=\bra{\beta}\left(2\ket{\psi}\braket{\psi}{\alpha}-\ket{\alpha}\right) \\
-    &=2\braket{\beta}{\psi}\braket{\psi}{\alpha},
-\end{aligned}
-\end{align}
-where, along the way, we used the orthogonality of $\ket{\alpha},\ket{\beta}$ and the fact that $O\ket{\alpha} = \ket{\alpha}$. Finally, using the expression given in the text for $\ket{\psi}$ expanded in the $\ket{\alpha},\ket{\beta}$ basis, we arrive at our result. 
-\begin{align}
-    \bra{\beta}G\ket{\alpha} = \sin\theta = \frac{2\sqrt{M(N-M)}}{N}
-\end{align}
-Note that, in fact, we did not require the assumption that $M\leq N/2$ in our derivation.
-
-\section*{Appendix 1: Notes on basic probability theory}
-\subsection*{A1.1} 
-\textbf{Problem:} Prove Bayes' rule.
-
-\textbf{Solution:} From the definition of conditional probability, we have
-\begin{align}
-    p(x,y) = p(y|x)p(x) = p(x|y)p(y)
-\end{align}
-Rearranging the last of these equations gives the desired result.
-
-\subsection*{A1.2}
-\textbf{Problem:} Prove the law of total probability.
-
-\textbf{Solution:} We start with the notion that, in the joint probability distribution for $(X,Y)$, one sums over all outcomes of $X$ to get a probability distribution on $Y$ alone.
-\begin{align}
-    p(y) = \sum_x p(x,y)
-\end{align}
-We arrive at our result by noting that, from the definition of conditional probability, $p(x,y) = p(y|x)p(x)$.
-
-\subsection*{A1.3}
-\textbf{Problem:} Prove there exists a value of $x\geq\textbf{E}(X)$ such that $p(x)>0$.
-
-\textbf{Solution:} Suppose, for sake of contradiction, that every value $x$ of $X$ with nonzero probability has the property $x < \textbf{E}(X)$. Intuitively, we'd expect that the expectation value would have to be less then $\textbf{E}(X)$. Indeed, using the inequality in the definition of expectation value,
-\begin{align}
-    \textbf{E}(X) = \sum_{x\in X} x p(x) < \textbf{E}(X)\sum_{x\in X}p(x) = \textbf{E}(X)
-\end{align}
-Hence, $\textbf{E}(X)<\textbf{E}(X)$, a clear contradiction. We conclude our premise was false, hence there does exist a value of $x\in X$ such that $x \geq \textbf{E}(X)$ and $p(x)>0$.
-
-\subsection*{A1.4} 
-\textbf{Problem:} Prove that $\textbf{E}(X)$ is linear in $X$.
-
-\textbf{Solution:} The following computation gives us the result.
-\begin{align}
-\begin{aligned}
-    \textbf{E}(aX+bY) &= \sum_{(x,y)\in(X,Y)}(ax+by)p(x,y) \\
-    &= \sum_{x\in X}\sum_{y\in Y}axp(x,y) + byp(x,y) \\
-    &=\sum_{x\in X}ax\sum_{y\in Y}p(x,y) + \sum_{y\in Y}by\sum_{x\in X}p(x,y) \\
-    &=a\sum_{x\in X}x p(x) + b\sum_{y\in Y}yp(y) \\
-    &=a\textbf{E}(X) + b\textbf{E}(Y).
-\end{aligned}
-\end{align}
-Here, $a,b$ are constants. Along the way, we used $p(x) = \sum_y p(x,y)$ and the definition of expectation value.
-
-\subsection*{A1.5}
-\textbf{Problem:} Prove that for independent random variables $X$ and $Y$, \textbf{E}(XY) = \textbf{E}(X)\textbf{E}(Y).
-
-\textbf{Solution:} Recall that, for independent random variables, the joint probability distribution breaks into a product of individual probabilities. This yields the following computation.
-\begin{align}
-\begin{aligned}
-    \textbf{E}(XY) &= \sum_x\sum_y xy\,p(x,y)\\
-    &= \sum_x\sum_y xy\,p(x)p(y) \\
-    &= \sum_x p(x) \sum_y p(y) \\
-    &= \textbf{E}(X)\textbf{E}(Y)
-\end{aligned}
-\end{align}
-
-\section*{Appendix 4: Number theory}
-
-\subsection*{A4.1}
-\textbf{Problem: (Transitivity)} Show that if $a|b$ and $b|c$, then $a|c$.
-
-\textbf{Solution:} The premises imply, by definition, that there exist integers $j, k$ such that $b = a j$ and $c = b k$. Substituting the first of these two equations into the second, we see $c = a j k = a l$, where $l = j k \in \mathbb{Z}$. Hence, there exists an integer, namely $l$, such that $c = a l$, proving $a |c$.
-
-\subsection*{A4.2}
-\textbf{Problem:} Show that if $d|a$ and $d|b$ then $d$ also divides a linear combination of $a$ and $b$, $ax+by$, where $x$ and $y$ are integers.
-
-\textbf{Solution:} From the definition of $d|a$ and $d|b$, there exist integers $j, k $ such that $a = d j$ and $b= dk$. Hence,
-\begin{align}
-    ax + by = djx + dky = d(jx + ky).
-\end{align}
-Define $m = jx +ky \in \mathbb{Z}$. Then we see $ax + by = dm$. From the definition of dividing, we have $d|(ax+by)$. 
-
-\subsection*{A4.3} 
-\textbf{Problem:} Suppose $a$ and $b$ are positive integers. Show that if $a|b$ then $a\leq b$. Conclude that if $a|b$ and $b|a$ then $a=b$.
-
-\textbf{Solution:} Suppose that $a|b$. Then there exists some $k\in \mathbb{Z}$ such that $b = ak$. By the hypothesis that $a$ and $b$ are positive, it must be that $k>0$. Hence, $k-1\geq0$. This, of course, implies
-\begin{align}
-    b(k-1) \geq 0
-\end{align}
-since, again, b is nonnegative (positive, in fact). The result we desire comes from basic manipulations of inequalities.
-\begin{align}
-\begin{aligned}
-    b(k-1) \geq 0 &\implies bk \geq b \\
-    &\implies a \geq b
-\end{aligned}
-\end{align}
-As an immediate corollary, if $a|b$ and $b|a$ (both being positive integers), we have $a\geq b$ and $b\geq a$. Of course, this implies $a = b$. Note that the assumption of positivity was crucial for the proof to hold, and indeed, it is easy to see how it can be broken if negative numbers are included.
-
-\subsection*{A4.4}
-\textbf{Problem:} Find the prime factorizations of 697 and 36 300.
-
-\textbf{Solution:} I do not pretend to solve these in any mechanical fashion. Looking online, I notice 697 is a product of 41 and 17. Each of these numbers are themselves prime, so the prime factorization is 
-\begin{align}
-    697 =41^1 17^1
-\end{align}
-
-Unlike the first, the second number is easier to do in your head. We can pull out two factors of 10 and easily prime factor those. Meanwhile, 363 is divisible by 3, and then if you cared to memorize some perfect squares, $121= 11^2$. Altogether.
-\begin{align}
-    36300 = 2^2 3^1 5^2 11^2.
-\end{align}
-
-\subsection*{A4.5}
-\textbf{Problem:} For $p$ a prime prove that all integers in the range 1 to $p-1$ have multiplicative inverses modulo $p$. Which integers in the range 1 to $p^2-1$ do not have multiplicative inverses modulo $p^2$?
-
-\textbf{Solution:} For any integer $a\in [1,p-1]$, $a$ is coprime with $p$. Hence, $a$ has an inverse modulo $p$. In the case of $p^2$, the only integer which is not coprime with $p^2$ in the range $[0,p^2-1]$ is $p$ itself. Every other integer in the range has a multiplicative inverse. 
-
-\subsection*{A4.6}
-\textbf{Problem:} Find the multiplicative inverse of 17 modulo 24.
-
-\textbf{Solution:} We seek an positive integer $n<24$ such that $17 * n = 1 \bmod 24$. Without yet an efficient method, we can perform an exhaustive check by hand or with a computer. It turns out the answer is $n=17$ itself. 
-
-\subsection*{A4.7}
-\textbf{Problem:} Find the multiplicative inverse of $n+1$ modulo $n^2$, where $n$ is any integer greater than 1.
-
-\textbf{Solution:} The answer, which might be reasonably guessed (or not). Is $n-1$.
-\begin{align}
-    (n+1)(n-1) = n^2 - 1 = 1 \pmod n^2.
-\end{align}
-
-\subsection*{A4.8}
-\textbf{Problem: (Uniqueness of the inverse)} Suppose $b$ and $b'$ are multiplicative inverses of $a$, modulo $n$. Prove that $b=b' \mod n$.
-
-\textbf{Solution:} If $b$ and $b'$ are both inverses of $a$, then $ab = ab' \pmod n$. This implies
-\begin{align}
-    a(b-b') = 0 \pmod n.
-\end{align}
-From this, we conclude $n|a(b-b')$. But we also know, by Corollary A4.4, that $n$ and $a$ are coprime. Hence, $n|(b-b')$, so $b=b' \pmod{n}$.
-
-\subsection*{A4.9}
-\textbf{Problem:} Explain how to find $\gcd(a,b)$ if the prime factorizations of $a$ and $b$ are known. Find the prime factorizations of 6825 and 1430, and use them to compute $\gcd(6825,1430)$.
-
-\textbf{Solution:} If the prime factorization of $a$ and $b$ are known, simply find the largest set (counting multiplicity) of shared prime factors. 
-
-The prime factorization of 6285 and 1430 are $3^1 5^1 15^1 419^1$ and $2^1 5^1 11^1 13^1$ respectively. The only shared prime factor is $5$, hence this is also the gcd.
-
-\subsection*{A4.10}
-\textbf{Problem:} What is $\varphi(187)$?
-
-\textbf{Solution:} The prime factorization of $187$ is $11\times17$. Hence,
-\begin{align}
-    \varphi(187) = \varphi(17\times 11) = \varphi(17)\varphi(11) = 16 \times 10 = 160
-\end{align}
-
-\subsection*{A4.11}
-\textbf{Problem:} Prove that
-\begin{align}
-    n = \sum_{d|n} \varphi(d)
-\end{align}
-where the sum is over all positive divisors $d$ of $n$, including 1 and $n$. (\emph{Hint:} Prove the result for $n=p^\alpha$ first, then use the multiplicative property (A4.22) of $\varphi$ to complete the proof.
-
-\textbf{Solution:} Follow the advice of the hint, suppose $n=p^\alpha$ where $p$ is prime. The divisors of $n$ are $p^j$, where $0\leq j \leq \alpha$. Hence, starting from the right hand side,
-\begin{align}
-\begin{aligned}
-    \sum_{d|n} \varphi(d) = \sum_{j=0}^\alpha \varphi(p^j) &=1 +  \sum_{j=1}^\alpha p^{j-1}(p-1)\\
-    &= 1+ (p-1)\sum_{j=1}^\alpha p^{j-1} \\
-    &= 1 + \sum_{j=0}^\alpha p^j -\sum_{j=0}^\alpha p^{j-1} \\
-    &= p^\alpha,
-\end{aligned}
-\end{align}
-where, in the last step, all but $p^\alpha$ cancel from subtractions. This proves the result when $n$ is a power of a prime.
-
-To generalize the argument, we use the fundamental theorem of arithmetic, which says any $n\in \mathbb{Z}$ has a prime factorization.
-\begin{align}
-    n = p_1^{\alpha_1}p_2^{\alpha_2}...p_m^{\alpha_m}.
-\end{align}
-Since all terms are powers of prime, they are coprime with each other, and we may use the multiplicative property of $\varphi$.
-\begin{align} \label{eq:n_to_primes}
-\begin{aligned}
-    \varphi(n) &= \prod_{j=1}^{m}\varphi(p_j^{\alpha_j}) \\
-    &= \prod_{j=1}^m \sum_{k_j=0}^{\alpha_j}\varphi(p^{k_j})
-\end{aligned}
-\end{align}
-In the second step we used the first result derived above for powers of primes. By repeated use of the distributive property, the sum and product in the second line of \eqref{eq:n_to_primes} can be reversed, and cast as a sum over $m$ variables.
-\begin{align}
-\begin{aligned}
-    \prod_{j=1}^m \sum_{k_j=0}^{\alpha_j}\varphi(p^{k_j}) &= \sum_{k_1=0}^{\alpha_1}\sum_{k_2=0}^{\alpha_2} \dots \sum_{k_m=0}^{\alpha_m} \prod_{j=1}^m \varphi(p^{k_j}) \\
-    &= \sum_{k_1=0}^{\alpha_1}\sum_{k_2=0}^{\alpha_2} \dots \sum_{k_m=0}^{\alpha_m} \varphi(p^{k_1}p^{k_2}...p^{k_m})
-\end{aligned}
-\end{align}
-A careful examination of this last equation reveals it is nothing more than a sum over all possible divisors $d$ of $n$, expressed via the prime factorization. Hence,
-\begin{align}
-    \varphi(n) = \sum_{d|n} \varphi(d)
-\end{align}
-as desired.
-
-\subsection*{A4.12}
-\textbf{Problem:} Verify that $\textbf{Z}_n^*$ forms a group of size $\varphi(n)$ under the operation of multiplication modulo $n$.
-
-\textbf{Solution:} That $\textbf{Z}_n^*$ is a set of size $\varphi(n)$ follows directly from the definition of $\varphi$. Let $a,b \in \textbf{Z}_n^*$, with inverses $a^{-1}, b^{-1}$. Then, the product $ab$ has inverse $a^{-1}b^{-1}$, hence is in $\textbf{Z}_n^*$ (note the order doesn't matter since multiplication is commutative). Thus, the set is closed under the binary operator. Moreover, multiplication modulo $n$ is associative. Finally, it is easy to see that $1\in \textbf{Z}_n^*$ (being its own inverse) and it acts as the identity operator. Of course inverses exist, by definition, therefore we have shown that $\textbf{Z}_n^*$ satisfies the properties of a group under multiplication modulo $n$.
-
-\subsection*{A4.13}
-\textbf{Problem:} Let $a$ be an arbitrary element of $\textbf{Z}_n^*$. Show that $S\equiv \{1,a,a^2,...\}$ forms a subgroup of $\textbf{Z}_n^*$, and that the size of $S$ is the least value of $r$ such that $a^r = 1\pmod{n}$.
-
-\textbf{Solution:} For any finite group G, if I take a single element $g\in G$ and generate a subset $S \subset G$ by repeatedly multiplying $g$ by itself, the result will be a subgroup (when I include the induced binary operation). More generally, I can have multiple generators $g_1, g_2, ..., g_m$ and the result will still be a subgroup. Note this does not hold for infinite groups such as $\mathbb{Z}$, unless we allow negative exponents.
-
-If $r$ is the smallest positive integer satisfying $a^r = 1\pmod{n}$, it follows that each $a^i$ is unique for $i=0,1,...,r-1$. Otherwise, $a^i = a^j$ for some $i,j <r$, which implies $a^{j-i}=1$. This contradicts the assertion that $r$ is the \emph{least} such value. Hence, $S$ has at least $r$ values. In fact, it cannot have more than $r$ unique values, since for any $k>r$ we have
-\begin{align}
-    k = qr + i
-\end{align}
-for some $q\in\mathbb{Z}^+$ and $i<r$. But this will give the same power of $a$ as $i$ does.
-\begin{align}
-    a^k = a^{qr + i} = (a^r)^q a^i = 1^q a^i = a^i
-\end{align}
-Here all powers are taken modulo $n$. Thus, $S$ has $r$ elements. 
-
-\subsection*{A4.14}
-\textbf{Problem:} Suppose $g$ is a generator for $\textbf{Z}_n^*$. Show that $g$ must have order $\varphi(n)$.
-
-\textbf{Solution:} If $g$ generates $\textbf{Z}_n^*$, then every $a\in \textbf{Z}_n^*$ must be some power of $g$. Hence, $\textbf{Z}_n^*$ is cyclic. By the results from the previous exercise, the size of $\textbf{Z}_n^*$, which is $\varphi(n)$ must equal the order of the generator $g$.
-
-\subsection*{A4.15}
-\textbf{Problem:} \emph{Lagrange's theorem} (Theorem A2.1 on page 610) is an elementary result of group theory stating that the size of a subgroup must divide the order of the group. Use Lagrange's theorem to provide an alternative proof of Theorem A4.9, that is, show that $a^{\varphi(n)}=1\pmod{n}$ for any $a\in \textbf{Z}_n^*$.
-
-\textbf{Solution:} Consider the subgroup $A\subset G$ generated by $a$. Then the size of $A$ is the order of $a$, say, $r$. By Lagrange's theorem, r must divide $\varphi(n)$, the size of $\textbf{Z}_n^*$. That is, $\varphi(n) = k r$ for some $k\in\mathbb{Z}^+$. Given this,
-\begin{align}
-    a^{\varphi(n)} = a^{kr} = (a^r)^k = 1^k = 1
-\end{align}
-where all values are taken modulo $n$. This proves Euler's generalization of the little theorem.
-
-\subsection*{A4.16}
-\textbf{Problem:} Use Theorem A4.9 to show that the order of $x$ modulo $N$ must divide $\varphi(N)$.
-
-\textbf{Solution:} This follows directly from Lagrange's theorem (see the previous cluster of exercises). We've already shown that the size of a cyclic subgroup of $\textbf{Z}_n^*$ is the order of a generating element. Lagrange's theorem says this order $r$ must divide the size of the larger group $\textbf{Z}_n^*$, which is $\varphi(n)$.
-
-\subsection*{A4.17}
-\textbf{Problem:} 
-
-\textbf{Solution:}
-
-\subsection*{A4.18}
-\textbf{Problem:} 
-
-\textbf{Solution:}
-
-\subsection*{A4.19}
-\textbf{Problem:} 
-
-\textbf{Solution:}
+        a \\
+        b \\
+        c
+    \end{pmatrix}
+    =0
+    \end{align}
+    using standard techniques of linear algebra (such as row reduction).
+
+\section*{Exercise 2.2: (Matrix representations: example)}
+    Suppose $V$ is a vector space with basis vectors $\ket{0}$ and $\ket{1}$, and $A$ is a linear operator from $V$ to $V$ such that $A\ket{0}=\ket{1}$ and $A\ket{1}=\ket{0}$. Give a matrix representation for $A$, with respect to the input basis $\ket{0}, \ket{1}$, and the output basis $\ket{0}, \ket{1}$. Find input and output bases which give rise to a different matrix representation of $A$.
+    
+    \textbf{Solution:} Making the identification
+    \begin{align}
+    \ket{0} =
+    \begin{pmatrix}
+        1 \\
+        0
+    \end{pmatrix}, \quad
+    \ket{1} =
+    \begin{pmatrix}
+        0 \\
+        1
+    \end{pmatrix}
+    \end{align}
+    it is easy to see that the matrix representation $M$ of $A$ must be 
+    \begin{align}
+        M = 
+        \begin{pmatrix}
+            0 & 1 \\
+            1 & 0
+        \end{pmatrix}.
+    \end{align}
+    On the other hand, say we choose the output basis to be $\ket{1},\ket{0}$ instead of $\ket{0},\ket{1}$ (note that order matters). In this case, $M$ would take the form of the identity matrix.
+
+\section*{Exercise 2.3: (Matrix representation for operator products)}
+    Suppose $A$ is a linear operator from vector space $V$ to vector space $W$, and $B$ is a linear operator from vector space $W$ to vector space $X$. Let $\ket{v_i}, \ket{w_j}$, and $\ket{x_k}$ be bases for the vector spaces $V, W$, and $X$ respectively. Show that the matrix representation for the linear transformation $BA$ is the matrix product of the matrix representations for $B$ and $A$, with respect to the appropriate bases.
+    
+    \textbf{Solution:} Let us compute the action of $BA$ on a basis vector $\ket{v_i}$.
+    \begin{align}
+    \begin{aligned}
+        BA\ket{v_i} &= B(A\ket{v_i}) \\
+        &= B(\sum_j A_{ji}\ket{w_j}) \\
+        &= \sum_j A_{ji}B\ket{w_j} \\
+        &= \sum_j\sum_k A_{ji}B_{kj}\ket{x_k} \\
+        &= \sum_k \left(\sum_j B_{kj}A_{ji}\right) \ket{x_k} \\
+        &= \sum_k (BA)_{ki} \ket{x_k}.
+    \end{aligned}
+    \end{align}
+    In the last step, we identified the coefficient as the product of the two matrix representations of $A$ and $B$. This gives the result.
+    
+\section*{Exercise 2.4: (Matrix representation for the identity)}
+    Show that the identity operator on a vector space $V$ has a matrix representation which is one along the diagonal and zero everywhere else, if the matrix representation is taken with respect to the same input and output bases. This matrix is known as the \emph{identity matrix}.
+    
+    \textbf{Solution:} Let $\mathbb{1}$ be the matrix representation of the identity operator $I$ with respect to some basis $\left\{\ket{v_i}\right\}$. Then,
+    \begin{align}
+        I\ket{v_i} = \ket{v_i} = \sum_j \delta_{ji}\ket{v_j},
+    \end{align}
+    where $\delta_{ji}$ is the Kronecker delta. The coefficients $\delta_{ji}$ are exactly those of the identity matrix $\mathbb{1}$, hence the identity matrix is the matrix representation of $I$.
+    
+\section*{Exercise 2.5}
+    Verify that $(\cdot,\cdot)$ just defined is an inner product on $\mathbb{C}^n$.
+    
+    \textbf{Solution:} 
+
+\chapter{The Quantum Fourier Transform and its applications}{5}
+
+
+\section*{Exercise 5.1}
+    Give a direct proof that the linear transformation defined by Equation (5.2) is unitary.
+    
+    \textbf{Solution:} It suffices to show that, for any two computational basis states $\ket{j}, \ket{k}$,
+    
+    \begin{align} \label{eq:5.1:QFT_unitary}
+        \bra{j}(QFT)^\dagger(QFT)\ket{k} = \braket{j}{k} = \delta_{ij}.
+    \end{align}
+    
+    To do this, we substitute the definition into the above equation. 
+    \begin{align} \label{eq:5.1:expand_and_simplify}
+    \begin{aligned}
+        \bra{k}(QFT)^\dagger(QFT)\ket{j} &= \Big(\frac{1}{\sqrt{N}}\sum_{p=0}^{N-1}e^{-2\pi ikp/N}\bra{p}\Big)\Big(\frac{1}{\sqrt{N}}\sum_{q=0}^{N-1}e^{2\pi ijq/N}\ket{q}\Big) \\
+        &= \frac{1}{N}\sum_{p=0}^{N-1}\sum_{q=0}^{N-1}e^{2\pi i(jq-kp)/N}\braket{p}{q} \\
+        &= \frac{1}{N}\sum_{p=0}^{N-1} e^{2\pi i (j-k)p/N}
+    \end{aligned}
+    \end{align}
+    where in the last step we used the orthonormality of the $p,q$ states to eliminate one of the sums. Clearly, if $j=k$, the result is exactly one, as desired. Otherwise, $j-k$ is a nonzero integer, say $n$, such that $\abs{n}<N$. We will show that in this case the sum above is zero. 
+    
+    The basic idea is that we are taking a sum over phases which are symmetrically distributed around the unit circle, so the result must be zero. To make this argument rigorous, multiply the sum by $e^{2\pi i n/N}$.
+    \begin{align}
+        e^{2\pi i n/N}\sum_{p=0}^{N-1}\big(e^{2\pi i n/N}\big)^p = \sum_{p=0}^{N-1}\big(e^{2\pi i n/N}\big)^{p+1} = \sum_{p=1}^{N}\big(e^{2\pi i n/N}\big)^{p}
+    \end{align}
+    In the last equation we simply reindexed. Because of the $N$-periodicity, $\big(e^{2\pi i n/N}\big)^N = 1 = \big(e^{2\pi i n/N}\big)^0$. Hence, we see that the sum is left unchanged by the multiplication. Since $e^{2\pi i n/N} \neq 1$, the sum must in fact be zero. This completes the proof.
+
+\section*{Exercise 5.2}
+    Explicitly compute the Fourier transform of the $n$ qubit state $\ket{00...0}$.
+    
+    \textbf{Solution:} Suppose there are $n$ qubits, so that $N=2^n$. Using the definition given directly above in the textbook,
+    \begin{align}
+        \ket{00...0} &\rightarrow \frac{1}{2^{n/2}} \sum_{k=0}^{2^n-1}e^0 \ket{k} \\
+        &= \frac{1}{2^{n/2}}\sum_{k=0}^{2^n-1}\ket{k},
+    \end{align}
+    which is simply a uniform superposition over the computational basis states. Evidently, the QFT on the zero state simply acts the same as Hadamards on all the qubits!
+    
+    We remark that this result is consistent with the interpretation that the Fourier transform decomposes a ``signal" into its frequency components. Here, the signal was a sharp spike, which requires an large spread in frequency to construct. Conversely, a uniform superposition without phases is like a constant function signal, which has a frequency of zero. 
+
+\section*{Exercise 5.3 (Classical fast Fourier transform)} 
+    Suppose we wish to perform a Fourier transform of a vector containing $2^n$ complex numbers on a classical computer. Verify that the straightforward method for performing the Fourier transform, based upon direct evaluation of Equation (5.1) requires $\Theta(2^{2n})$ elementary arithmetic operations. Find a method for reducing this to $\Theta(n2^n)$ operations, based upon Equation (5.4).
+    There are $2^n$ complex numbers we need to compute, which are the output amplitudes of the Fourier transform. If we compute each one using (5.1), each such amplitude involves a sum which contains $2^n$ terms. Thus, there will be $2^n \times 2^n = 2^{2n}$ summations and therefore at least as many arithmetic operations.
+    
+    \textbf{Solution:} Let's now consider a computation based on the factored form of the QFT, Equation (5.4). As before, this involves a computation of $2^n$ amplitudes, one for each bitstring $k = k_1k_2...k_n$. Using (5.4) the amplitude $a_{k}$ corresponding to the state $\ket{k}$ is given by
+    \begin{align}
+        \bra{k}QFT\ket{j} = \frac{1}{2^{n/2}}\big(\delta_{k_1 0}+e^{2\pi i0.j_n}\delta_{k_1 2}\big)\big(\delta_{k_2 0}+e^{2\pi i0.j_{n-1}j_n}\delta_{k_2 2}\big)...\big(\delta_{k_n 0}+e^{2\pi i0.j_1...j_n}\delta_{k_n 2}\big).
+    \end{align}
+    where $\ket{j}$ is our input state. This involves a multiplication of $n$ terms, hence there are $n\times 2^n$ total multiplications. This is a lower bound for the number of operations. 
+
+\section*{Exercise 5.4}
+    Give a decomposition of the controlled-$R_k$ gate into single qubit and \text{CNOT} gates.
+    
+    \textbf{Solution:} We use the $ABC$ construction of Corollary 4.2 to make our controlled $R_k$ according to Figure 4.6. First, note that
+    \begin{align}
+        R_k = 
+        \begin{pmatrix}
+            1 & 0\\
+            0 & e^{2\pi i/2^k}\\
+        \end{pmatrix} = e^{2\pi i/2^{k+1}}
+        \begin{pmatrix}
+            e^{-2\pi i/2^{k+1}} & 0 \\
+            0 & e^{2\pi i/2^{k+1}}
+        \end{pmatrix} = e^{i\alpha}R_z(\beta)
+    \end{align}
+    where $\alpha = 2\pi/2^{k+1}$ and $\beta = 2\pi/2^k$. Comparing this to the Euler decomposition formula of Theorem 4.1, we set $\gamma =\delta = 0$. Following through the steps, this implies,
+    \begin{align}
+    \begin{aligned}
+        A &= R_z(\beta) \\
+        B &= R_z(-\beta/2)\\
+        C &= R_z(-\beta/2)
+    \end{aligned}
+    \end{align}
+    can be used in the $ABC$ construction of $R_k$. As a final step, primarily one of cosmetics, we notice these gates are related to the $R_k$ through global phases which cancel each other out. Thus, the following circuit implements the controlled-$R_k$, as is easy to verify.
+    \begin{align}
+        \Qcircuit @C=1em @R=1.6em {
+            \qw & \ctrl{1} & \qw & & & \qw & \qw & \ctrl{1} & \qw & \ctrl{1} & \gate{R_{k+1}} & \qw\\
+            \qw & \gate{R_k} & \qw & \raisebox{2.2em}{=} & & \qw & \gate{R_{k+1}^\dagger} & \targ & \gate{R_{k+1}^\dagger} & \targ & \gate{R_k} & \qw
+        } 
+    \end{align}
+
+\section*{Exercise 5.5} 
+    Give a quantum circuit to perform the inverse quantum Fourier transform.
+
+    \textbf{Solution:} Here is the circuit for six qubits (generated using qiskit).
+    \begin{equation*}
+        \Qcircuit @C=1.0em @R=0.0em @!R {
+    	 	\lstick{ {q}_{0} :  } \barrier[0em]{5} & \qw & \qw \barrier[0em]{5} & \qw & \qw & \qw & \qw \barrier[0em]{5} & \qw & \qw & \qw & \qw & \qw & \qw \barrier[0em]{5} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw \barrier[0em]{5} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw \barrier[0em]{5} & \qw & \ctrl{5} & \dstick{\frac{-\pi}{32}}\qw & \ctrl{4} & \dstick{\frac{-\pi}{16}}\qw & \ctrl{3} & \dstick{\frac{-\pi}{8}}\qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw\\
+    	 	\lstick{ {q}_{1} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{4} & \dstick{\frac{-\pi}{16}}\qw & \ctrl{3} & \dstick{\frac{-\pi}{8}}\qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw\\
+    	 	\lstick{ {q}_{2} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{3} & \dstick{\frac{-\pi}{8}}\qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+    	 	\lstick{ {q}_{3} :  } & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{2} & \dstick{\frac{-\pi}{4}}\qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+    	 	\lstick{ {q}_{4} :  } & \qw & \qw & \qw & \ctrl{1} & \dstick{\frac{-\pi}{2}}\qw & \gate{H} & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+    	 	\lstick{ {q}_{5} :  } & \qw & \gate{H} & \qw & \control \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \control \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw & \qw\\
+    	 }
+    \end{equation*}
+    Here, the vertical line segments are the $R_k$ gates, where the number alongside indicate angle of phase rotated. Like the inverse to any quantum circuit, can be obtained by reversing the order of the gates and taking the inverse of each gate. Note the Hadamard $H$ is self-inverse.
+
+\section*{Exercise 5.6 (Approximate quantum Fourier transform)}
+    The quantum circuit construction of the quantum Fourier transform apparently requires gates of exponential precision in the number of qubits used. However, such precision is never required in any quantum circuit of polynomial size. For example, let $U$ be the ideal quantum Fourier transform on $n$ qubits, and $V$ be the transform which results if the controlled-$R_k$ gates are performed to a precision $\Delta = 1/p(n)$ for some polynomial $p(n)$. Show that the error $E(U, V) \equiv max_{\ket{\psi}} \left\|(U - V)\ket{\psi}\right\|$ scales as $\Theta(n^2/p(n))$, and thus polynomial precision in each gate is sufficient to guarantee polynomial accuracy in the output state.
+
+    \textbf{Solution:} First we will show a more general result (one which will be further generalized in part 3 of the book, when discussing quantum channels). Let $\mc{X}$ and $\mc{Y}$ be quantum gates, and let $X$ and $Y$ be gates which we will think of as approximating $\mc{X}$ and $\mc{Y}$ respectively. We will show that
+    \begin{align}
+        E(\mc{XY},XY) \leq E(\mc{X},X) + E(\mc{Y},Y).
+    \end{align}
+    To proceed, we set things up to make use of our friend: the triangle inequality. For any state $\ket{\psi}$ we have
+    \begin{align}
+        \left\|(\mc{XY}-XY)\ket{\psi}\right\|&=\left\|(\mc{X}\mc{Y}-X\mc{Y}+X\mc{Y}-XY)\ket{\psi}\right\| \\
+        &= \left\|(\mc{X}-X)\mc{Y}\ket{\psi}+X(\mc{Y}-Y)\ket{\psi}\right\| \\
+        &\leq \left\|(\mc{X}-X)\mc{Y}\ket{\psi}\right\|+\left\|X(\mc{Y}-Y)\ket{\psi}\right\|
+    \end{align}
+    Since this inequality holds for any $\ket{\psi}$, it certainly holds if we take the max of both sides. Hence,
+    \begin{align}
+        E(\mc{XY},XY) \leq \max_{\ket{\psi}} \left(\left\|(\mc{X}-X)\mc{Y}\ket{\psi}\right\|+\left\|X(\mc{Y}-Y)\ket{\psi}\right\|\right)
+    \end{align}
+    Certainly, the maximum of a sum $A+B$ is less than (or equal to) maximizing each individual piece $A,B$, so we may distribute the $\max$ function and maintain the inequality. Let's consider each term on the left hand side. Since $\mc{Y}$ is unitary, it is a bijection on the space of valid states. Hence, we can maximize over $\ket{\phi} = \mc{Y}\ket{\psi}$ instead. Now consider the rightmost term. Since $X$ is unitary, it preserves norm. Altogether,
+    \begin{align}
+         E(\mc{XY},XY) &\leq \max_{\ket{\phi}}\left\|(\mc{X}-X)\ket{\phi}\right\| + \max_{\ket{\psi}}\left\|(\mc{Y}-Y)\ket{\psi}\right\|\\
+         &= E(\mc{X},X) + E(\mc{Y},Y).
+    \end{align}
+    This places a bound on the error when composing imperfect gates. Moreover, this bound is tight, since if $X=\mc{X}$ and $Y=\mc{Y}$ we get strict equality. 
+    We can generalize this result, by simple induction, to arbitrary sequences of gates with corresponding approximations. Thus, in our present case, if each controlled $R_k$ has precision $\Delta$, 
+    \begin{align}
+        E(U,V) \leq \frac{n(n+1)}{2}\Delta \in \Theta(n^2 \Delta).
+    \end{align}
+    Here, the use of $\Theta$ is appropriate rather than $\mc{O}$ since our bound is tight.
+
+\section*{Exercise 5.7}
+    Additional insight into the circuit in Figure 5.2 may be obtained by showing, as you should now do, that the effect of the sequence of controlled-$U$ operations like that in Figure 5.2 is to take the state $\ket{j}\ket{u}$ to $\ket{j}U^j\ket{u}$. (Note that this does not depend on $\ket{u}$ being an eigenstate of $U$.)
+
+    \textbf{Solution:} Suppose there are $t$ qubits in the first register, so the integer $j$ can be expressed in binary as $j_{t-1}...j_1j_0$, with $j_k \in \{0,1\}$ for every $0\leq k < t$. By definition, this means $j = j_0 + 2j_1 + ... + 2^{t-1}j_{t-1}$. The state $\ket{j}$ has tensor product form
+    \begin{align}
+        \ket{j} = \bigotimes_{k=0}^{t-1} \ket{j_k} \equiv \ket{j_{t-1}}...\ket{j_{0}}.
+    \end{align}
+    The action of the controlled-$U^2k$ controlled on the $k$th qubitis given by
+    \begin{align}
+        \ket{j_k}\ket{u} \longrightarrow  \ket{j_k} U^{2^k j_k}\ket{u}
+    \end{align}
+    as can be readily verified. Thus, the full sequence of controlled gates acts as follows.
+    \begin{align}
+    \begin{aligned}
+        \ket{j}\ket{u} = \bigotimes_{k=0}^{t-1} \ket{j_k}\ket{u} \longrightarrow &\ket{j}U^{2^{t-1}j_{t-1}}...U^{2^0 j_0}\ket{u} \\
+        = &\ket{j}U^{2^0 j_0 + ... + 2^{t-1} j_{t-1}}\ket{u} \\
+        = &\ket{j}U^j\ket{u}
+    \end{aligned}
+    \end{align}
+    In the last step we reused the definition of $j$ being expressed in binary. This gives the desired result, which, as we see, did not rely on particular knowledge of the state $\ket{u}$.
+
+\section*{Exercise 5.8}
+    Suppose the phase estimation algorithm takes the state $\ket{0}\ket{u}$ to the state $\ket{\tilde{\varphi}_u}\ket{u}$, so that the input $\ket{0}\big(\sum_u c_u\ket{u}\big)$, the algorithm outputs $\sum_u c_u\ket{\tilde{\varphi}_u}\ket{u}$. Show that if $t$ is chosen according to (5.35), then the probability for measuring $\varphi_u$ accurate to $n$ bits at the conclusion of the phase estimation algorithm is at least $\abs{c_u}^2(1-\epsilon)$.
+
+    \textbf{Solution:} If $t$ is chosen as such, then $\tilde{\varphi}_u$ is an $n$-bit approximation to $\varphi_u$ with probability $p_{succ} \geq (1-\epsilon)$. Meanwhile, the probability of measuring $\tilde{\varphi}_u$ on the first register is given by the Born rule: $p_u = \abs{c_u}^2$. These two events are independent, hence, the probability of measuring $\tilde{\varphi}_u$ \emph{and} having it be an $n$-bit approximation is
+    \begin{align} \label{eq:lower bound}
+        p_u p_{succ} \geq \abs{c_u}^2 (1-\epsilon).
+    \end{align}
+    Moreover, any other eigenstate $\ket{v}$ of $U$ such that $\varphi_v \neq \varphi_u$ might still result in an $n$-bit approximation to $\varphi_u$, provided they are sufficiently close (it may even be that $\tilde{\varphi}_v = \tilde{\varphi}_u$). This will only further increase the probability of success. In any case, the right side of \eqref{eq:lower bound} remains a lower bound. 
+
+\section*{Exercise 5.9}
+    Let $U$ be a unitary transform with eigenvalues $\pm 1$, which acts on a state $\ket{\psi}$. Using the phase estimation procedure, construct a quantum circuit to collapse $\ket{\psi}$ into one or the other of the two eigenspaces of $U$, giving also a classical indicator as to which space the final state is in. Compare your result with Exercise 4.34.
+
+    \textbf{Solution:} If the eigenvalues of $U$ are $1$ and $-1$, the corresponding phases are $0.0$ and $0.1$ respectively. Because these phases are finite bitstrings, there is no possibility of error and, in fact, we can take $t = n$, which in our case is $1$. The inverse-QFT on one qubit is simply the Hadamard, and our circuit reduces to the following.
+    \begin{align}
+        \Qcircuit @C=1.0em @R=1.6em{
+            \lstick{\ket{0}} & \gate{H} & \ctrl{1} & \gate{H} & \meter & \qw \\
+            \lstick{\ket{\psi}} & \qw & \gate{U} & \qw & \qw & \qw
+        }
+    \end{align}
+    If a $0$ ($1$) is measured, the final state is known to be in the plus (minus) subspace. The probability of each outcome is simply related to the initial overlap with each subspace via the Born rule. 
+
+\section*{Exercise 5.10}
+    Show that the order of $x=5$ modulo $N=21$ is 6.
+    
+    \textbf{Solution:} We proceed by exhaustive calculation.
+    \begin{align}
+    \begin{aligned}
+        5^1 \bmod 21 &= 5 \\
+        5^2 \bmod 21 &= 4 \\
+        5^3 \bmod 21 &= 20\\
+        5^4 \bmod 21 &= 16\\
+        5^5 \bmod 21 &= 17\\
+        5^6 \bmod 21 &= 1
+    \end{aligned}
+    \end{align}
+    Hence, 6 is the smallest positive integer $r$ such that $5^r \bmod 21 = 1$. Thus, 6 is the order of 5 modulo 21.
+
+\section*{Exercise 5.11}
+    Show that the order of $x$ satisfies $r\leq N$.
+    
+    \textbf{Solution:} Consider the set $\{x^n \bmod N\}_{n=1}^N$. Because we assume $x$ and $N$ share no common factors, it is not possible for $x^n \bmod N = 0$. Hence, $0< x^n \bmod N < N$. By the pigeonhole principle, not all the values for $x^n \bmod N$ can be unique. There must exist some $x^i = x^j \bmod N$ for some $1\leq i,j \leq N$ and $j\neq i$. Assume $j>i$ without loss of generality. Then, we have
+    \begin{align}
+    \begin{aligned}
+        x^j-x^i &= 0 \bmod N \\
+        x^i(x^{j-i}-1) &=0 \bmod N.
+    \end{aligned}
+    \end{align}
+    This implies $N|x^i(x^{j-i}-1)$. But $N\nmid x^i$, again by assumption of no common factors. Hence, we must have $N|(x^{j-i}-1)$, or $x^{j-i} = 1 \bmod N$. Since $r$ is the smallest integer satisfying this condition, we must have $r\leq j-i < N$. Note this is a strict inequality, unlike what is given in the text.
+
+\section*{Exercise 5.12}
+    Show that $U$ is unitary (Hint: $x$ is co-prime to $N$, and therefore has an inverse modulo $N$).
+    
+    \textbf{Solution:} Since $U$ acts as a map on the computational basis states, it suffices to show this map is injective (one-to-one). If $y\geq N$, then $\ket{y}$ is mapped to itself. On the other hand, if $0\leq y < N$, then $\ket{y}$ is certainly mapped to some $\ket{z}$ where $z< N$. Hence, $U$ is injective on the subspace where $y\geq N$, and it suffices to focus on the case where $y< N$. To this end, suppose $U\ket{y} = U\ket{z}$ for $y,z < N$. Then,
+    \begin{align}
+    \begin{aligned}
+        xy\bmod{N} &= xz\bmod{N} \\
+        x(y-z) &= 0 \pmod{N}
+    \end{aligned}
+    \end{align}
+    This implies $N$ divides $x(y-z)$. However, since $N$ and $x$ are coprime, they share no common factors. This implies $N|(y-z)$. But $|y-z| < N$, so it must be that $y-z = 0$. Hence
+    \begin{align}
+        \ket{y} = \ket{z}
+    \end{align}
+    which proves that $U$ is injective on the basis, as desired.
+
+\section*{Exercise 5.13}
+    Prove (5.44). (\emph{Hint}:$\sum_{s=0}^{r-1}\exp(-2\pi i sk/r)=r\delta_{k0}$). In fact, prove that
+    \begin{align}
+        \frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}e^{2\pi isk/r}\ket{u_s} = \ket{x^k\bmod N}
+    \end{align}
+
+    \textbf{Solution:} Let us crank the wheel: putting in the definition of $\ket{u_s}$ to the left side of (5.44) and regrouping.
+    \begin{align}
+        \frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}e^{2\pi isk/r}\ket{u_s} &= \frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}e^{2\pi isk/r} \frac{1}{\sqrt{r}}\sum_{t=0}^{r-1}e^{-2\pi ist/r}\ket{x^t\bmod N} \\
+        &= \frac{1}{r}\sum_{s=0}^{r-1}\sum_{t=0}^{r-1}e^{2\pi is(k-t)/r}\ket{x^t\bmod N} \\
+        &=\frac{1}{r}\sum_{t=0}^{r-1}\ket{x^t\bmod N}\Big(\sum_{s=0}^{r-1}e^{2\pi is(k-t)/r}\Big)
+    \end{align}
+    Making gracious use of the hint, we see the rightmost sum on the last line equals $r\delta_{kt}$. Hence,
+    \begin{align}
+        \frac{1}{\sqrt{r}}\sum_{s=0}^{r-1}e^{2\pi isk/r}\ket{u_s} &= \sum_{t=0}^{r-1}\delta_{tk}\ket{x^t \bmod N} \\
+        &= \ket{x^k \bmod N}.
+    \end{align}
+    To obtain (5.44) from the text, simply set $k=0$.
+
+\section*{Exercise 5.14}
+    The quantum state produced in the order-finding algorithm, before
+    the inverse Fourier transform, is
+    \begin{align}
+        \ket{\psi} =\sum_{j=0}^{2^t-1}\ket{j}U^j\ket{1} =\sum_{j=0}^{2^t-1}\ket{j}\ket{x^j\bmod N}
+    \end{align}
+    if we initialize the second register as $\ket{1}$. Show that the same state is obtained if we replace $U^j$ with a \emph{different} unitary transform $V$, which computes
+    \begin{align}
+        V\ket{j}\ket{k} = \ket{j}\ket{k+x^j\bmod N},
+    \end{align}
+    and start the second register in the state $\ket{0}$. Also show how to construct $V$ using $O(L^3)$ gates.
+
+    \textbf{Solution:} It is obvious that, by setting $k=0$, we obtain the same output using $V$ as we would if $k=1$ and we had acted with $U$. To construct $V$ we can simply use the $U^j$ as before and store the result in an ancillary register whose initial value was one, then \emph{add} that result to the register initialized to 0. The addition step can be carried out bitwise, and only takes $O(L^2)$ gates naively. Hence, the algorithm remains $O(L^3)$ after this addition step.
+
+\chapter{Quantum Search Algorithms}{6}
+\section*{Exercise 6.1} 
+    Show that the unitary operator corresponding to the phase shift in the Grover iteration is $(2\ket{0}\bra{0}-I)$.
+    
+    \textbf{Solution:} For $\ket{x} = \ket{0}$,
+    \begin{align}
+        (2\ket{0}\bra{0}-I)\ket{0} = 2\ket{0}-\ket{0} = \ket{0}
+    \end{align}
+    Meanwhile, for $\ket{x} \neq \ket{0}$,
+    \begin{align}
+        (2\ket{0}\bra{0}-I)\ket{x} = 2\ket{0}\braket{0}{x}-\ket{x} = -\ket{x}
+    \end{align}
+    Altogether,
+    \begin{align}
+        (2\ket{0}\bra{0}-I)\ket{x} = (-1)^{\delta_{0x}}\ket{x}
+    \end{align}
+
+\section*{Exercise 6.2}
+    Show that the operation $(2\ket{\psi}\bra{\psi}-I)$ applied to a general state $\sum_k \alpha_k \ket{k}$ produces
+    \begin{align}
+        \sum_k \left(-\alpha_k+2\langle\alpha\rangle\right)\ket{k}
+    \end{align}
+    where $\langle\alpha\rangle \equiv \sum_k\alpha_k/N$ is the mean value of the $\alpha_k$. For this reason, $(2\ket{\psi}\bra{\psi}-I)$ is sometimes referred to as the \emph{inversion about mean} operation.
+    
+    \textbf{Solution:} By linearity,
+    \begin{align*}
+        (2\ket{\psi}\bra{\psi}-I)\sum_k \alpha_k\ket{k} &= \sum_k 2 \alpha_k\left(\ket{\psi}\bra{\psi}\right)\ket{k} - \sum_k \alpha_k\ket{k} \\
+        &= 2\ket{\psi}\sum_k\alpha_k\braket{\psi}{k}-\sum_k\alpha_k\ket{k}
+    \end{align*}
+    Because $\ket{\psi}$ is uniform superposition over the computational basis states, for all $k$ we have $\braket{\psi}{k}=1/\sqrt{N}$. Hence,
+    \begin{align}
+    (2\ket{\psi}\bra{\psi}-I)\sum_k \alpha_k\ket{k} &= \frac{2}{\sqrt{N}}\left(\sum_k\alpha_k\right)\ket{\psi} - \sum_k \alpha_k\ket{k} \\
+    &= 2\sqrt{N} \langle\alpha\rangle\ket{\psi} - \sum_k\alpha_k\ket{k}
+    \end{align}
+    Finally, we expand out the definition of $\ket{\psi}$ and cancel the factors of $\sqrt{N}$.This gives our result. 
+    \begin{align}
+        2\sqrt{N} \langle\alpha\rangle\ket{\psi} - \sum_k\alpha_k\ket{k} &= \sum_k\left(2\langle\alpha\rangle-\alpha_k\right)\ket{k}
+    \end{align}
+
+\section*{Exercise 6.3}
+    Show that in the $\ket{\alpha}, \ket{\beta}$ basis, we may write the Grover iteration as
+    \begin{align}
+        G = 
+        \begin{bmatrix} \label{eq:matrix_G}
+            \cos\theta & -\sin\theta \\
+            \sin\theta & \cos\theta
+        \end{bmatrix}
+    \end{align}
+    where $\theta$ is a real number in the range 0 to $\pi/2$ (assuming for simplicity that $M\leq N/2$; this limitation will be lifted shortly), chosen so that
+    \begin{align} \label{eq:theta_value}
+        \sin\theta =\frac{2\sqrt{M(N-M)}}{N}
+    \end{align}
+    
+    \textbf{Solution:} As discussed in the text, both the oracle $O$ and the reflection $2\ket{\psi}\bra{\psi}-I$ leave the subspace $V = span\left(\ket{\alpha},\ket{\beta}\right)$ invariant. Hence, so does the product $G$. Therefore, we will from here on speak of $G$ only in terms of its action on the 2-dimensional subspace $V = span\left(\ket{\alpha},\ket{\beta}\right)$, and consider the matrix representation in the orthonormal basis $\{\ket{\alpha},\ket{\beta}\}$. This representation is unitary (since $G$ itself is), and in fact it is orthogonal, since both $O$ and $(2\ket{\psi}\bra{\psi}-I)$ have real matrix elements. More specifically, $G$ is \emph{special} orthogonal, meaning it has determinant one, because it is the product of two reflections. All of this implies $G$ is a proper rotation in the plane, and any such matrix may be parametrized as equation \eqref{eq:matrix_G} for \emph{some} angle $\theta$. It remains to show $\theta$ satisfies relation \eqref{eq:theta_value}. To do this, we simply compute the matrix element $\bra{\beta}G\ket{\alpha}$.
+    \begin{align}
+    \begin{aligned}
+        \bra{\beta}G\ket{\alpha} &= \bra{\beta}\left(2\ket{\psi}\bra{\psi}-I\right)O\ket{\alpha} \\
+        &=\bra{\beta}\left(2\ket{\psi}\bra{\psi}-I\right)\ket{\alpha}\\
+        &=\bra{\beta}\left(2\ket{\psi}\braket{\psi}{\alpha}-\ket{\alpha}\right) \\
+        &=2\braket{\beta}{\psi}\braket{\psi}{\alpha},
+    \end{aligned}
+    \end{align}
+    where, along the way, we used the orthogonality of $\ket{\alpha},\ket{\beta}$ and the fact that $O\ket{\alpha} = \ket{\alpha}$. Finally, using the expression given in the text for $\ket{\psi}$ expanded in the $\ket{\alpha},\ket{\beta}$ basis, we arrive at our result. 
+    \begin{align}
+        \bra{\beta}G\ket{\alpha} = \sin\theta = \frac{2\sqrt{M(N-M)}}{N}
+    \end{align}
+    Note that, in fact, we did not require the assumption that $M\leq N/2$ in our derivation.
+
+
+\chapter*{Appendix 1: Notes on basic probability theory}
+
+
+\section*{Exercise A1.1} 
+    Prove Bayes' rule.
+    
+    \textbf{Solution:} From the definition of conditional probability, we have
+    \begin{align}
+        p(x,y) = p(y|x)p(x) = p(x|y)p(y)
+    \end{align}
+    Rearranging the last of these equations gives the desired result.
+
+\section*{Exercise A1.2}
+    Prove the law of total probability.
+    
+    \textbf{Solution:} We start with the notion that, in the joint probability distribution for $(X,Y)$, one sums over all outcomes of $X$ to get a probability distribution on $Y$ alone.
+    \begin{align}
+        p(y) = \sum_x p(x,y)
+    \end{align}
+    We arrive at our result by noting that, from the definition of conditional probability, $p(x,y) = p(y|x)p(x)$.
+
+\section*{Exercise A1.3}
+    Prove there exists a value of $x\geq\textbf{E}(X)$ such that $p(x)>0$.
+    
+    \textbf{Solution:} Suppose, for sake of contradiction, that every value $x$ of $X$ with nonzero probability has the property $x < \textbf{E}(X)$. Intuitively, we'd expect that the expectation value would have to be less then $\textbf{E}(X)$. Indeed, using the inequality in the definition of expectation value,
+    \begin{align}
+        \textbf{E}(X) = \sum_{x\in X} x p(x) < \textbf{E}(X)\sum_{x\in X}p(x) = \textbf{E}(X)
+    \end{align}
+    Hence, $\textbf{E}(X)<\textbf{E}(X)$, a clear contradiction. We conclude our premise was false, hence there does exist a value of $x\in X$ such that $x \geq \textbf{E}(X)$ and $p(x)>0$.
+
+\section*{Exercise A1.4} 
+    Prove that $\textbf{E}(X)$ is linear in $X$.
+    
+    \textbf{Solution:} The following computation gives us the result.
+    \begin{align}
+    \begin{aligned}
+        \textbf{E}(aX+bY) &= \sum_{(x,y)\in(X,Y)}(ax+by)p(x,y) \\
+        &= \sum_{x\in X}\sum_{y\in Y}axp(x,y) + byp(x,y) \\
+        &=\sum_{x\in X}ax\sum_{y\in Y}p(x,y) + \sum_{y\in Y}by\sum_{x\in X}p(x,y) \\
+        &=a\sum_{x\in X}x p(x) + b\sum_{y\in Y}yp(y) \\
+        &=a\textbf{E}(X) + b\textbf{E}(Y).
+    \end{aligned}
+    \end{align}
+    Here, $a,b$ are constants. Along the way, we used $p(x) = \sum_y p(x,y)$ and the definition of expectation value.
+
+\section*{Exercise A1.5}
+    Prove that for independent random variables $X$ and $Y$, \textbf{E}(XY) = \textbf{E}(X)\textbf{E}(Y).
+    
+    \textbf{Solution:} Recall that, for independent random variables, the joint probability distribution breaks into a product of individual probabilities. This yields the following computation.
+    \begin{align}
+    \begin{aligned}
+        \textbf{E}(XY) &= \sum_x\sum_y xy\,p(x,y)\\
+        &= \sum_x\sum_y xy\,p(x)p(y) \\
+        &= \sum_x p(x) \sum_y p(y) \\
+        &= \textbf{E}(X)\textbf{E}(Y)
+    \end{aligned}
+    \end{align}
+
+\section*{Exercise A1.6}
+    Prove Chebyshev's inequality.
+    
+    \textbf{Solution:} Our solution is taken from Kliesch and Roth, 2021. We start by proving  a more fundamental result: \emph{Markov's inequality}. Let $Y$ be a nonnegative random variable, and $t>0$. Then
+    \begin{align}
+        p(Y\geq t) \leq \frac{\textbf{E}(Y)}{t}.
+    \end{align}
+    To show this, let $\Omega$ be the set of outcomes over which our random variable $Y$ is defined. Consider the indicator function $\textbf{1}_A$ for some $A\subset\Omega$, defined as follows.
+    \begin{align}
+        \textbf{1}_A (\omega) = 
+        \begin{cases}
+            1 & y\in A \\
+            0 & y \notin A
+        \end{cases}
+    \end{align}
+    Take the particular choice $A = \{\omega\in \Omega| Y(\omega)\geq t\}$, one can observe that
+    \begin{align}
+        t \textbf{1}_A (\omega')\leq Y(\omega')
+    \end{align}
+    for any $\omega' \in \Omega$. Taking the expectation value of our results gives us Markov's inequality.
+    
+    To obtain Chebyshev's inequality, let $Y = \abs{X-\textbf{E}(X)}^2$ for some probability distribution $X$, and let $\lambda^2 = t/\Delta(X)^2$. Note that $\mathbf{E}(Y) = \Delta (X)^2$. Making these substitutions for $t$ and $Y$ gives
+    \begin{align}
+        p(|X-\mathbf{E}(X)|^2 \geq \lambda^2 \Delta(X)^2) &\leq \frac{1}{\lambda^2} \\
+        p(|X-\mathbf{E}(X)|\geq \lambda\Delta(X)) \leq \frac{1}{\lambda^2}
+    \end{align}
+    This proves our result.
+
+\chapter*{Appendix 4: Number theory}
+
+
+\section*{Exercise A4.1 (Transitivity)}
+    Show that if $a|b$ and $b|c$, then $a|c$.
+    
+    \textbf{Solution:} The premises imply, by definition, that there exist integers $j, k$ such that $b = a j$ and $c = b k$. Substituting the first of these two equations into the second, we see $c = a j k = a l$, where $l = j k \in \mathbb{Z}$. Hence, there exists an integer, namely $l$, such that $c = a l$, proving $a |c$.
+
+\section*{Exercise A4.2}
+    Show that if $d|a$ and $d|b$ then $d$ also divides a linear combination of $a$ and $b$, $ax+by$, where $x$ and $y$ are integers.
+    
+    \textbf{Solution:} From the definition of $d|a$ and $d|b$, there exist integers $j, k $ such that $a = d j$ and $b= dk$. Hence,
+    \begin{align}
+        ax + by = djx + dky = d(jx + ky).
+    \end{align}
+    Define $m = jx +ky \in \mathbb{Z}$. Then we see $ax + by = dm$. From the definition of dividing, we have $d|(ax+by)$. 
+
+\section*{Exercise A4.3} 
+    Suppose $a$ and $b$ are positive integers. Show that if $a|b$ then $a\leq b$. Conclude that if $a|b$ and $b|a$ then $a=b$.
+    
+    \textbf{Solution:} Suppose that $a|b$. Then there exists some $k\in \mathbb{Z}$ such that $b = ak$. By the hypothesis that $a$ and $b$ are positive, it must be that $k>0$. Hence, $k-1\geq0$. This, of course, implies
+    \begin{align}
+        b(k-1) \geq 0
+    \end{align}
+    since, again, b is nonnegative (positive, in fact). The result we desire comes from basic manipulations of inequalities.
+    \begin{align}
+    \begin{aligned}
+        b(k-1) \geq 0 &\implies bk \geq b \\
+        &\implies a \geq b
+    \end{aligned}
+    \end{align}
+    As an immediate corollary, if $a|b$ and $b|a$ (both being positive integers), we have $a\geq b$ and $b\geq a$. Of course, this implies $a = b$. Note that the assumption of positivity was crucial for the proof to hold, and indeed, it is easy to see how it can be broken if negative numbers are included.
+
+\section*{Exercise A4.4}
+    Find the prime factorizations of 697 and 36 300.
+    
+    \textbf{Solution:} I do not pretend to solve these in any mechanical fashion. Looking online, I notice 697 is a product of 41 and 17. Each of these numbers are themselves prime, so the prime factorization is 
+    \begin{align}
+        697 =41^1 17^1
+    \end{align}
+    
+    Unlike the first, the second number is easier to do in your head. We can pull out two factors of 10 and easily prime factor those. Meanwhile, 363 is divisible by 3, and then if you cared to memorize some perfect squares, $121= 11^2$. Altogether.
+    \begin{align}
+        36300 = 2^2 3^1 5^2 11^2.
+    \end{align}
+
+\section*{Exercise A4.5}
+    For $p$ a prime prove that all integers in the range 1 to $p-1$ have multiplicative inverses modulo $p$. Which integers in the range 1 to $p^2-1$ do not have multiplicative inverses modulo $p^2$?
+    
+    \textbf{Solution:} For any integer $a\in [1,p-1]$, $a$ is coprime with $p$. Hence, $a$ has an inverse modulo $p$. In the case of $p^2$, the only integer which is not coprime with $p^2$ in the range $[0,p^2-1]$ is $p$ itself. Every other integer in the range has a multiplicative inverse. 
+
+\section*{Exercise A4.6}
+    Find the multiplicative inverse of 17 modulo 24.
+    
+    \textbf{Solution:} We seek an positive integer $n<24$ such that $17 * n = 1 \bmod 24$. Without yet an efficient method, we can perform an exhaustive check by hand or with a computer. It turns out the answer is $n=17$ itself. 
+
+\section*{Exercise A4.7}
+    Find the multiplicative inverse of $n+1$ modulo $n^2$, where $n$ is any integer greater than 1.
+    
+    \textbf{Solution:} The answer, which might be reasonably guessed (or not). Is $n-1$.
+    \begin{align}
+        (n+1)(n-1) = n^2 - 1 = 1 \pmod n^2.
+    \end{align}
+
+\section*{Exercise A4.8 (Uniqueness of the inverse)}
+    Suppose $b$ and $b'$ are multiplicative inverses of $a$, modulo $n$. Prove that $b=b' \mod n$.
+    
+    \textbf{Solution:} If $b$ and $b'$ are both inverses of $a$, then $ab = ab' \pmod n$. This implies
+    \begin{align}
+        a(b-b') = 0 \pmod n.
+    \end{align}
+    From this, we conclude $n|a(b-b')$. But we also know, by Corollary A4.4, that $n$ and $a$ are coprime. Hence, $n|(b-b')$, so $b=b' \pmod{n}$.
+
+\section*{Exercise A4.9}
+    Explain how to find $\gcd(a,b)$ if the prime factorizations of $a$ and $b$ are known. Find the prime factorizations of 6825 and 1430, and use them to compute $\gcd(6825,1430)$.
+    
+    \textbf{Solution:} If the prime factorization of $a$ and $b$ are known, simply find the largest set (counting multiplicity) of shared prime factors. 
+
+    The prime factorization of 6285 and 1430 are $3^1 5^1 15^1 419^1$ and $2^1 5^1 11^1 13^1$ respectively. The only shared prime factor is $5$, hence this is also the gcd.
+
+\section*{Exercise A4.10}
+    What is $\varphi(187)$?
+    
+    \textbf{Solution:} The prime factorization of $187$ is $11\times17$. Hence,
+    \begin{align}
+        \varphi(187) = \varphi(17\times 11) = \varphi(17)\varphi(11) = 16 \times 10 = 160
+    \end{align}
+
+\section*{Exercise A4.11}
+    \textbf{Problem:} Prove that
+    \begin{align}
+        n = \sum_{d|n} \varphi(d)
+    \end{align}
+    where the sum is over all positive divisors $d$ of $n$, including 1 and $n$. (\emph{Hint:} Prove the result for $n=p^\alpha$ first, then use the multiplicative property (A4.22) of $\varphi$ to complete the proof.
+
+    \textbf{Solution:} Follow the advice of the hint, suppose $n=p^\alpha$ where $p$ is prime. The divisors of $n$ are $p^j$, where $0\leq j \leq \alpha$. Hence, starting from the right hand side,
+    \begin{align}
+    \begin{aligned}
+        \sum_{d|n} \varphi(d) = \sum_{j=0}^\alpha \varphi(p^j) &=1 +  \sum_{j=1}^\alpha p^{j-1}(p-1)\\
+        &= 1+ (p-1)\sum_{j=1}^\alpha p^{j-1} \\
+        &= 1 + \sum_{j=0}^\alpha p^j -\sum_{j=0}^\alpha p^{j-1} \\
+        &= p^\alpha,
+    \end{aligned}
+    \end{align}
+    where, in the last step, all but $p^\alpha$ cancel from subtractions. This proves the result when $n$ is a power of a prime.
+    
+    To generalize the argument, we use the fundamental theorem of arithmetic, which says any $n\in \mathbb{Z}$ has a prime factorization.
+    \begin{align}
+        n = p_1^{\alpha_1}p_2^{\alpha_2}...p_m^{\alpha_m}.
+    \end{align}
+    Since all terms are powers of prime, they are coprime with each other, and we may use the multiplicative property of $\varphi$.
+    \begin{align} \label{eq:n_to_primes}
+    \begin{aligned}
+        \varphi(n) &= \prod_{j=1}^{m}\varphi(p_j^{\alpha_j}) \\
+        &= \prod_{j=1}^m \sum_{k_j=0}^{\alpha_j}\varphi(p^{k_j})
+    \end{aligned}
+    \end{align}
+    In the second step we used the first result derived above for powers of primes. By repeated use of the distributive property, the sum and product in the second line of \eqref{eq:n_to_primes} can be reversed, and cast as a sum over $m$ variables.
+    \begin{align}
+    \begin{aligned}
+        \prod_{j=1}^m \sum_{k_j=0}^{\alpha_j}\varphi(p^{k_j}) &= \sum_{k_1=0}^{\alpha_1}\sum_{k_2=0}^{\alpha_2} \dots \sum_{k_m=0}^{\alpha_m} \prod_{j=1}^m \varphi(p^{k_j}) \\
+        &= \sum_{k_1=0}^{\alpha_1}\sum_{k_2=0}^{\alpha_2} \dots \sum_{k_m=0}^{\alpha_m} \varphi(p^{k_1}p^{k_2}...p^{k_m})
+    \end{aligned}
+    \end{align}
+    A careful examination of this last equation reveals it is nothing more than a sum over all possible divisors $d$ of $n$, expressed via the prime factorization. Hence,
+    \begin{align}
+        \varphi(n) = \sum_{d|n} \varphi(d)
+    \end{align}
+    as desired.
+
+\section*{Exercise A4.12}
+    Verify that $\textbf{Z}_n^*$ forms a group of size $\varphi(n)$ under the operation of multiplication modulo $n$.
+    
+    \textbf{Solution:} That $\textbf{Z}_n^*$ is a set of size $\varphi(n)$ follows directly from the definition of $\varphi$. Let $a,b \in \textbf{Z}_n^*$, with inverses $a^{-1}, b^{-1}$. Then, the product $ab$ has inverse $a^{-1}b^{-1}$, hence is in $\textbf{Z}_n^*$ (note the order doesn't matter since multiplication is commutative). Thus, the set is closed under the binary operator. Moreover, multiplication modulo $n$ is associative. Finally, it is easy to see that $1\in \textbf{Z}_n^*$ (being its own inverse) and it acts as the identity operator. Of course inverses exist, by definition, therefore we have shown that $\textbf{Z}_n^*$ satisfies the properties of a group under multiplication modulo $n$.
+
+\section*{Exercise A4.13}
+    Let $a$ be an arbitrary element of $\textbf{Z}_n^*$. Show that $S\equiv \{1,a,a^2,...\}$ forms a subgroup of $\textbf{Z}_n^*$, and that the size of $S$ is the least value of $r$ such that $a^r = 1\pmod{n}$.
+    
+    \textbf{Solution:} For any finite group G, if I take a single element $g\in G$ and generate a subset $S \subset G$ by repeatedly multiplying $g$ by itself, the result will be a subgroup (when I include the induced binary operation). More generally, I can have multiple generators $g_1, g_2, ..., g_m$ and the result will still be a subgroup. Note this does not hold for infinite groups such as $\mathbb{Z}$, unless we allow negative exponents.
+    
+    If $r$ is the smallest positive integer satisfying $a^r = 1\pmod{n}$, it follows that each $a^i$ is unique for $i=0,1,...,r-1$. Otherwise, $a^i = a^j$ for some $i,j <r$, which implies $a^{j-i}=1$. This contradicts the assertion that $r$ is the \emph{least} such value. Hence, $S$ has at least $r$ values. In fact, it cannot have more than $r$ unique values, since for any $k>r$ we have
+    \begin{align}
+        k = qr + i
+    \end{align}
+    for some $q\in\mathbb{Z}^+$ and $i<r$. But this will give the same power of $a$ as $i$ does.
+    \begin{align}
+        a^k = a^{qr + i} = (a^r)^q a^i = 1^q a^i = a^i
+    \end{align}
+    Here all powers are taken modulo $n$. Thus, $S$ has $r$ elements. 
+
+\section*{Exercise A4.14}
+    Suppose $g$ is a generator for $\textbf{Z}_n^*$. Show that $g$ must have order $\varphi(n)$.
+    
+    \textbf{Solution:} If $g$ generates $\textbf{Z}_n^*$, then every $a\in \textbf{Z}_n^*$ must be some power of $g$. Hence, $\textbf{Z}_n^*$ is cyclic. By the results from the previous exercise, the size of $\textbf{Z}_n^*$, which is $\varphi(n)$ must equal the order of the generator $g$.
+
+\section*{Exercise A4.15}
+    \emph{Lagrange's theorem} (Theorem A2.1 on page 610) is an elementary result of group theory stating that the size of a subgroup must divide the order of the group. Use Lagrange's theorem to provide an alternative proof of Theorem A4.9, that is, show that $a^{\varphi(n)}=1\pmod{n}$ for any $a\in \textbf{Z}_n^*$.
+    
+    \textbf{Solution:} Consider the subgroup $A\subset G$ generated by $a$. Then the size of $A$ is the order of $a$, say, $r$. By Lagrange's theorem, r must divide $\varphi(n)$, the size of $\textbf{Z}_n^*$. That is, $\varphi(n) = k r$ for some $k\in\mathbb{Z}^+$. Given this,
+    \begin{align}
+        a^{\varphi(n)} = a^{kr} = (a^r)^k = 1^k = 1
+    \end{align}
+    where all values are taken modulo $n$. This proves Euler's generalization of the little theorem.
+
+\section*{Exercise A4.16}
+    Use Theorem A4.9 to show that the order of $x$ modulo $N$ must divide $\varphi(N)$.
+    
+    \textbf{Solution:} This follows directly from Lagrange's theorem (see the previous cluster of exercises). We've already shown that the size of a cyclic subgroup of $\textbf{Z}_n^*$ is the order of a generating element. Lagrange's theorem says this order $r$ must divide the size of the larger group $\textbf{Z}_n^*$, which is $\varphi(n)$.
+
+\section*{Exercise A4.17 (Reduction of order-finding to factoring)}
+    We have seen that an efficient order-finding algorithm allows us to factor efficiently. Show that an efficient factoring algorithm would allow us to efficiently find the order modulo $N$ of any $x$ co-prime to $N$.
+    
+    \textbf{Solution:}
+
+\section*{Exercise A4.18}
+    Find the continued fraction expansion for $x=19/17$ and $x=77/65$
+
+    \textbf{Solution:} In both cases we apply the repeated fraction algorithm. The case $x=19/17$ is only a few steps.
+    \begin{align}
+        \frac{19}{17} = 1 + \frac{2}{17} = 1 + \frac{1}{\frac{17}{2}} = 1+\frac{1}{8+\frac{1}{2}} 
+    \end{align}
+    For the case $x=77/65$, we have to work a little harder. Here are the intermediate steps.
+    \begin{align}
+    \begin{aligned}
+        77/65 &= 1 + 12/65 \\
+        65/12 &= 5 + 5/12 \\
+        12/5 &= 2 + 2/5 \\
+        5/2 &= 2 + 1/2.
+    \end{aligned}
+    \end{align}
+    Hence the result is
+    \begin{align}
+        \frac{77}{65} = 1 + \frac{1}{5 + \frac{1}{2+\frac{1}{2+\frac{1}{2}}}}
+    \end{align}
+
+\section*{Exercise A4.19}
+    Show that $q_n p_{n-1}-p_n q_{m-1}=(-1)^n$ for $n\geq 1$. Use this fact to conclude that $\gcd(p_n,q_n)=1$. (\emph{Hint:} Induct on $n$.)
+    
+    \textbf{Solution:} As the hint suggests, we proceed by induction on $n$. In the case $n=1$, using the definitions provided in the text,
+    \begin{align}
+        q_1 p_0-p_1 q_0 = a_1 a_0-(1+a_0 a_1)1 = -1
+    \end{align}
+    as desired. By inductive hypothesis, assume the statement holds for $n=m$. Then, using the recursive definition for $p$ and $q$,
+    \begin{align}
+        q_{m+1}p_m - p_{m+1}q_m &= \left(a_{m+1}q_m + q_{m-1}\right)p_m-\left(a_{m+1}p_m+p_{m+1}\right)q_m \\
+        &= \cancel{a_{m+1}q_m p_m} + q_{m-1}p_m-\cancel{a_{m+1}p_m q_m} -p_{m-1}q_m \\
+        &=-(q_m p_{m-1}-p_m q_{m-1}) \\
+        &= (-1)^m+1,
+    \end{align}
+    where in the last step we invoked the inductive hypothesis. Hence, the statement also holds for $n=m+1$. By induction, the statement holds for all $n\geq 1$.
+    
+    Note that the result may be reexpressed as 
+    \begin{align}
+        (-1)^n(q_n p_{n-1}-p_n q_{n-1}) = 1.
+    \end{align}
+    By Theorem A4.2, we must have $\gcd(p_n,q_n)=1$.
+
+\section*{Problem 4.1 (Prime number estimate)}
+    Let $\pi(n)$ be the number of prime numbers which are less than $n$. A difficult-to-prove result known as the \emph{prime number theorem} asserts that $\lim_{n\rightarrow\infty} \pi(n)\log(n)/n=1$ and thus $\pi(n) \approx n/\log(n)$. This problem gives a poor man's version of the prime number theorem which gives a pretty good lower bound on the distribution of prime numbers.
+    
+    (1) Prove that $n\leq \log \binom{2n}{n}$. 
+
+    \textbf{Solution to (1):} Note this is equivalent proving $2^n \geq {\binom{2n}{n}}$ (note the logarithm is base two). By definition,
+    \begin{align}
+        \binom{2n}{n} = \frac{2n!}{n!n!} = \prod_{i=1}^n \frac{n+i}{i}.
+    \end{align}
+    Moreover, for each $i$ in the product, $(n+i)/i  = 1 + n/i \geq 2$. Hence,
+    \begin{align}
+        \prod_{i=1}^n \frac{n+i}{i} \geq \prod_{i=1}^n \frac{n+i}{i} = 2^n.
+    \end{align}
+    This proves the result.
+
+    (2) Show that
+    \begin{align}
+        \log \binom{2n}{n} \leq \sum_{p\leq2n} \left\lfloor\frac{\log(2n)}{\log p} \right\rfloor\log p
+    \end{align}
+    where the sum is over all primes $p$ less than or equal to $2n$.
+
+    \textbf{Solution to (2):} This one is hard! I could rewrite the problem as showing
+    \begin{align}
+        \binom{2n}{n} \leq \prod_{p<2n}e^{\log p \left\lfloor\frac{\log(2n)}{\log p}\right\rfloor}
+    \end{align}
+
+    (3) Use the previous two results to show that
+    \begin{align}
+        \pi(2n) \geq \frac{n}{\log(2n)}
+    \end{align}
+
+    \textbf{Solution to (3):} From the previous two parts, we have
+    \begin{align}
+        n \leq \sum_{p\leq2n} \left\lfloor\frac{\log(2n)}{\log p} \right\rfloor\log p.
+    \end{align}
+    Moreover, for any two positive real numbers $x$ and $y$,
+    \begin{align}
+        \lfloor x\rfloor y \leq \lfloor x y\rfloor.
+    \end{align}
+    Hence,
+    \begin{align}
+    \begin{aligned}
+        \sum_{p\leq2n} \left\lfloor\frac{\log(2n)}{\log p} \right\rfloor\log p &\leq \sum_{p\leq2n} \left\lfloor\frac{\log(2n)}{\log p }\log p\right\rfloor \\
+        &\leq \sum_{p\leq2n} \left\lfloor\log(2n)\right\rfloor\\
+        &\leq \log(2n) \pi(2n)
+    \end{aligned}
+    \end{align}
+    From this, we have $n \leq \log(2n) \pi(2n)$, and we have our result from rearranging.
+
+
+\chapter*{Appendix 5: Public key cryptography and the RSA cryptosystem}
+
+
+\section*{Exercise A5.1} 
+    Written examples of the application of RSA tend to be rather opaque. It’s better to work through an example yourself. Encode the word ‘QUANTUM’ (or at least the first few letters!), one letter at a time, using $p=3$ and $q=11$. Choose appropriate values for $e$ and $d$, and use a representation of English text involving 5 bits per letter.
+    
+    \textbf{Solution:} There is choice in how we represent the letters, but a natural one is to label from 1 to 26. In this representation, we have
+    \begin{align}
+    \begin{aligned}
+        Q &= 17 = 10001 \\
+        U &= 21 = 10101 \\
+        A &= 01 = 00001 \\
+        N &= 14 = 01110 \\
+        T &= 20 = 10100 \\
+        M &= 13 = 01101. \\
+    \end{aligned}
+    \end{align}
+    In our encoding, the message is 35 bits in length, and given by
+    \begin{align} \label{message}
+        S &= 10001101010000101110101001010101101 \\
+        &= 18959782573
+    \end{align}
+    where we converted to decimal in the last step. Next we choose an odd number $e$ relatively prime to $\phi(n) = (p-1)(q-1) = 20$. We will choose $e=9$. To compute the multiplicative inverse modulo 20, $d$, we employ Euler's algorithm. Following the steps outlined in appendix 4,
+    \begin{align}
+    \begin{aligned}
+        20 &= 2\times 9 + 2 \\
+        9 &= 4\times2 + 1 \\
+        2 &= 2\times 1.
+    \end{aligned}
+    \end{align}
+    Now we back substitute to find coefficients $x, y$ such that $1 = 9x + 20y$.
+    \begin{align}
+    \begin{aligned}
+        1 &= 9-4\times 2 \\
+        &= 9-4\times (20-2\times 9) \\
+        &= 9 - 4\times 20 + 8\times 9 \\
+        &= 9\times 9 -4\times 20.
+    \end{aligned}
+    \end{align}
+    Reading off the coefficient, we can readily see that 9 is its own inverse modulo 20. Hence $d=e=9$. 
+    
+    Alas, with such a small $n$ we can only encode in 5 bit chunks. We'll therefore simply encode each letter separately. We have
+    \begin{align}
+        E(Q) &= 17^9 \pmod{33} = 02 = 00010 \\
+        E(U) &= 21^9 \pmod{33} = 21 = 10101 \\
+        E(A) &= 01^9 \pmod{33} = 01 = 00001 \\
+        E(N) &= 14^9 \pmod{33} = 26 = 00010 \\
+        E(T) &= 20^9 \pmod{33} = 05 = 00101 \\
+        E(M) &= 13^9 \pmod{33} = 28 = 11100 \\
+    \end{align}
+    You can readily check, as expected, that taking the encoded message to the power of 9 (in 5 bit chunks) gets you back to the original message.
+
+\section*{Exercise A5.2} 
+    Show that $d$ is also an inverse of $e$ modulo $r$, and thus $d=d'\pmod{r}$.
+    
+    \textbf{Solution:} We will prove a somewhat more general result, namely if $ab = 1\pmod{n}$ and $d|n$, then $ab=1\pmod{d}$. Indeed, the first statement implies $ab = qn + 1$ for some $q\in \mathbb{Z}$. On the other hand, since $d|n$, there is an integer $k$ such that $n = dk$. Using these relations, we have $ab = q(dk)+1 = (qk)d + 1$. Thus, $ab=1\pmod{d}$.
+    
+    This solves the exercise when we recognize that $de=1\pmod{\phi(n)}$ and $r|\phi(n)$. A result from the previous appendix shows that the two inverses $d$ and $d'$ are equivalent modulo $r$.
+
+\section*{Problem 5.1:} 
+    Write a computer program for performing encryption and decryption using the RSA algorithm. Find a pair of 20 bit prime numbers and use them to encrypt a 40 bit message.
+    
+    \textbf{Solution:} I will first write pseudocode, then give an actual implementation in a common language such as python.
+    \begin{algorithm}
+        \SetKwInOut{Input}{Input}
+        \SetKwInOut{Output}{Output}
+        
+        \underline{RSA algorithm} $(L,M)$\;
+        \Input{An integer $L$ specifying bit length of primes, and a $2L$-bit message $M$.}
+        \Output{A public key 
+        $P = (e, n)$ and private key $M = (d,n)$.}
+        $p$ = RandomPrime($L$)\;
+        q = RandomPrime($L$)\;
+        $n = pq$\;
+        $\varphi$ = $(p-1)(q-1)$\;
+        $d$ = InverseMod$(e, \varphi)$\;
+        $P = (e, n)$\;
+        $S= (d,n)$\;
+        return P, S
+        \caption{RSA algorithm for public key cryptography}
+    \end{algorithm}
+    Here is some pseudocode for the two major subroutines employed: RandomPrime and InverseMod.
+    \begin{algorithm}
+        \SetKwInOut{Input}{Input}
+        \SetKwInOut{Output}{Output}
+        \SetKwRepeat{Do}{do}{while}
+        \underline{RandomPrime} $(L)$\;
+        \Input{An integer $L$ specifying the bit length of the desired prime}
+        \Output{A random prime $p$ of that length}
+        p = RandomInt(L)\;
+        \Do{not prime(p)}
+            {
+            p = RandomInt(L)\;
+            }
+        \caption{Algorithm for producing random prime $p$ of given length.}
+    \end{algorithm}
+
+
+\chapter*{Appendix 6: Proof of Lieb's theorem}
+
+
+\section*{Exercise A6.1 ($\leq$ is preserved under conjugation)}
+    If $A\leq B$, show that $XAX^\dagger \leq XBX^\dagger$ for all matrices $X$.
+    
+    \textbf{Solution:} We will first prove that positivity is preserved under conjugation with $X$. That is, if $P$ is positive, so is $XPX^\dagger$. Taking the adjoint shows that $XPX^\dagger$ is hermitian.
+    \begin{align}
+        (XPX^\dagger)^\dagger = (X^\dagger)^\dagger P^\dagger X^\dagger = XPX^\dagger
+    \end{align}
+    To prove positive-semidefiniteness, suppose $\lambda$ is a (real) eigenvalus of $XPX^\dagger$, so that there is a normalized vector $v$ such that.
+    \begin{align}
+        XPX^\dagger v = \lambda v
+    \end{align}
+    Taking the inner product of both sides of this equation with $v$ itself,
+    \begin{align}
+    \begin{aligned}
+        \innerprod{v}{XPX^\dagger v} &= \innerprod{v}{\lambda v} \\
+        \innerprod{X^\dagger v}{PX^\dagger v} &= \lambda \innerprod{v}{v} \\
+        \innerprod{u}{Pu} = \lambda,
+    \end{aligned}
+    \end{align}
+    where $u = X^\dagger v$. Because $P$ is positive semidefinite, we see that $\lambda \geq 0$. Hence, every eigenvalue of $XPX^\dagger$ is nonnegative. This proves our result.  
+
+\section*{Exercise A6.2}
+    Prove that $A\geq 0$ if and only if $A$ is a positive operator.
+    
+    \textbf{Solution:} If $A\geq 0$, then $A - 0$ is positive semidefinite, hence so is $A$. Conversely, if $A$ is positive, so is $A-0$, and thus $A \geq 0$.
+    
+\section*{Exercise A6.3 ($\leq$ is a partial order)}
+    Show that the relation $\leq$ is a partial order on operators -- that is, it is transitive ($A\leq B$ and $B \leq C$ implies $A \leq C$), asymmetric ($A \leq B$ and $B \leq A$ implies $A = B$), and reflexive ($A\leq A$).
+
+    \textbf{Solution:} Let's start by proving transitivity. If $A\leq B$ and $B\leq C$, then $B-A$ and $C - B$ are positive matrices. Hence so is their sum, $C-A$. This implies $A \leq C$ by definition.
+    
+    To prove asymmetry, suppose $A\leq B$ and $B \leq $. Let $\lambda$ be an eigenvalue of $A-B$. It is then clear that $B-A$ must have eigenvalue $-\lambda$. By assumption of positive semidefiniteness of $A-B$ and $B-A$ we must have 
+    \begin{align}
+        \lambda \leq 0 \quad lambda \geq 0.
+    \end{align}
+    Hence, $\lambda = 0$. Thus every eigenvalue of $A-B$ is zero, so $A - B = 0$. This proves asymmetry.
+    
+    Finally, we note that $A-A = 0$ is positive semidefinite. Thus, $A\leq A$, proving the reflexive property.
+
+\section*{Exercise A6.4}
+    Suppose $A$ has eigenvalues $\lambda_i$. Define $\lambda$ to be the maximum of the set $\abs{\lambda_i}$. Prove that
+    
+    (1) $\norm{A} \geq \lambda$. \\
+    \indent (2) When $A$ is Hermitian, $\norm{A}=\lambda$. \\
+    \indent (3) When
+    \begin{align}
+        A = 
+        \begin{bmatrix}
+            1 & 0 \\
+            1 & 1 \\
+        \end{bmatrix},
+    \end{align}
+    \indent $\norm{A}=3/2>1 = \lambda$
+    
+    \textbf{Solution:} (1) Since $A$ is a matrix, its set of eigenvalues is finite. Hence, there exists an eigenvalue $\lambda_m$ such that $\abs{\lambda_m} = \lambda$. Let $\ket{u_m}$ be the corresponding eigenvector, normalized. Then, 
+    \begin{align}
+        \abs{\bra{u_m}A\ket{u_m}} = \abs{\lambda_m \braket{u_m}{u_m}} = \lambda
+    \end{align}
+    Since $\norm{A}$ is the maximum over all such inner products, it is certainly at least as big as the value set by $\ket{u} = \ket{u_m}$. Hence, $\norm{A}\geq \lambda.$
+    
+    (2) Using part (1), it suffices to show that $\norm{A} \leq \lambda$ for hermitian $A$. If $\ket{u}$ is a normalized state, it can be expressed as a linear combination in an orthonormal basis defined by the eigenstates of $A$.
+    \begin{align}
+        \ket{u} = \sum_i c_i\ket{\lambda_i}
+    \end{align}
+    Here, $\ket{\lambda_i}$ is an eigenstate of $A$ with eigenvalue $\lambda_i$. Computing the inner product as in the defition of $\norm{A}$,
+    \begin{align}
+        \abs{\bra{u}A\ket{u}} = \abs{\sum_i \lambda_i \abs{c_i}^2} \leq \sum_i \abs{\lambda_i}\abs{c_i}^2 \leq \lambda \sum_i \abs{c_i}^2 =\lambda
+    \end{align}
+    Along the way, we used the triangle inequality, the fact that $\abs{\lambda_i}\leq \lambda$, and the normalization of $\ket{u}$. Since $\lambda$ is an upper bound for every $\ket{u}$, it is also an upper bound for the maximum, which is precisely $\norm{A}$. Thus, $\norm{A}\leq \lambda$, which combined with the previous result gives $\norm{A} = \lambda$.
+    
+    (3) $A$ has a single eigenvalue $\lambda = 1$ with eigenvector $\ket{\lambda} = (0,1)^T$. Hence, $\lambda =1$. On the other hand, for some normalized $(a,b)\in \mathbb{C}^2$,
+    \begin{align}
+        \begin{pmatrix}
+            a^* & b^*
+        \end{pmatrix}
+        \begin{pmatrix}
+            1 & 0 \\
+            1 & 1
+        \end{pmatrix}
+        \begin{pmatrix}
+            a \\
+            b
+        \end{pmatrix} &= \abs{a}^2 + \abs{b}^2 + a b^* \\
+        &= 1 + a b^*
+    \end{align}
+    If $a = b = 1/\sqrt{2}$, then this value is $3/2$. On the other hand, for more arbitrary complex values of $a$ and $b$, the triangle inequality puts 3/2 as an upper bound on the magnitude.
+    \begin{align}
+        \abs{1 + a b^*} \leq 1 + \abs{a}\abs{b} \leq 3/2.
+    \end{align}
+    Hence, $\norm{A} = 3/2$, and we have our result.
+    
+\section*{Exercise 6.5: ($AB$ and $BA$ have the same eigenvalues)}
+    Prove that $AB$ and $BA$ have the same eigenvalues. (\emph{Hint}: For invertible $A$, show that $\det(xI-AB) = \det(xI-BA)$, and thus the eigenvalues of $AB$ and $BA$ are the same. By continuity this holds even when $A$ is not invertible.
+    
+    \textbf{Solution:} As the hint suggests, first suppose $A$ is invertible. Because the eigenvalues of $AB$ and $BA$ are the zeros of the characteristic polynomial, showing these two polynomials are the same amounts to proving the statement. And these polynomials are precisely the determinants shown in the hint. 
+    
+    We will use the property that the determinant is indifferent to the permutation of matrices in a product.
+    \begin{align}
+        \det(xI-AB) &= \det(I(xI-AB)) \\
+        &= \det(A^{-1}A(xI-AB)) \\
+        &= \det(A^{-1}(xI-AB)A) \\
+        &= \det(xI-BA)
+    \end{align}
+    This proves our result when $A$ is invertible. If $A$ is singular, then there exists an $\epsilon>0$ such that
+    \begin{align}
+        A' = A + \epsilon I 
+    \end{align}
+    is invertible. Then the theorem carries over as before for $A'$, and to get the result for $A$ we take $\epsilon\rightarrow 0$. This is valid since the determinant is only a polynomial in $\epsilon$.
+    
+\section*{Exercise 6.6}
+    Suppose $A$ and $B$ are such that $AB$ is Hermitian. Using the previous two observations show that $\norm{AB}\leq\norm{BA}$.
+    
+    \textbf{Solution:} Since $AB$ is Hermitian, then $\norm{AB} = \abs{\lambda}$ for some eigenvalue of $AB$. By the previous exercise, $\lambda$ is also an eigenvalue of $BA$, and by that same exercise we have $\lambda \leq \norm{BA}$. Thus, $\norm{AB}
+    \leq\norm{BA}$.
+    
+\section*{Exercise 6.7}
+    Suppose $A$ is positive. Show that $\norm{A}\leq 1$ if and only if $A \leq I$.
+    
+    \textbf{Solution:} $(\implies)$ Suppose $\norm{A}\leq 1$. Then every eigenvalue $\lambda$ of $A$ is such that $\lambda \in [0,1]$. This implies the eigenvalues of $I-A$, which are given by $1-\lambda$ are also in this range. In particular, $I-A$ is positive, so $A\leq I$.
+    
+    $(\impliedby)$ Suppose $A\leq I$, so that $I-A$ is positive. As above, the eigenvalues of $I-A$ are $1-\lambda$, where $\lambda$ is an eigenvalue of $A$. Since both $A$ and $I-A$ are positive, we have
+    \begin{align}
+        1-\lambda \geq 0 \quad \lambda \geq 0.
+    \end{align}
+    This implies $\lambda \leq 1$ for each $\lambda$, so we have $\norm{A}\leq 1$.
+
+\section*{Exercise 6.8}
+    Let $A$ be a positive matrix. Define a superoperator (linear operator on matrices) by the equation $\mc{A}(X) \equiv A X$. Show that $\mc{A}$ is positive with respect to the Hilbert-Schmidt inner product. That is, for all $X$, $\tr(X^\dagger \mc{A}(X)) \geq 0$. Similarly, show that the superoperator defined by $\mc{A} (X) \equiv XA$ is positive with respect to the Hilbert–Schmidt inner product on matrices.
+    
+    \textbf{Solution:} Suppose $A$ is positive. Then for any matrix $X$, both $XAX^\dagger$ and $X^\dagger A X$ are positive. Moreover, the trace of any positive matrix is itself positive. Therefore, the desired result comes from the simple fact that the condition for positivity of $\mc{A}$ amounts to taking traces of the above matrices. For the first definition of $\mc{A}$,
+    \begin{align}
+        \tr(X^\dagger \mc{A}(X)) &= \tr(X^\dagger AX).
+    \end{align}
+    For the second definition,
+    \begin{align}
+        \tr(X^\dagger \mc{A}(X)) = \tr(X^\dagger X A) = \tr(XAX^\dagger)
+    \end{align}
+
 \end{document}
