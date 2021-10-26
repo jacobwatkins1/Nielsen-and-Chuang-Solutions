@@ -20,20 +20,22 @@
 
 \title{Nielsen and Chuang Solutions}
 \author{Jacob Watkins}
-\date{December 2020}
+\date{May 2021}
 
 \begin{document}
 
 \maketitle
-\chapter{Plan and Progress}{0}
+\chapter{Plan and Progress}
 \section{Goals of this project}
 There exist other partial solution manuals to N\&C, most of them on github. It appears, taken together, they have covered chapters 2,3,4 and 9 almost completely, with scattered solutions for other chapters. Here, we wish to help fill in the gaps, and perhaps ultimately create the most comprehensive solution manual to date. The strategy here is as follows:
 \begin{itemize}
+    \item Create solution manuals for appendices
     \item Create solution manuals for chapters 5-8
     \item Create solutions for chapters 10-12
     \item (If motivated) Fill in remaining problems in chapters already covered by others (in chapters 2-4 for example.)
     \item (If REALLY motivated) Compile together solutions already created, and bring them into a common format, so that we may come closer to a universal solutions manual!
 \end{itemize}
+I would enjoy collaboration from the community, if anyone wants to help contribute to this project. 
 \section*{To-do}
 \begin{itemize}
     \item Fix QFT circuit, recreate it in Qiskit and set barrier option to True
@@ -54,7 +56,7 @@ This progress was last updated February 1st, 2021.
     \item Appendix 6: All exercises complete!
 \end{itemize}
 
-\chapter{Introduction to quantum mechanics}{2}
+\chapter{Introduction to quantum mechanics}
 
 
 \section*{Exercise 2.1: (Linear dependence: example)}
@@ -135,7 +137,15 @@ This progress was last updated February 1st, 2021.
     
     \textbf{Solution:} 
 
-\chapter{The Quantum Fourier Transform and its applications}{5}
+\chapter{Introduction to computer science}
+
+\section*{Exercise 3.1}
+
+\chapter{Quantum circuits}
+
+\section*{Exercise 4.1}
+
+\chapter{The Quantum Fourier Transform and its applications}
 
 
 \section*{Exercise 5.1}
@@ -380,7 +390,218 @@ This progress was last updated February 1st, 2021.
 
     \textbf{Solution:} It is obvious that, by setting $k=0$, we obtain the same output using $V$ as we would if $k=1$ and we had acted with $U$. To construct $V$ we can simply use the $U^j$ as before and store the result in an ancillary register whose initial value was one, then \emph{add} that result to the register initialized to 0. The addition step can be carried out bitwise, and only takes $O(L^2)$ gates naively. Hence, the algorithm remains $O(L^3)$ after this addition step.
 
-\chapter{Quantum Search Algorithms}{6}
+\section*{Exercise 5.15}
+    Show that the least common multiple of positive integers $x$ and $y$ is $xy/\gcd(x,y)$, and thus may be computed in $O(L^2)$ operations if $x$ and $y$ are $L$ bit numbers.
+    
+    \textbf{Solution:} Let $d = \gcd(x,y)$. Since $d|x$ and $d|y$, it divides the product, so $xy = dn$ for some integer $n >0$. Our goal is to prove that $n=\text{lcm}(x,y)$.
+    
+    By Bézout's lemma, there exists integers $a,b$ such that $d = ax + by$. Let $m$ be a common multiple of $x$ and $y$. Then there exists integers $s$ and $t$ such that $m=sx=ty$. Consider the product $md$. Using the lemma,
+    \begin{align}
+    \begin{aligned}
+        md &= axm+bym \\
+        &= axty + bysx \\
+        &= xy(at+bs).
+    \end{aligned}
+    \end{align}
+    This implies $xy|md$, or since $n = xy/d$, $n|m$. Therefore, $n$ divides every common multiple of $x$ and $y$. On the other hand, $n$ is itself a common multiple, because 
+    \begin{align}
+        n = x \left(\frac{y}{d}\right) = \left(\frac{x}{d}\right)y,
+    \end{align}
+    where the terms in parenthesis are integers. Thus, $n$ is the least common multiple, and the statement is proved.
+    
+\section*{Exercise 5.16}
+    For all $x\geq 2$ prove that $\int_x^{x+1} 1/y^2 dy \geq 2/3x^2$. Show that
+    \begin{align}
+        \sum_q \frac{1}{q^2} \leq \frac{3}{2}\int_2^\infty \frac{1}{y^2} dy =\frac{3}{4},
+    \end{align}
+    and thus that (5.58) holds.
+    
+    \textbf{Solution:} Performing the integral directly yields the solution
+    \begin{align}
+        \int_x^{x+1}1/y^2 dy = \frac{1}{x^2+x}.
+    \end{align}
+    For all $x\geq 2$,
+    \begin{align}
+        x \leq \frac{x^2}{2}.
+    \end{align}
+    Thus,
+    \begin{align}
+        \int_x^{x+1} 1/y^2 dy = \frac{1}{x^2+x} \geq \frac{1}{x^2 + x^2/2} = \frac{2}{3x^2}
+    \end{align}
+    To complete the exercise, note that the sum over prime numbers $q$ is less than the same sum over all integers starting from 2. Thus,
+    \begin{align}
+    \begin{aligned}
+        \sum_q \frac{1}{q^2} &\leq \sum_{n\geq 2} 1/n^2 \\
+        &\leq \sum_{n\geq 2} \frac{3}{2}\int_{n}^{n+1} \frac{1}{y^2} dy \\
+        &= \frac{3}{2} \int_2^{\infty}\frac{1}{y^2} dy = \frac{3}{4}
+    \end{aligned}
+    \end{align}
+    This proves our result.
+    
+\section*{Exercise 5.17}
+    Suppose $N$ is $L$ bits long. The aim of this exercise is to find an efficient classical algorithm to determine whether $N=a^b$ for some integers $a\geq 1$, $b \geq 2$. This may be done as follows:
+    \begin{enumerate}
+        \item Show that $b$, if it exists, satisfies $b\leq L$.
+        \item Show that it takes at most $O(L^2)$ operations to compute $\log_2 N, x = y/b$ for $b \leq L$, and the two integers $u_1$ and $u_2$ nearest to $2^x$.
+        \item Show that it takes at most $O(L^2)$ operations to compute $u_1^b$ and $u_2^b$ (use repeated squaring) and check to see if either is equal to $N$.
+        \item Combine the previous results to give an $O(L^3)$ operation algorithm to determine whether $N = a^b$ for integers $a$ and $b$.
+    \end{enumerate}
+
+    \textbf{Solution:}
+    (1) Note that this statement does not actually hold in the special case $N =1$, since $b \geq 2$ by assumption and $L = \log_2 1 = 0$. Now to the more interesting case of $N\geq 2$. Then it must be that $a \geq 2$. Assuming that $b$ exists, it may be obtained by computing $\log_a N$. Meanwhile,  $L = \lceil\log_2 N\rceil = \lceil b \log_2 a \rceil$. Since $\log_2 a \geq 1$, $L \geq b$. 
+    
+    (2)
+    
+\section*{Exercise 5.18 (Factoring 91)}
+    Suppose we wish to factor $N = 91$. Confirm that steps \textbf{1} and \textbf{2} are passed. For step \textbf{3}, suppose we choose $x = 4$, which is co-prime to 91. Compute the order $r$ of $x$ with respect to $N$, and show that $x^{r/2} \mod 91 = 64 \neq -1\pmod{91}$, so the algorithm succeeds, giving $\gcd(64-1,19)=7$.\\
+    It is unlikely that this is the most efficient method you’ve seen for factoring 91. Indeed, if all computations had to be carried out on a classical computer, this reduction would not result in an efficient factoring algorithm, as no efficient method is known for solving the order-finding problem on a classical computer.
+    
+    \textbf{Solution:} Step \textbf{1} is passed since 91 is odd. 
+    
+\section*{Exercise 5.19}
+    Show that $N = 15$ is the smallest number for which the order-finding subroutine is required, that is, it is the smallest composite number that is not even or a power of some smaller integer.
+    
+    \textbf{Solution:} This can be checked by exhaustion. See the below list
+    \begin{center}
+        \begin{tabular}{c|l}
+             1 & Special case (N/A) \\
+             2 & Prime \\
+             3 & Prime \\
+             4 & $2^2$ \\
+             5 & Prime \\
+             6 & Even \\
+             7 & Prime \\
+             8 & $2^3$ \\
+             9 & $3^2$ \\
+             10 & Even \\
+             11 & Prime \\
+             12 & Even \\
+             13 & Prime \\
+             14 & Even \\
+             15 & Composite, Odd, distinct prime factors \checkmark
+        \end{tabular}
+    \end{center}
+
+\section*{Exercise 5.20}
+    Suppose $f(x+r) = f(x)$, and $0\leq x<N$ for $N$ an integer multiple of $r$. Compute
+    \begin{align}
+        \hat{f}(l)\equiv \frac{1}{\sqrt{N}}\sum_{x=0}^{N-1} e^{-2\pi i l x/N} f(x),
+    \end{align}
+    and relate the result to (5.63). You will need to use the fact that
+    \begin{align}
+        \sum_{\{0,r,2r,...,N-r\}} e^{2\pi ikl/N} = 
+        \begin{cases}
+            \sqrt{N/r}  & \text{if $l$ is an integer multiple of $N/r$} \\
+            0 & \text{otherwise}.
+        \end{cases}
+    \end{align}
+    
+    \textbf{Solution:}
+    
+\section*{Exercise 5.21 (Period finding a phase estimation}
+    Suppose you are given a unitary operator $U_y$ which performs the transformation $U_y\ket{f(x)} = \ket{f(x+y)}$, for the periodic function described above.
+    \begin{enumerate}
+        \item Show that the eigenvectors of $U_y$ are $\ket{\hat{f}(l)}$, and calculate their eigenvalues.
+        \item Show that given $\ket{f(x_0)}$ for some $x_0$, $U_y$ can be used to realize a black box which is as useful as $U$ in solving the period-finding problem.
+    \end{enumerate}
+    
+    \textbf{Solution:}
+    
+\section*{Exercise 5.22}
+    Show that
+    \begin{align}
+        \ket{\hat{f}(l_1,l_2)} = \sum_{x_1=0}^{r-1} \sum_{x_2 = 0}^{r-1}e^{-2\pi i(l_1x_1+l_2x_2)} = \frac{1}{\sqrt{r}} \sum_{j=0}^{r-1}e^{-2\pi i l_2 j /r}\ket{f(0,j)}
+    \end{align}
+    and we are constrained to have $l_1/s-l_2$ be an integer multiple of $r$ for this expression to be non-zero.
+    
+    \textbf{Solution:}
+    
+\section*{Exercise 5.23}
+    Compute
+    \begin{align}
+        \frac{1}{r}\sum_{l_1=0}^{r-1}\sum_{l_2=0}^{r-1} e^{2\pi i (l_1x_1+l_2x_2)/r}\ket{\hat{f}(l_1,l_2)}
+    \end{align}
+    using (5.70), and show that the result is $f(x_1,x_2)$.
+    
+    \textbf{Solution:}
+    
+\section*{Exercise 5.24}
+    Construct the generalized continued fractions algorithm needed in step \textbf{6} of the discrete logarithm algorithm to determine $s$ from estimates of $s l_2/r$ and $l_2/r$.
+    
+    \textbf{Solution:}
+    
+\section*{Exercise 5.25}
+    Construct a quantum circuit for the black box $U$ used in the quantum discrete logarithm algorithm, which takes $a$ and $b$ as parameters, and performs the unitary transform $\ket{x_1}\ket{x_2}\ket{y}\rightarrow\ket{x_1}\ket{x_2}\ket{y\oplus b^{x_1}a^{x_2}}$. How many elementary operations are required?
+    
+    \textbf{Solution:}
+    
+\section*{Exercise 5.26}
+    Since $K$ is a subgroup of $G$, when we decompose $G$ into a product of cyclic groups of prime power order, this also decomposes $K$. Re-express (5.77) to show that determining $l_i'$ allows one to sample from the corresponding cyclic subgroup $K_{p_i}$ of $K$.
+    
+    \textbf{Solution:}
+    
+\section*{Exercise 5.27}
+    Of course, the decomposition of a general finite Abelian group $G$ into a product of cyclic groups of prime power order is usually a difficult problem (at least as hard as factoring integers, for example). Here, quantum algorithms come to the rescue again: explain how the algorithms in this chapter can be used to efficiently decompose $G$ as desired.
+    
+    \textbf{Solution:}
+
+\section*{Exercise 5.28}
+    Write out a detailed specification of the quantum algorithm to solve the hidden subgroup problem, complete with runtime and success probability estimates, for finite Abelian groups.
+    
+    \textbf{Solution:}
+    
+\section*{Exercise 5.29}
+    Give quantum algorithms to solve the Deutsch and Simon problems listed in Figure 5.5, using the framework of the hidden subgroup problem.
+    
+    \textbf{Solution:}
+
+\section*{Problem 5.1}
+    Construct a quantum circuit to perform the quantum Fourier transform
+    \begin{align}
+        \ket{j} \rightarrow \frac{1}{\sqrt{p}} \sum_{k=0}^{p-1} e^{2\pi ijk/p} \ket{k}
+    \end{align}
+    where $p$ is prime.
+    
+    \textbf{Solution:}
+
+\section*{Problem 5.2 (Measured quantum Fourier transform)}
+    Suppose the quantum Fourier transform is performed as the last step of a quantum computation, followed by a measurement in the computational basis. Show that the combination of quantum Fourier transform and measurement is equivalent to a circuit consisting entirely of \emph{one} qubit gates and measurement, with classical control, and no two qubit gates. You may find the discussion of Section 4.4 useful.
+    
+    \textbf{Solution:}
+
+\section*{Problem 5.3 (Kitaev's algorithm)}
+    Consider the quantum circuit
+    \begin{align}
+        \Qcircuit @R = 1.2em @C = 1.5em{
+            \lstick{\ket{0}} & \gate{H} & \ctrl{1} & \gate{H} & \meter \\
+            \lstick{\ket{u}} & \qw & \gate{U} & \qw & \rstick{\ket{u}}\\
+        }
+    \end{align}
+    where $\ket{u}$ is an eigenstate of $U$ with eigenvalue $e^{2\pi i \phi}$. Show that the top qubit is measured to be 0 with probability $p\equiv \cos^2 (\pi \phi)$. Since the state $\ket{u}$ is unaffected by the circuit it may be reused; if $U$ can be replaced by $U^k$, where k is an arbitrary integer under your control, show that by repeating this circuit and increasing $k$ appropriately, you can efficiently obtain as many bits of $p$ as desired, and thus, of $\phi$. This is an alternative to the phase estimation algorithm.
+    
+    \textbf{Solution:}
+
+\section*{Problem 5.4}
+    The runtime bound $O(L^3)$ we have given for the factoring algorithm is not tight. Show that a better upper bound of $O(L^2 \log L \log \log L)$ operations can be achieved.
+    
+    \textbf{Solution:}
+
+\section*{Problem 5.5 (Non-Abelian hidden subgroups- Research)}
+    Let $f$ be a function on a finite group $G$ to an arbitrary finite range $X$, which is promised to be constant and distinct on distinct left cosets of a subgroup $K$. Start with the state
+    \begin{align}
+        \frac{1}{\sqrt{\abs{G}^m}} \sum_{g_1,...,g_m}\ket{g_1,...,g_,}\ket{f(g_1),...,f(g_m)}
+    \end{align}
+    and prove that picking $m=4\log\abs{G}+2$ allows $K$ to be identified with probability at least $1-1/\abs{G}$. Note that $G$ does not necessarily have to be Abelian, and being able to perform a Fourier transform over $G$ is not required. This result shows that one can produce (using only $O(\log\abs{G})$ oracle calls) a final result in which the pure state outcomes corresponding to different possible hidden subgroups are nearly orthogonal. However, it is unknown whether a POVM exists or not which allows the hidden subgroup to be identified \emph{efficiently} (i.e. using $\text{poly}(\log\abs{G})$ operations) from this final state.
+    
+    \textbf{Solution:}
+
+\section*{Problem 5.6 (Addition by Fourier transform)}
+    Consider the task of constructing a quantum circuit to compute $\ket{x}\rightarrow \ket{x +y \mod 2^n}$, where $y$ is a fixed constant, and $0\leq x < 2^n$. Show that one efficient way to do this, for values of $y$ such as 1, is to first perform a quantum Fourier transform, then to apply single qubit phase shifts, then an inverse Fourier transform. What values of $y$ can be added easily this way, and how many operations are required?
+    
+    \textbf{Solution:}
+
+\chapter{Quantum Search Algorithms}
+
 \section*{Exercise 6.1} 
     Show that the unitary operator corresponding to the phase shift in the Grover iteration is $(2\ket{0}\bra{0}-I)$.
     
@@ -448,6 +669,673 @@ This progress was last updated February 1st, 2021.
     \end{align}
     Note that, in fact, we did not require the assumption that $M\leq N/2$ in our derivation.
 
+\section*{Exercise 6.4}
+    Give explicit steps for the quantum search algorithm, as above, but for the case of multiple solutions $(1<M<N/2)$.
+    
+    \textbf{Solution:} 
+    
+    \textbf{Algorithm: Quantum Search} \par
+    \textbf{Input:} (1) a black box oracle $O$ which performs the transformation $O\ket{x}\ket{q}=\ket{x}\ket{q\oplus f(x)}$, where $f$ is a boolean function on $n$ bits in which exactly $M$ inputs are known to return $1$, with the rest 0. (2) $n+1$ qubits in the state $\ket{0}$. \par
+    
+    \textbf{Output:} One of the $M$ solutions to the search problem, where a solution $x$ is a $n$-bit string such that $f(x) = 1$. \par
+    
+    \textbf{Procedure:}\par
+    \begin{enumerate}
+        \item $\ket{0}^{\otimes n}\ket{0}$ (initial state)
+        \item $\rightarrow \frac{1}{\sqrt{2^n}} \sum_{x=}^{2^n-1} \ket{x} \left(\frac{\ket{0}-\ket{1}}{\sqrt{2}}\right)$ (apply $H^{\otimes n}$ to the first $n$ qubits and $HX$ to the last). 
+        \item $\rightarrow \left[(2\ket{\psi}\bra{\psi}-I)O\right]^R \frac{1}{\sqrt{2^n}} \sum_{x=}^{2^n-1} \ket{x} \left(\frac{\ket{0}-\ket{1}}{\sqrt{2}}\right)$ \\
+        $\approx \frac{1}{\sqrt{2^M}}\sum_{s=1}^M \ket{s} \left[\frac{\ket{0}-\ket{1}}{\sqrt{2}}\right]$ (apply the Grover iterate $R\approx \lceil\frac{\pi}{4}\sqrt{\frac{2^n}{M}}\rceil$ times
+        \item $\rightarrow$ some $s$ such that $f(s) = 1$ (measure the first $n$ qubits)
+    \end{enumerate}
+    
+    \section*{Exercise 6.5}
+        Show that the augmented oracle $O'$ may be constructed using one application of $O$, and elementary quantum gates, using the extra qubit $\ket{q}$.
+        
+        \textbf{Solution:} Notice that $O'$ amounts to applying the oracle $O$ to the first $n$ qubits, conditioned on qubit $q$ being in the 0 state. We can express this schematically as
+        \begin{align}
+            \Qcircuit @R=1em @C=2em{
+            \lstick{q} & \gate{X} & \ctrl{1} & \gate{X} \\
+            \qw &{/} \qw & \gate{O} & \qw 
+            }
+        \end{align}
+        Thus, we are making a single access to the oracle $O$.
+        
+    \section*{Exercise 6.6} 
+        Verify that the gates in the dotted box in the second figure of Box 6.1 perform the conditional phase shift operation $2\ket{00}\bra{00}-I$, up to an unimportant global phase factor.
+        
+        \textbf{Solution:} Because $HXH = Z$, the CNOT gate sandwiched between $H$ gates is equivalent to a CZ gate. Moreover, $XZX = -Z$. Thus, the gates in the dotted box enact a controlled minus $Z$ gate, where the control is taken to be the zero state. In braket form, if $R$ is this set of gates,
+        \begin{align}
+            R = \ket{0}\bra{0} \otimes (-Z) + \ket{1}\bra{1}\otimes I.
+        \end{align}
+        Let's consider the action of $R$ on the computational basis. For states with a 1 on the top qubit, the state is unaffected. Otherwise, the top qubit is in the state 0, in which case a minus sign is applied only if the bottom qubit is also zero. Thus, $R$ applies a minus sign to $\ket{00}$ and leaves the other basis states unchanged. Hence,
+        \begin{align}
+            R = I - 2\ket{00}\bra{00}
+        \end{align}
+        which is the reflection operator up to an unimportant minus sign. 
+    
+    \section*{Exercise 6.7}
+        Verify that the circuits shown in Figures 6.4 and 6.5 implement the operations $\exp(-i\ket{x}\bra{x}\Delta t)$ and $\exp(-i\ket{\psi}\bra{\psi}\Delta t)$, respectively, with $\ket{\psi}$ as in (6.24).
+        
+        \textbf{Solution:}
+    
+    \section*{Exercise 6.8}
+        Suppose the simulation step is performed to an accuracy $O(\Delta t^r)$. Show that the number of oracle calls required to simulate $H$ to reasonable accuracy is $O(N^{r/2(r-1)})$. Note that as $r$ becomes large the exponent of $N$ approaches 1/2.
+        
+        \textbf{Solution:} If the accuracy of a single step is $O(\Delta t^r)$, then the total error of the simulation is $O((t/\Delta t) \Delta t^r)=O(t\Delta t^{r-1})$, since $t/\Delta t$ is the number of steps in the simulation. For accurate results, we require this error to be $O(1)$, and from the previous section, we see that the time of simulation $t$ is $O(\sqrt{N})$. Thus, we have $\Delta t \in O(1/N^{(r-1)/2})$. 
+    
+    \section*{Exercise 6.9}
+        Verify Equation (6.25). (\emph{Hint}: see Exercise 4.15.)
+        
+        \textbf{Solution:}
+    
+    \section*{Exercise 6.10}
+        Show that by choosing $\Delta t$ appropriately we can obtain a quantum
+        search algorithm which uses $O(\sqrt{N})$ queries, and for which the final state is $\ket{x}$ \emph{exactly}, that is, the algorithm works with probability 1, rather than with some smaller probability.
+        
+        \textbf{Solution:}
+    
+    \section*{Exercise 6.11 (Multiple solution continuous quantum search)}
+        Guess a Hamiltonian with which one may solve the continuous time search problem in the case where the search problem has $M$ solutions.
+        
+        \textbf{Solution:}
+    
+    \section*{Exercise 6.12 (Alternative Hamiltonian for quantum search)}
+        Suppose
+        \begin{align}
+            H = \ket{x}\bra{\psi}+\ket{\psi}\bra{x}.
+        \end{align}
+        (1) Show that it takes time $O(1)$ to rotate from the state $\ket{\psi}$ to the state $\ket{x}$, given an evolution according to the Hamiltoinian $H$. \par
+        (2) Explain how a quantum simulation of the Hamiltonian $H$ may be performed, and determine the number of oracle calls your simulation technique requires to obtain the solution with high probability.
+        
+        \textbf{Solution:}
+    
+    \section*{Exercise 6.13}
+        Consider a classical algorithm for the counting problem which samples uniformly and independently $k$ times from the search space, and let $X_1, ..., X_k$ be the results of the oracle calls, that is, $X_j = 1$ if the $j$th oracle call revealed a solution to the problem, and $X_j$=0 if the $j$th oracle call did not reveal a solution to the problem. This algorithm returns the estimate $S = N\times \sum_j X_j/k$ for the number of solutions to the search problem. Show that the standard deviation in $S$ is $\Delta S = \sqrt{M(N-M)/k}$. Prove that to obtain a probability at least 3/4 of estimating $M$ correctly to within an accuracy $\sqrt{M}$ for all values of $M$ we must have $k = \Omega(N)$.
+        
+        \textbf{Solution:}
+    
+    \section*{Exercise 6.14}
+        Prove that \emph{any} classical counting algorithm with a probability at least 3/4 for estimating $M$ correctly to within an accuracy $c\sqrt{M}$ for some constant $c$ and for all values of $M$ must make $\Omega (N)$ oracle calls. 
+        
+        \textbf{Solution:}
+    
+    \section*{Exercise 6.15}
+        Use the Cauchy–Schwarz inequality to show that for any normalized state vector $\ket{\psi}$ and set of $N$ orthonormal basis vectors $\ket{x}$,
+        \begin{align}
+            \sum_x \norm{\psi -x}^2 \geq 2N-2\sqrt{N}.
+        \end{align}
+        
+        \textbf{Solution:}
+        
+    \section*{Exercise 6.16}
+        Suppose we merely require that the probability of an error being made is less than 1/2 when averaged uniformly over the possible values for $x$, instead of for all values of $x$. Show that $O(\sqrt{N})$ oracle calls are still required to solve the search problem. 
+        
+        \textbf{Solution:}
+        
+    \section*{Exercise 6.17 (Optimality for multiple solutions)}
+        Suppose the search problem has $M$ solutions. Show that $O(\sqrt{N/M})$ oracle applications are required to find a solution. 
+        
+        \textbf{Solution:}
+        
+    \section*{Exercise 6.18}
+        Prove that the minimum degree polynomial representing a Boolean function $F(X)$ is unique. 
+        
+        \textbf{Solution:}
+    
+    \section*{Exercise 6.19}
+        Show that $P(X) = 1-(1-X_0)(1-X_1)...(1-X_{N-1})$ represents OR. 
+        
+        \textbf{Solution:}
+    
+    \section*{Exercise 6.20}
+        Show that $Q_0(OR)\geq N$ by constructing a polynomial which represents the OR function from the output of a quantum circuit which computes OR with zero error.
+        
+        \textbf{Solution:}
+    
+    \section*{Problem 6.1 (Finding the minimum)}
+        Suppose $x_1,...,x_N$ is a database of numbers held in memory, as in Section 6.5. Show that only $O(\log(N)\sqrt{N})$ accesses to the memory are required on a quantum computer, in order to find the smallest element on the list, with probability at least one-half. 
+        
+        \textbf{Solution:}
+    
+    \section*{Problem 6.2 (Generalized quantum searching)}
+        Let $\ket{\psi}$ be a quantum state, and define $U_{\ket{\psi}}\equiv I - 2\ket{\psi}\bra{\psi}$. That is, $U_{\ket{\psi}}$ gives the state $\ket{\psi}$ a -1 phase, and leaves the states orthogonal to $\ket{\psi}$ invariant. \par
+        
+        (1) Suppose we have a quantum circuit implementing a unitary operator $U$ such that $U\ket{0}^{\otimes n} = \ket{\psi}$. Explain how to implement $U_{\ket{\psi}}$. \par
+        (2) Let $\ket{\psi_1}=\ket{1}, \ket{\psi_2} = (\ket{0}-\ket{1})/\sqrt{2}, \ket{\psi_3}=(\ket{0}-i\ket{1})/\sqrt{2}$. Suppose an unknown oracle $O$ is selected from the set $U_{\ket{\psi_1}}, U_{\ket{\psi_2}}, U_{\ket{\psi_3}}$. Give a quantum algorithm which identifies the oracle with just \emph{one} application of the oracle. (\emph{Hint}: consider superdense coding.) \par
+        (3) \textbf{Research:} More generally, given $k$ states $\ket{\psi_1},...,\ket{\psi_k}$, and an unknown oracle selected from the set $U_{\ket{\psi_1}},...,U_{\ket{\psi_k}}$, how many oracle applications are required to identify the oracle, with high probability?
+        
+        \textbf{Solution:}
+    
+    \section*{Problem 6.3 (Database retrieval)}
+        Given a quantum oracle which returns $\ket{k,y\oplus X_k}$ given an $n$ qubit query (and one scratchpad qubit) $\ket{k,y}$, show that with high probability, all $N=2^n$ bits of $X$ can be obtained using only $N/2 + \sqrt{N}$ queries. This implies the general upper bound $Q_2(F) \leq N/2 +\sqrt{N}$ for any $F$.
+        
+        \textbf{Solution:}
+    
+    \section*{Problem 6.4 (Quantum searching and cryptography)}
+        Quantum searching can, potentially, be used to speed up the search for cryptographic keys. The idea is to search through the space of all possible keys for decryption, in each case trying the key, and checking to see whether the decrypted message makes ‘sense’. Explain why this idea doesn’t work for the Vernam cipher (Section 12.6). When might it work for cryptosystems such as DES? (For a description of DES see, for example, [MvOV96] or [Sch96a].)
+        
+        \textbf{Solution:}
+
+\chapter{Quantum computers: physical realization}
+
+\section*{Exercise 7.1}
+    Using the fact that $x$ and $p$ do not commute, and that in fact $[x,p]=i\hbar$, explicitly show that $a^\dagger a= H/\hbar\omega -1/2$.
+    
+    \textbf{Solution:} Let us first apply the definition of $a$, which is given in the text.
+    \begin{align}
+    \begin{aligned}
+        a^\dagger a &= \frac{1}{2m\hbar\omega}(m\omega x-ip)(m\omega x+ip) \\
+        &= \frac{1}{2m\hbar\omega} \left((m\omega x)^2 + p^2 + im\omega(xp-px)\right) \\
+    \end{aligned}
+    \end{align}
+    Note that we cannot cancel the rightmost term since $x$ and $p$ do not commute. However, we can use the commutation relation between them. Regrouping and rearranging,
+    \begin{align}
+    \begin{aligned}
+        a^\dagger a &= \frac{p^2}{2m\hbar\omega}+\frac{1}{2\hbar\omega}m \omega^2 x^2 + \frac{i}{2\hbar} [x,p] \\
+        &= \frac{1}{\hbar\omega} \left(\frac{p^2}{2m} + \frac{1}{2}m\omega^2 x^2\right) - \frac{1}{2} \\
+        &= \frac{H}{\hbar\omega}-\frac{1}{2}.
+    \end{aligned}
+    \end{align}
+    In the last step, we identified the Hamiltonian of the harmonic oscillator. This completes the derivation.
+    
+\section*{Exercise 7.2}
+
+\chapter{Quantum noise and quantum operations}
+
+\section*{Exercise 8.1 (Unitary evolution as a quantum operation)}
+    Pure states evolve under unitary transforms as $\ket{\psi}\rightarrow U\ket{\psi}$. Show that, equivalently, we may write $\rho \rightarrow \mc{E}(\rho) \equiv U \rho U^\dagger$, for $\rho = \ket{\psi}\bra{\psi}$.
+    
+    \textbf{Solution:} Consider the map $f$ which identifies the ket representation of a pure quantum state, $\ket{\psi}$, with its representation as a rank one density operator.
+    \begin{align}
+        f(\ket{\psi}) = \ket{\psi}\bra{\psi}
+    \end{align}
+    Now suppose we have a unitary operation $U$ on the quantum state, which in the ket representation acts as $\ket{\psi}\to U\ket{\psi}$. To arrive at a natural definition of the unitary transformation in the density operator formalism, we can consider what map $\mc{E}$ satisfies the following commutative property.
+    \begin{align}
+        f(U\ket{\psi}) = \mc{E}(f(\ket{\psi})) = \mc{E}(\ket{\psi}\bra{\psi})
+    \end{align}
+    Let $\ket{\psi'} = U\ket{\psi}$, so that $f(U\ket{\psi}) = \ket{\psi'}\bra{\psi'}$. I claim that
+    \begin{align}
+        \ket{\psi'}\bra{\psi'} = U \ket{\psi}\bra{\psi} U^\dagger.
+    \end{align}
+    To see this, we can show that the right side of this equation sends $\ket{\psi'}$ to itself and anything orthogonal to $\ket{\psi'}$ to the zero vector. Indeed,
+    \begin{align}
+        U\ket{\psi}\bra{\psi}U^\dagger \ket{\psi'} = U \ket{\psi}\bra{\psi}\ket{\psi} = \bra{\psi}\ket{\psi} U \ket{\psi} = \ket{\psi'}.
+    \end{align}
+    Similarly, suppose $\ket{\psi'_\perp}$ is orthogonal to $\ket{\psi'}$. Then, $\ket{\psi'_\perp} = U \ket{\psi_\perp}$ for some $\ket{\psi_\perp}$ orthogonal to $\ket{\psi}$. Hence,
+    \begin{align}
+         U\ket{\psi}\bra{\psi}U^\dagger \ket{\psi'_\perp} = U\ket{\psi}\bra{\psi} \ket{\psi_\perp} = 0.
+    \end{align}
+    Thus, we see that $\ket{\psi'}\bra{\psi'} = U\ket{\psi}\bra{\psi}U^\dagger$. This demonstrates that the natural definition of a unitary $U$ acting on the density matrix representation of a quantum state is given by
+    \begin{align}
+        \mc{E}(\ket{\psi}\bra{\psi}) = U\ket{\psi}\bra{\psi}U^\dagger,
+    \end{align}
+    which is precisely what we sought to show. 
+    
+    \section*{Exercise 8.2} 
+    Recall from Section 2.2.3 (on page 84) that a quantum measurement with outcomes labeled by $m$ is described by a set of measurement operators $M_m$ such that $\sum_m M_m^\dagger M_m = I$. Let the state of the system immediately before the measurement be $\rho$. Show that for $\mc{E}_m(\rho) \equiv M_m \rho M_m^\dagger$, the state of the system immediately after the measurement is
+    \begin{align} \label{eq:Exercise 8.2 final state}
+        \frac{\mc{E}_m(\rho)}{\tr(\mc{E}_m(\rho))}.
+    \end{align}
+    Also show that the probability of obtaining this measurement result is $p(m) = \tr(\mc{E}_m(\rho))$.
+    
+    \textbf{Solution:} For reference, the axioms for pure state measurements as provided in the text are as follows. A measurement with outcome $m$ (an event in the probability space) has corresponding probability $p(m)$ and final state $\ket{\psi'}$ given by
+    \begin{align} \label{eq:Exercise 8.2 pure state measurement axioms}
+    \begin{aligned} 
+        p(m) &= \bra{\psi}M_m^\dagger M_m \ket{\psi} \\
+        \ket{\psi'} &= \frac{M_m \ket{\psi}}{\sqrt{\bra{\psi}M_m^\dagger M_m \ket{\psi}}},
+    \end{aligned}
+    \end{align}
+    where $\ket{\psi}$ is the initial (pure) state of the system.
+    
+    The results we are asked to ``show" can be taken as axiomatic for open quantum systems. Unfortunately, because the map \eqref{eq:Exercise 8.2 final state} is not convex linear, we cannot extend the axioms on pure states by linearity. The best we can do is show that \eqref{eq:Exercise 8.2 pure state measurement axioms} imply \eqref{eq:Exercise 8.2 final state} in the case of pure states, then \emph{assert} (i.e. define) the result to hold for any mixed state. This is what we do below.
+    
+    First, consider the expression $p(m)$ in terms of ket $\ket{\psi}$. We have
+    \begin{align}
+    \begin{aligned}
+        p(m) &= \bra{\psi}M_m^\dagger M_m \ket{\psi} \\
+        &= \tr (M_m^\dagger M_m \ket{\psi}\bra{\psi}) \\
+        &= \tr (M_m\ket{\psi}\bra{\psi}M_m^\dagger) \\
+        &= \tr(\mc{E}_m(\rho)).
+    \end{aligned}
+    \end{align}
+    where we used the property that the trace is cyclic and that, for any operator $A$ and pure state,
+    \begin{align}
+        \tr( A \ket{\psi}\bra{\psi}) = \bra{\psi}A\ket{\psi}.
+    \end{align}
+    Now consider the pure state after measurement, which as a density operator is given by $\ket{\psi'}\bra{\psi'}$. Using the transformation given by the second line of \eqref{eq:Exercise 8.2 pure state measurement axioms},
+    \begin{align}
+        \ket{\psi'}\bra{\psi'} = \frac{M_m\ket{\psi}\bra{\psi}M_m^\dagger}{\bra{\psi} M_m^\dagger M_m\ket{\psi}} = \frac{\mc{E}_m(\ket{\psi}\bra{\psi})}{\tr(\mc{E}_m(\ket{\psi}\bra{\psi}))}.
+    \end{align}
+    This shows the result for pure state density matrices that we desire. We can now extend this definition to all quantum states, mixed and pure. 
+    
+\section*{Exercise 8.3}
+    Our derivation of the operator-sum representation implicitly assumed that the input and output spaces for the operation were the same. Suppose a composite system $AB$ initially in an unknown quantum state $\rho$ initially in an unknown quantum state $\rho$ is brought into contact with a composite system $CD$ initially in some standard state $\ket{0}$, and the two systems interact according to a unitary interaction $U$. After the interaction we discard systems $A$ and $D$, leaving a state $\rho'$ of the system $BC$. Show that the map $\mc{E}(\rho) = \rho'$ satisfies
+    \begin{align}
+        \mc{E}(\rho) = \sum_k E_k \rho E_k^\dagger
+    \end{align}
+    for some set of linear operators $E_k$ from the state space of the system $AB$ to the state space of system $BC$, and such that $\sum_k E_k^\dagger E_k = I$.
+    
+    \textbf{Solution:} The action of $\mc{E}$ from $AB$ to $BC$ is summarized as follows: append a system $CD$ with state $\ket{0}$, apply a unitary $U$ which acts on the combined system $ABCD$, and trace out system $AD$. More explicitly,
+    \begin{align}
+        \mc{E}(\rho) = \tr_{AD}(U \rho \otimes \ket{0}\bra{0} U^\dagger).
+    \end{align}
+    Let $\{\ket{u_k}\}$ form an orthonormal basis for the space of system $AD$. Computing the trace with respect to this basis, we have
+    \begin{align} \label{eq:Exercise 8.3}
+    \begin{aligned}
+        \mc{E}(\rho) &= \sum_k \bra{u_k}U \rho \otimes \ket{0}\bra{0}U^\dagger \ket{u_k} \\
+        &= \sum_k \bra{u_k}U\ket{0}\rho \bra{0}U^\dagger \ket{u_k}
+    \end{aligned}
+    \end{align}
+    Note that we can freely move the ket $\ket{0}$ across $\rho$ to match with $U$ since $\rho$ and $\ket{0}$ live in difference spaces. Consider the object $E_k$ defined by
+    \begin{align}
+        E_k \equiv \bra{u_k}U\ket{0}.
+    \end{align}
+    This is, in fact, an operator from the space of $AB$ to $BC$. From \eqref{eq:Exercise 8.3} we have
+    \begin{align}
+        \mc{E}(\rho) = \sum_k E_k \rho E_k^\dagger
+    \end{align}
+    as desired. Moreover, we can check that the completeness relation is satisfied, as it must be for probability conservation.
+    \begin{align}
+        \sum_k E_k^\dagger E_k = \sum_k \bra{0}U^\dagger \ket{u_k}\ket{u_k}U\bra{0} = \bra{0}U^\dagger \left(\sum_k \ket{u_k}\bra{u_k}\right) U\ket{0} = \bra{0}U^\dagger U \ket{0} = I_{AB}
+    \end{align}
+    where the subscript emphasizes the space the identity is acting on. 
+    
+\section*{Exercise 8.4: (Measurement)}
+    Suppose we have a single qubit principal system, interacting with a single qubit environment through the transform
+    \begin{align}
+        U = P_0\otimes I + P_1 \otimes X
+    \end{align}
+    where $X$ is the usual Pauli matrix (acting on the environment) and $P_0\equiv \ket{0}\bra{0}$, $P_1 \equiv \ket{1}\bra{1}$ are projectors (acting on the system). Give the quantum operation for this process, in the operator-sum representation, assuming the environment starts in the state $\ket{0}$.
+    
+    \textbf{Solution:} There will be two operation elements, $E_0$ and $E_1$, since the dimension of the environment is two. Moreover, per the preceding discussion these will be given by
+    \begin{align}
+        E_j = \bra{u_j}U\ket{0}
+    \end{align}
+    where the $\ket{u_j}$ form an orthonormal basis for the environment. Let's take these to be the computational basis. We then have
+    \begin{align}
+    \begin{aligned}
+        E_0 = \bra{0}U\ket{0} = P_0\otimes \bra{0}I\ket{0} + P_1 \otimes \bra{0}X\ket{0} = P_0 \\
+        E_1 = \bra{1}U\ket{0} = P_0\otimes \bra{1}I\ket{0} + P_1 \otimes \bra{1}X\ket{0} = P_1.
+    \end{aligned}
+    \end{align}
+    Thus, the quantum operation $\mc{E}$ can be expressed as
+    \begin{align}
+        \mc{E}(\rho) = P_0 \rho P_0 + P_1 \rho P_1
+    \end{align}
+    Note that this is equivalent to a measurement in the computational basis. It is straightforward to show that these operators satisfy the completeness relation. 
+
+\section*{Exercise 8.5: (Spin flips)}
+    Just as in the previous exercise, but now let 
+    \begin{align}
+        U = \frac{X}{\sqrt{2}}\otimes I + \frac{Y}{\sqrt{2}}\otimes X.
+    \end{align}
+    Give the quantum operation for this process, in the operator-sum representation.
+    
+    \textbf{Solution:} We compute the Kraus operators as above, and get the following results.
+    \begin{align}
+        E_0 = \bra{0}U\ket{0} = \frac{X}{\sqrt{2}} \\
+        E_1 = \bra{1}U\ket{0} = \frac{Y}{\sqrt{2}}
+    \end{align}
+    Note that the $E_0$ corresponds to a spin flip, while $E_1$ corresponds to a spin flip followed by phase flip. We can interpret each event occurring with probability $\frac{1}{2}$.
+    
+\section*{Exercise 8.6: (Composition of quantum operations)}
+    Suppose $\mc{E}$ and $\mc{F}$ are quantum operations on the same quantum system. Show that the composition $\mc{F}\circ \mc{E}$ is a quantum operation, in the sense that it has an operator-sum representation. State and prove an extension of this result to the case where $\mc{E}$ and $\mc{F}$ do not necessarily have the same input and output spaces. 
+    
+    \textbf{Solution:} Let $\{E_i\}$ and $\{F_j\}$ be the operation elements for the channels $\mc{E}$ and $\mc{F}$ respectively. Considering the action of the composition $\mc{F} \circ \mc{E}$ on an arbitrary input state $\rho$.
+    \begin{align}
+    \begin{aligned}
+        \mc{F}\circ\mc{E} (\rho) &= \mc{F}(\mc{E}(\rho)) \\
+        &= \sum_j F_j \mc{E}(\rho) F_j^\dagger \\
+        &= \sum_j F_j \left(\sum_i E_i \rho E_i^\dagger \right) F_j^\dagger \\
+        &= \sum_{ji} F_j E_i \rho E_i^\dagger F_j^\dagger \\
+        &= \sum_{ji} G_{ji} \rho G_{ji}^\dagger 
+    \end{aligned}
+    \end{align}
+    where $G_{ji} \equiv F_j E_i$ is the composition of the two operation elements. Note that this derivation holds as long as the output space of $\mc{E}$ matches the input space of $\mc{F}$, as is required for the composition to be well-defined anyways. One can check that the completeness relation
+    \begin{align}
+        \sum_{ji}G_{ji}^\dagger G_{ji} \leq I 
+    \end{align}
+    is satisfied.
+
+\chapter*{Distance measures for quantum information}
+
+\section*{Exercise 9.1}
+    What is the trace distance between the probability distribution (1, 0) and the probability distribution (1/2, 1/2)? Between (1/2, 1/3, 1/6) and (3/4, 1/8, 1/8)?
+    
+    \textbf{Solution:} Let's apply the definition in each case.
+    \begin{align}
+    \begin{aligned}
+        D((1,0), (1/2,1/2)) &= \frac{1}{2} (\abs{1-1/2}+\abs{0-1/2}) = \frac{1}{2}\\
+        D((1/2,1/3,1/6), (3/4,1/8,1/8)) &= \frac{1}{2} (\abs{1/4} + \abs{5/24}+\abs{1/24}) = \frac{1}{4}
+    \end{aligned}
+    \end{align}
+    
+\section*{Exercise 9.2}
+    Show that the trace distance between probability distributions $(p, 1 - p)$ and $(q, 1 - q)$ is $\abs{p - q}$.
+    
+    \textbf{Solution:} Again applying the definition,
+    \begin{align}
+    \begin{aligned}
+        D((q,1-q), (p,1-p)) &= \frac{1}{2}(\abs{q-p} + \abs{(1-q)-(1-p)}) \\
+        &= \frac{1}{2} (2 \abs{p-q}) \\
+        &= \abs{p-q}
+    \end{aligned}
+    \end{align}
+
+\section*{Exercise 9.3}
+    What is the fidelity of the probability distributions (1, 0) and (1/2, 1/2)? Of (1/2, 1/3, 1/6) and (3/4, 1/8, 1/8)?
+    
+    \textbf{Solution:} Let's once again apply the definition of fidelity to these distributions.
+    
+    \begin{align}
+    \begin{aligned}
+        F((1,0),(1/2,1/2)) &= 1\times \sqrt{1/2} + 0 = \frac{1}{\sqrt{2}} \\
+        F((1/2,1/3,1/6),(3/4,1/8,1/8)) &= \sqrt{1/2\times 3/4} + \sqrt{1/3\times 1/8}+\sqrt{1/6\times 1/8} \\
+        &= \frac{1}{2}(\sqrt{3/2} + 1/\sqrt{6}+1/(2\sqrt{3}))
+        &\approx 0.96
+    \end{aligned}
+    \end{align}
+
+\section*{Exercise 9.4}
+    Prove (9.3).
+    
+    \textbf{Solution:} Let $X$ be the index set for the outcomes $x$. Note that we may write
+    \begin{align} \label{eq:Exercise_9.4_1}
+        \frac{1}{2}\sum_{x\in X} \abs{p_x-q_x} = \frac{1}{2}\sum_{x\in P} (p_x-q_x) + \frac{1}{2} \sum_{x\notin P} (q_x-p_x)
+    \end{align}
+    where $P = \{x\in X| p_x \geq q_x\}$. This amounts to breaking up the absolute value depending on the sign of $p_x-q_x$. I claim that both sums on the right side of the equation are, in fact, equal. This follows from normalization of probabilities, which in this case can be cast as 
+    \begin{align}
+        \sum_{x\notin P} p_x = 1-\sum_{x\in P} p_x
+    \end{align}
+    and similar for $q_x$. Thus,
+    \begin{align}
+        \sum_{x\notin P} (q_x-p_x) = (1-\sum_{x\in P}q_x) - (1-\sum_{x\in P}p_x) = \sum_{x\in P }(p_x - q_x).
+    \end{align}
+    Applying this relationship to equation \eqref{eq:Exercise_9.4_1} gives
+    \begin{align}
+        D(p_x, q_x) = \frac{1}{2}\sum_{x\in X} \abs{p_x-q_x} = \sum_{x\in P} p_x - q_x.
+    \end{align}
+    We could have just as well summed over $Q = X\setminus P$ and gotten the same result, provided we summed over $q_x-p_x$ instead. 
+    
+    Let's now argue that $P$ is the set that maximizes the sum, that is,
+    \begin{align} \label{eq:Exercise_9.4_2}
+        \sum_{x\in P } (p_x-q_x) = \max_{S\subset X} \sum_{x\in S} (p_x -q_x).
+    \end{align}
+    To see this, note that $P$ contains every element $x$ such that $p_x-q_x$ is positive (or zero, though this doesn't matter in terms of the sum), and doesn't contain elements for which it is negative. Thus, elements of $P$ only increase the sum, never decrease. And $P$ contains all such positive elements. This means that equation \eqref{eq:Exercise_9.4_2} holds. Since the left hand side equals the trace distance, we have our result. The only thing that remains is to argue that the equality remains unchanged when we include the absolute value sign; this will be done in the subsequent exercise. 
+    
+\section*{Exercise 9.5}
+    Show that the absolute value signs may be removed from Equation (9.3), that is,
+    \begin{align}
+        D(p_x, q_x) = \max_s (p(S)-q(S)) = \max_S \left(\sum_{x\in S} p_x -\sum_{x\in S} q_x\right).
+    \end{align}
+    
+    \textbf{Solution:} To maximize the absolute value, we can either sum over all the $x$ where $p_x-q_x$ is positive, or those in which it is negative, and take the maximum of these two with absolute value. However, because of the normalization of probability to one, these two are equal anyways, as I argue in the previous exercise as an intermediate step. Hence, we can always just choose the positive sum, so the absolute value sign is not necessary. 
+    
+\section*{Exercise 9.6}
+    What is the trace distrance between the density operators
+    \begin{align}
+        \frac{3}{4}\ket{0}\bra{0}+\frac{1}{4}\ket{1}\bra{1};\quad \frac{2}{3}\ket{0}\bra{0}+\frac{1}{3}\ket{1}\bra{1}?
+    \end{align}
+    Between:
+    \begin{align}
+        \frac{3}{4}\ket{0}\bra{0}+\frac{1}{4}\ket{1}\bra{1};\quad \frac{2}{3}\ket{+}\bra{+}+\frac{1}{3}\ket{-}\bra{-}?
+    \end{align}
+    (Recall that $\ket{\pm} = (\ket{0}\pm\ket{1})/\sqrt{2}.)$
+    
+    \textbf{Solution:} (Example 1) This example is relatively simple, since both operators are already diagonal in the computational basis. We basically just need the difference, absolute valued, of the diagonal elements. Here is the full computation.
+    \begin{align}
+    \begin{aligned}
+         &\frac{1}{2}\left(\abs{\frac{3}{4}-\frac{2}{3}}+\abs{\frac{1}{4}-\frac{1}{3}}\right) \\
+         &= \frac{1}{2}\left(\frac{1}{12}+\frac{1}{12}\right) \\
+         &= \frac{1}{12}
+    \end{aligned}
+    \end{align}
+    
+    (Example 2) This one is a bit trickier, because the two operators under consideration do not commute. To proceed, we will calculate the eigenvalues of the difference. Let $\rho$ and $\sigma$ denote the first and second density operators, respectively. We will diagonalize the difference $\rho-\sigma$, and it will be helpful to express everything as a matrix in the computational basis. These are given by
+    \begin{align}
+        \rho =
+        \begin{pmatrix}
+            3/4 & 0 \\
+            0 & 1/4
+        \end{pmatrix} \quad 
+        \sigma = 
+        \begin{pmatrix}
+            1/2 & 1/6 \\
+            1/6 & 1/2
+        \end{pmatrix}.
+    \end{align}
+    It's a good idea to do the computation for $\sigma$ yourself. Note that the matrix forms are symmetric and have trace 1, as expected. They are also positive definite. None of this should be surprising, of course. The difference $\rho - \sigma$ is then given by 
+    \begin{align}
+        \rho-\sigma = 
+        \begin{pmatrix}
+            1/4 & -1/6 \\
+            -1/6 & -1/4
+        \end{pmatrix}.
+    \end{align}
+    Now we compute the eigenvalues. Do this using your favorite method. The two eigenvalues, $\lambda_+$, $\lambda_-$ are given by
+    \begin{align}
+        \lambda_\pm = \pm \frac{\sqrt{13}}{12}
+    \end{align}
+    Thus, taking the sum of the absolute values, and dividing by two, we get the trace distance: $\sqrt{13}/12$. Again, it's a good idea to check this. 
+    
+\section*{Exercise 9.7}
+    Show that for any states $\rho$ and $\sigma$, one may write $\rho-\sigma = Q-S$, where $Q$ and $S$ are positive operators with support on orthogonal vector spaces. (Hint: use the spectral decomposition $\rho -\sigma = U DU^\dagger$, and split the diagonal matrix $D$ into positive and negative parts. This fact will continue to be useful later.)
+    
+    \textbf{Solution:} Though we are proving this for the specific case $\rho -\sigma$, with two quantum states, this is really quite more general. All we require is the difference $\rho - \sigma$ be Hermitian, which it certainly is in this case. Any Hermitian operator can be diagonalized, and one way to understand this is to say that $\rho - \sigma$ may be expressed as a combination of orthogonal projectors.
+    \begin{align} \label{eq:Exercise_9.7}
+        \rho - \sigma = \sum_j \lambda_j \ket{\lambda_j}\bra{\lambda_j}
+    \end{align}
+    Here, the sum is taken over all (nonzero) eigenvalues $\lambda_j$, with corresponding eigenvector $\ket{\lambda_j}$ (in case of multiplicity, $\lambda_j$ may be equal to $\lambda_k$ for $j\neq k$. However, in this case we can make a choice so that $\ket{\lambda_j}$ and $\ket{\lambda_k}$ are orthogonal. The notation is tricky but useful). Let us reorganize the sum into two pieces, one in which the eigenvalues are positive, and one containing the remaining, negative terms. Call these terms $Q$ and $T$, respectively. Clearly, $Q$ is positive; its eigenvalues are either zero or $\lambda_j$ for positive $\lambda_j$. Moreover, $T$ is clearly negative, since all it's eigenvalues are negative or zero. Thus, $S = -T$ is positive. Moreover, by construction, we have
+    \begin{align}
+        \rho - \sigma = Q + T = Q - S
+    \end{align}
+    The fact that $Q$ and $S$ act on orthogonal subspaces is also a consequence of the hermiticity of $\rho -\sigma$, which implies that all the eigenvectors in equation \eqref{eq:Exercise_9.7} are mutually orthogonal.
+
+\section*{Exercise 9.8 (Convexity of the trace distance)} 
+    Show that the trace distance is convex in its first input,
+    \begin{align}
+        D\left(\sum_i p_i\rho_i, \sigma\right) \leq \sum_i p_i D(\rho_i, \sigma).
+    \end{align}
+    By symmetry convexity in the second entry follows from convexity in the first.
+    
+    \textbf{Solution:} We would like to somehow take advantage of the joint convexity result, which seems like it should directly imply the result we seek. To make it work in our favor, we can employ a trick: write $\sigma = \sum_i p_i \sigma_i$, where $\sigma_i = \sigma$ for all $i$. Now, $\sigma$ is written so that we can apply joint convexity. As a final step, simply replace $\sigma_i = \sigma$ in the resulting formula. This will prove the result. 
+    
+\section*{Exercise 9.9 (Existence of fixed points)} 
+    \emph{Schauder's fixed point theorem} is a classic result from mathematics that implies that any continuous map on a convex, compact subset of a Hilbert space has a fixed point. Use Schauder’s fixed point theorem to prove that any trace-preserving quantum operation $\mc{E}$ has a fixed point, that is, $\rho$ such that $\mc{E}(\rho) = \rho$. 
+    
+    \textbf{Solution:} We simply need to show that a trace-preserving quantum operation $\mc{E}$ satisfies the criteria of the theorem. First, note that the collection of self-adjoint operators on a complex Hilbert space is \emph{itself} a real Hilbert space, with inner product defined by $\langle A, B \rangle \equiv \tr(A B)$. Quantum operations are maps on the set of density operators, which are a subset of this Hilbert space of operators. And we know this map is continuous, since, after all, the map $\mc{E}$ is contractive with respect to trace distance, and therefore keeps quantum states close together (this could probably be demonstrated more rigorously). Therefore, we need to check that this set $\mc{D}$ of density operators is convex and compact. We already know $\mc{D}$ is convex: any convex combination of states $\rho$ and $\sigma$, 
+    \begin{align}
+        \lambda \rho + (1-\lambda) \sigma,
+    \end{align} is itself a valid state. To prove compactness, we will take advantage of the so-called \emph{Heine-Borel theorem}, which says that subset of a space which is the "same as" an n-dimensional real space, $\mathbb{R}^n$ is compact if and only it is closed and bounded. Bound just means the set doesn't extend indefinitely. Closed means there is some boundary that lies within the set. Both these properties can be understood, in our circumstances, as a consequence of the existence of pure states, which are \emph{extremal points} of $\mc{D}$. This means pure states form the boundary for density operators, and of course this boundary is included in $\mc{D}$. All of this can be proved with greater rigor, but hopefully this gives a starting point for understanding the result. With these properties in hand, we can use the Schauder theorem to assert a map $\mc{E}$ on $\mc{D}$ has at least one fixed point $\rho \in \mc{D}$.
+    
+\section*{Exercise 9.10}
+    Suppose E is a \emph{strictly contractive} trace-preserving quantum operation, that is, for any $\rho$ and $\sigma$, $D(\mc{E}(\rho), \mc{E}(\sigma)) < D(\rho, \sigma)$. Show that E has a unique fixed point.
+    
+    \textbf{Solution:} From the previous exercise, we know that $\mc{E}$ has at least one fixed point. Let $\rho$ and $\sigma$ be fixed points, possibly equal. We will show that, in fact, it must be that $\rho = \sigma$. By definition of fixed point, the states are invariant under the map: $\mc{E}(\rho) = \rho$ and $\mc{E}(\sigma) = \sigma$. Therefore, $D(\mc{E}(\rho),\mc{E}(\sigma)) = D(\rho, \sigma)$. On the other hand, because $D$ is strictly contractive, $D(\mc{E}(\rho), \mc{E}(\sigma)) \leq D(\rho, \sigma)$, with equality if and only if $\rho = \sigma$. Since we indeed have equality, it must be that $\rho = \sigma$. Thus, every fixed point of $\mc{E}$ is the same, and therefore unique.
+
+\section*{Exercise 9.11}
+    Suppose $\mc{E}$ is a trace-preserving quantum operation for which there exists a density operator $\rho_0$ and a trace-preserving quantum operation $\mc{E}'$ such that
+    \begin{align}
+        \mc{E}(\rho) = p\rho_0 + (1-p)\mc{E}'(\rho)
+    \end{align}
+    for some $p, 0 < p \leq 1$. Physically, this means that with probability $p$ the input state is thrown out and replaced with the fixed state $\rho_0$, while with probability $1 - p$ the operation $\mc{E}'$ occurs. Use joint convexity to show that $\mc{E}$ is a strictly contractive quantum operation, and thus has a unique fixed point.
+    
+    \textbf{Solution:} Let $\rho$ and $\sigma$ be distinct quantum states, and consider the distance between the states after application of the operation $\mc{E}$.
+    \begin{align}
+        D(\mc{E}(\rho),\mc{E}(\sigma)) = D(p\rho_0 + (1-p)\mc{E}'(\rho), p \rho_0 + (1-p)\mc{E}'(\sigma))
+    \end{align}
+    Using the joint convexity of the trace distance,
+    \begin{align}
+    \begin{aligned}
+        D(\mc{E}(\rho),\mc{E}(\sigma)) &\leq p D(\rho_0, \rho_0) + (1-p)D(\mc{E}'(\rho) \mc{E}'(\sigma)) \\
+        &= (1-p) D(\mc{E}'(\rho), \mc{E}'(\sigma)) \\
+        &< D(\mc{E}'(\rho), \mc{E}'(\sigma))\\
+        &\leq D(\rho, \sigma)
+    \end{aligned}
+    \end{align}
+    In the process we used the fact that $1-p <1$ and that any quantum channel, particularly $\mc{E}'$, is contractive. From this string of inequalities, one of which is strict, we can conclude that $D(\mc{E}(\rho), \mc{E}(\sigma)) < D(\rho, \sigma)$, hence the map is strictly contractive. By the results of the previous exercise, it also has a unique fixed point. 
+    
+\section*{Exercise 9.12}
+    Consider the depolarizing channel introduced in Section 8.3.4 on page 378, $\mc{E}(\rho) = pI/2 + (1 - p)\rho$. For arbitrary $\rho$ and $\sigma$ find $D(\mc{E}(\rho), \mc{E}(\sigma))$ using the Bloch representation, and prove explicitly that the map $\mc{E}$ is strictly contractive, that is, $D(\mc{E}(\rho), \mc{E}(\sigma)) < D(\rho, \sigma)$.
+    
+    \textbf{Solution:} Note that the depolarizing channel meets the criteria of the map $\mc{E}$ of the previous exercise, and therefore we could conclude right away that the map is strictly contractive. However, as the problem suggests, we will show this explicitly in the Bloch representation, which will serve as a nice illustration. Recall that any qubit state $\rho$ can be parametrized as 
+    \begin{align}
+        \rho = \frac{1}{2}(I+\Vec{r}\cdot\vec{\sigma})
+    \end{align}
+    where $\norm{\vec{r}} \leq 1$. The 3-vector $\vec{r}$ gives the location of the state in the Bloch ball. The action of the depolarizing channel $\mc{E}$ can be expressed solely in terms of changing $\vec{r}$, and we can compute this action.
+    \begin{align}
+    \begin{aligned}
+        \mc{E}(\rho) &= pI/2 + (1-p)\frac{1}{2}(I+\vec{r}\cdot\vec{\sigma}) \\
+        &= I/2 + \frac{1-p}{2}\vec{r}\cdot\vec{\sigma}\\
+        &= \frac{1}{2}(I+\vec{r}'\cdot\vec{\sigma})
+    \end{aligned}
+    \end{align}
+    where $\vec{r}' = (1-p) \vec{r}$. Hence, the depolarizing channel shrinks any Bloch vector by the factor $1-p<1$. From this geometric, picture, it should be clear that this map is strictly contractive: all quantum states get closer together after application of the map. Indeed, the trace distance for qubits is directly proportional to the Euclidean distance of the corresponding Bloch vectors. This proves our result. 
+    
+\section*{Exercise 9.13}
+    Show that the bit flip channel (Section 8.3.3) is contractive but not strictly contractive. Find the set of fixed points for the bit flip channel.
+    
+    \textbf{Solution:} We showed in Exercise 9.10 that all strictly contractive quantum operations have unique fixed points. Therefore, by the contrapositive, if an operation \emph{does} have multiple fixed points, it cannot be strictly contractive. Since every quantum operation is contractive by Theorem 9.2, we simply need to show there are multiple fixed points. Recall that the bit flip channel $\mc{E}$ is defined by
+    \begin{align}
+        \mc{E}(\rho) = p X\rho X + (1-p) \rho.
+    \end{align}
+    Let us find the set of points $\rho$ such that $\mc{E}(\rho) = \rho$. Applying the definition and simplifying,
+    \begin{align}
+        p X\rho X +(1-p)\rho = \rho \quad \Leftrightarrow \quad X \rho X = \rho.
+    \end{align}
+    In turn, this is equivalent to
+    \begin{align}
+        [\rho, X] = 0.
+    \end{align}
+    Hence, any state which commutes with pauli $X$ is unchanged by the channel. This makes sense intuitively, since these states are eigenstates of the pauli $X$ operator. These states can be understood as the set of all Bloch vectors lying along the x-axis. Clearly there are many (in fact, infinite) such states. Therefore, $\mc{E}$ is not strictly contractive.
+    
+\section*{Exercise 9.14: (Invariance of fidelity under unitary transformations)}
+    Prove (9.61) by using the fact that for any positive operator $A$, $\sqrt{UAU^\dagger} = U\sqrt{A}U^\dagger$.
+    
+    \textbf{Solution:} Let $\rho' = U \rho U^\dagger$ and similarly for $\sigma$. Making use of the square root property given in the problem, we have
+    \begin{align}
+        \rho'^{1/2}\sigma'\rho'^{1/2} = (U\rho^{1/2} U^\dagger) (U \sigma U^\dagger) (U\rho^{1/2}U^\dagger) = U \rho^{1/2}\sigma\rho^{1/2}U^\dagger.
+    \end{align}
+    This is the type of isomorphism property we expect matrices to respect under multiplication. Because of this, we have
+    \begin{align}
+    \begin{aligned}
+        F(\rho', \sigma') &= \tr\sqrt{U\rho^{1/2}\sigma\rho^{1/2}U^\dagger} \\
+        &= \tr U \sqrt{\rho^{1/2}\sigma\rho^{1/2}} U^\dagger \\
+        &= \tr \sqrt{\rho^{1/2}\sigma\rho^{1/2}} \\
+        &= F(\rho, \sigma).
+    \end{aligned}
+    \end{align}
+    Along the way, we again used the square root property for positive operators, as well as the cyclic property of the trace. This completes the proof.
+    
+\section*{Exercise 9.15:}
+    Show that
+    \begin{align}
+        F(\rho, \sigma) = \max_{\ket{\varphi}} \abs{\bra{\psi}\ket{\varphi}}
+    \end{align}
+    where $\ket{\psi}$ is any fixed purification of $\rho$, and the maximization is over all purifications of $\sigma$.
+    
+    \textbf{Solution:} Let's return to an earlier line of the derivation for the full proof of Uhlmann's theorem. At equation (9.70) of the text, we showed that for any purifications $\ket{\psi}$ and $\ket{\varphi}$ of $\rho$ and $\sigma$ respectively,
+    \begin{align}
+        \abs{\bra{\psi}\ket{\varphi}} = \abs{\tr(\sqrt{\rho}\sqrt{\sigma}U)},
+    \end{align}
+    where $U = V_Q V_R^\dagger U_R U_Q^\dagger$. As in the original derivation, let $V$ be the unitary part of the polar decomposition of $\sqrt{\rho}\sqrt{\sigma}$.
+    \begin{align}
+        \sqrt{\rho}\sqrt{\sigma} = \abs{\sqrt{\rho}\sqrt{\sigma}} V.
+    \end{align}
+    As before, we need to set $VU=I$ in order to achieve the maximum value and match the fidelity. But this time we can only change $V_Q$ and $V_R$, not $U_Q$ and $U_R$ (which are fixed by our choice of purification of $\ket{\psi}$). Thankfully, we can still accomplish this. Set $V_R = U_R$ and $V_Q = V^\dagger U_Q$. Then,
+    \begin{align}
+        VU = V V_Q V_R^\dagger U_R U_Q^\dagger = V V^\dagger U_Q U_R^\dagger U_R U_Q^\dagger = I.
+    \end{align}
+    This completes the proof: we only need to maximize one of the two purifications.
+    
+\section*{}
+    Suppose $R$ and $Q$ are two quantum systems with the same Hilbert space. Let $\ket{i_R}$ and $\ket{i_Q}$ be orthonormal basis sets for $R$ and $Q$. Let $A$ be an operator on $R$ and $B$ an operator on $Q$. Define $\ket{m} \equiv \sum_i \ket{i_R}\ket{i_Q}$. Show that
+    \begin{align}
+        \tr(A^\dagger B) = \bra{m} A \otimes B \ket{m}
+    \end{align}
+    where the multiplication on the left hand side is of matrices, and it is understood that the matrix elements of $A$ are taken with respect to the basis $\ket{i_R}$ and those for $B$ with respect to the basis $\ket{i_Q}$.
+    
+    \textbf{Solution:} Let's explicitly evaluate the right side of the equation. We have
+    \begin{align}
+    \begin{aligned}
+        \bra{m} A \otimes B \ket{m} &= \sum_{i} \bra{i_R}\bra{i_Q} A \otimes B \sum_j \ket{j_R}\ket{j_Q} \\
+        &= \sum_{ij} \bra{i_R}A\ket{j_R} \bra{i_Q}B\ket{j_Q} \\
+        &= \sum_{ij} A_{ij} B_{ij} 
+    \end{aligned}
+    \end{align}
+    where $A_{ij} \equiv \bra{i_R}A\ket{j_R}$ are the matrix elements with respect to the basis, as are $B_{ij}$. 
+
+\chapter*{Theory of quantum error correction}
+
+\section*{Exercise 10.1}
+    Verify that the encoding circuit in Figure 10.2 works as claimed.
+    
+    \textbf{Solution:} In order for the encoding to work properly, the circuit must take $\ket{000} \rightarrow \ket{000}$, and $\ket{100} \rightarrow \ket{111}$. Why? First, note that the first qubit is the one which we are trying to encode, and the other two are initialized in the $00$ state, regardless of the state of the first qubit. Thus, for example, $100$ has the unencoded first qubit in the $1$ state, and we need to encode it to the logical 1 state given by $111$. 
+    
+    Consequently, whether $\ket{\psi}$ is in the 0 or 1 state, we can easily verify that the circuit does the appropriate action. Moreover, arbitrary states are taken care of by linearity. 
+
+\section*{Exercise 10.2}
+    The action of the bit flip channel can be described by the quantum operation $\mc{E}(\rho) = (1-p)\rho + p X\rho X$. Show that this may be given an alternate operator-sum representation, as $\mc{E}(\rho) = (1-2p)\rho + 2p P_+ \rho P_+ + 2p P_- \rho P_-$ where $P_+$ and $P_-$ are projectors onto the $+1$ and $-1$ eigenstates of $X$, $(\ket{0}+\ket{1})/\sqrt{2}$ and $(\ket{0}-\ket{1})/\sqrt{2}$, respectively. This latter representation can be understood as a model in which the qubit is left alone with probability $1-2p$, and is 'measured' by the environment in the $\ket{+}, \ket{-}$ basis with probability $2p$.
+    
+    \textbf{Solution:} The operation elements $E_i$ are not unique for a given quantum operation. We can obtain new operation elements $F_j$ through a `rotation' by some unitary matrix
+    \begin{align}
+        F_j = u_{ji} E_i.
+    \end{align}
+    In our case, the original operator elements are $\sqrt{1-p}I$ and $\sqrt{p}X$. The new operator elements are $\sqrt{1-2p}I$, $\sqrt{2p}P_+$, and $\sqrt{2p}P_-$. First of all, is it even possible to express the new operators as a linear combination of the old ones? Indeed it is. First we can simply rescale the identity.
+    \begin{align}
+        \sqrt{1-2p}I = \sqrt{\frac{1-2p}{1-p}} \sqrt{1-p}I
+    \end{align}
+    Next, we can write the projectors $P_\pm$ as a combination of $I$ and $X$: $P_\pm = (I\pm X)/2$. Starting from here, we can insert factors of $\sqrt{p}$ and such as required to get the right operation elements.
+    \begin{align}
+    \begin{aligned}
+        \sqrt{2p}P_\pm &= \sqrt{p} \frac{I\pm X}{\sqrt{2}} \\
+        &= \frac{\sqrt{\frac{p}{1-p}} \left(\sqrt{1-p}I\right) + \left(\sqrt{p} X\right)}{\sqrt{2}}
+    \end{aligned}
+    \end{align}
+    Do these linear combinations constitute a unitary combination? First, we'll need to do something to make the number of quantum operations before and after the same, otherwise our 'unitary' cannot be square. A simple way to do this is to append the zero operation 0. Using the combinations above, we can express the transformation in matrix form as
+    \begin{align}
+        \begin{pmatrix}
+            \sqrt{1-2p} I \\
+            \sqrt{2p}P_+ \\
+            \sqrt{2p}P_- 
+        \end{pmatrix}
+        =
+        \begin{pmatrix}
+            \sqrt{\frac{1-2p}{1-p}} & 0 & ? \\
+            \sqrt{\frac{p}{1-p}} & \frac{1}{\sqrt{2}} & ? \\
+            \sqrt{\frac{p}{1-p}} & -\frac{1}{\sqrt{2}} & ?
+        \end{pmatrix}
+        \begin{pmatrix}
+            \sqrt{1-p}I \\
+            \sqrt{p} X \\
+            0
+        \end{pmatrix}
+    \end{align}
+    We haven't worked out the entries with ?'s, but we won't need to. The first two columns of the matrix can be checked to be orthonormal and orthogonal to each other. Since the matrix is 3x3, we can choose the remaining column to be orthogonal to the remaining two and normalized. The resulting matrix will therefore be unitary. Moreover, since the bottom entry on the right column vector is zero, the entries don't affect the truth of the equality. 
+    
+    Let's call this unitary matrix $u$. We've shown that a unitary relationship between the two sets of operation elements exists, and therefore they constitute the same quantum operation. 
+    
+\section*{Exercise 10.3}
+    Show by explicit calculation that measuring $Z_1 Z_2$ followed by $Z_2 Z_3$ is equivalent, up to labeling of the measurement outcomes, to measuring the four projectors defined by (10.5)–(10.8), in the sense that both procedures result in the same measurement statistics and post-measurement states.
+    
+\section*{Exercise 10.4}
+    Consider the three qubit bit flip code. Suppose we had performed the error syndrome measurement by measuring the eight orthogonal projectors corresponding to projections onto the eight computational basis states.
+    
+    (1) Write out the projectors corresponding to this measurement, and explain how the measurement result can be used to diagnose the error syndrome: either no bits flipped or bit number j flipped, where j is in the range one to three.
+    
+    (2) Show that the recovery procedure works only for computational basis states.
+    
+    (3) What is the minimum fidelity for the error-correction procedure?
+    
+    \textbf{Solution:} (1) We can perform this orthogonal measurement in the usual way: measuring each qubit in the computational basis. The projector for bitstring $s$ will be $\ket{s}\bra{s}$. Even though we are using a different measurement scheme for correction, we will only be able to correct for a single bit flip at a time, because if there are two flips it looks the same as a single flip from the other state. Suppose the $j$th bit flips, where $j$ ranges from one to three. To correct the error, we can apply an $X$ gate to the $j$th qubit, bringing the state back to either $\ket{000}$ or $\ket{111}$.
+    
+    (2) The problem with this error correction scheme is that it destroys coherence (meaning it eliminates superpositions of computational basis states). To see this, suppose an error occurs on the 2nd qubit, so our state $\ket{\psi}$ is of the form (ignoring normalization)
+    \begin{align}
+        \ket{\psi} = \ket{010} + \ket{101}.
+    \end{align}
+    Performing our measurement yields the state $\ket{010}$ or $\ket{101}$ with equal probability. Applying our correction scheme gives us either a logical zero or one, but we have lost the original state $\ket{\psi}$. This demonstrates that we need to be more clever about the way we perform measurements, and in particular our measurements cannot reveal \emph{full} information about the encoded state $\ket{\psi}$. This is why partial information such as parity are more suitable. 
+    
+    (3) 
 
 \chapter*{Appendix 1: Notes on basic probability theory}
 
@@ -534,6 +1422,338 @@ This progress was last updated February 1st, 2021.
         p(|X-\mathbf{E}(X)|\geq \lambda\Delta(X)) \leq \frac{1}{\lambda^2}
     \end{align}
     This proves our result.
+
+
+\chapter*{Appendix 2: Group theory}
+
+
+\section*{Exercise A2.1}
+    Prove that for any element $g$ of a finite group, there always exists a positive integer $r$ such that $g^r = e$. That is, every element of such a group has an order.
+    
+    \textbf{Solution:} The proof relies on the pigeonhole principle. If $G$ is a finite group, and $g\in G$, then taking repeated powers of $g$ must yield a repeated element. More formally, there exist distinct positive integers $i,j \in \mathbb{Z^+}$ such that $g^i = g^j$. Without loss of generality, assume $j>i$. Multiplying by $g^{-i}$ on both sides gives $e = g^{j-i}$. Hence, there exists a positive integer $k=j-i$ such that $g^k = e$. Hence $g$ has an order. 
+    
+\section*{Exercise A2.2}
+    Prove Lagrange's theorem.
+    
+    \textbf{Solution:} To prove the theorem, we will introduce the notion of a coset, which is actually discussed later in the appendix. If $g\in G$, define the (left) coset $gH = \{gh|h\in H\}$. Consider the set of cosets $\{gH| g\in G\}$. I claim two things.
+    \begin{enumerate}
+        \item Each coset is the same size, and in particular the same size as $H$ (which is itself a coset).
+        \item The collection of cosets is a \emph{partition} of the group $G$. This means that
+        \begin{enumerate}
+            \item Each distinct coset is disjoint, i.e. if $g_1 H \neq g_2 H$, then $g_1 H \cap g_2 H = \emptyset$
+            \item Every element of $G$ is in some coset.
+        \end{enumerate}
+    \end{enumerate}
+    Let us prove each of these claims one by one. Consider some coset $gH$, and define a bijection $g:H\rightarrow gH$ by left multiplication.
+    \begin{align}
+        g(h) = gh
+    \end{align}
+    Clearly, this is a map to and from the appropriate sets. The map is surjective (onto) since any element $x\in gH$ is equal to $gh$ for some $h$, and there for the image of $h$ under the map induced by $g$. To prove the map is injective (one-to-one), suppose $gh_1 = gh_2$ for some $h_1, h_2 \in H$. Taking the inverse of both sides and using associativity, we have $h_1 = h_2$. This proves $g$ is a bijection, and hence $H$ and $gH$ have the same number of elements. 
+    
+    Now for the second item, namely the set of cosets form a partition of $G$. It is easy to see that every element of $g\in G$ is in the coset $gH$, proving item (b). To show item (a), we prove the contrapositive: if $g_1 H\cap g_2 H \neq \emptyset$, then $g_1 H = g_2 H$. Assuming the intersection is nonempty, there exists an element $g$ such that both $g = g_1 h_1$ and $g = g_2 h_2$ for some $h_1, h_2 \in H$. Hence, $g_1 = g_2 h_2 (h_1)^{-1} \in g_2 H$, since $H$ is closed under multiplication. This implies $g_1 H \subset g_2 H$. But as we just showed, all cosets are the same size (for finite $G)$. Thus, in fact, $g_1 H = g_2 H$.
+    
+    Having established the claims above, it is straightforward to prove Lagrange's theorem. There are $\abs{G}$ elements of $G$, partitioned into a finite number of cosets, each of size $\abs{H}$. That is, $\abs{G} = n\abs{H}$, where $n$ is the number of cosets. This proves the result.
+    
+\section*{Exercise A2.3}
+    Show that the order of an element $g\in G$ divides $\abs{G}$.
+    
+    \textbf{Solution:} The order of an element $g$ is the same as the size of the cyclic subgroup $H$ generated by $g$. By Lagrange's theorem, the order must divide the size of the group.
+    
+\section*{Exercise A2.4}
+    Show that if $y\in G_x$ then $G_y = G_x$.
+    
+    \textbf{Solution:} Suppose $y\in G_x$. Then there exists some $g\in G$ such that $y=g^{-1} x g$. Hence, $g y g^{-1} = x$, which implies $x \in G_y$. 
+    
+    We will prove $G_y \subset G_x$. Let $z \in G_y$, so that $z = w^{-1}y w$ for some $w\in G$. Using the conjugacy relation between $x$ and $y$,
+    \begin{align}
+        z = w^{-1}(g^{-1}xg)w = u^{-1}x u
+    \end{align}
+    where $u = gw \in G$. Thus, $z \in G_x$, so $G_y \subset G_x$.
+    
+    We can prove $G_x \subset G_y$ by the argument of the previous paragraph, interchanging $x$ with $y$ and $g$ with $g^{-1}$ wherever they appear. This implies $G_x = G_y$. 
+
+\section*{Exercise A2.5}
+    Show that if $x$ is an element of an Abelian group $G$ then $G_x = \{x\}$.
+    
+    \textbf{Solution:} Since $x = exe$, $x$ is in its own conjugacy class. Thus, $G_x$ is nonempty. Let $y \in G_x$, so that $y = g^{-1}x g$ for some $g\in G$. Since the group is Abelian,
+    \begin{align}
+        g^{-1}xg &= g^{-1}g x \\
+        &= ex \\
+        &= x
+    \end{align}
+    Hence, $y=x$. This implies any element of $G_x$ is $x$ itself, so $G_x = \{x\}$.
+    
+\section*{Exercise A2.6}
+    Show that any group of prime order is cyclic.
+    
+    \textbf{Solution:} Let $G$ be a group of prime order. Then, $\abs{G}>1$, and therefore $G\setminus\{e\}$ is nonempty. Let $g \in G\setminus\{e\}$ and consider the cyclic subgroup $H = \langle g \rangle$. By Lagrange's theorem, $\abs{H}$ divides $\abs{G}$. However, since $\abs{G}$ is prime, it must be that $\abs{H} = 1$ or $\abs{H} = \abs{G}$. It cannot be that $\abs{H} =1$, since $H$ contains $e$ and $g$. Hence, $\abs{H} = \abs{G}$. Since $H\subset G$ we have $H = G$. Thus, $G$ is cyclic.
+
+\section*{Exercise A2.7}
+    Show that every subgroup of a cyclic group is cyclic.
+    
+    \textbf{Solution:}
+
+\section*{Exercise A2.8}
+    Show that if $g\in G$ has finite order $r$, then $g^m = g^n$ if and only if $m=n\pmod{r}$.
+    
+    \textbf{Solution:} If $m=n$, the statement is true automatically. Otherwise, $m<n$ or $m>n$. Assume the former without loss of generality. Then, multiplying both sides by $g^{-m}$,
+    \begin{align} \label{eq: e = g^{n-m}}
+        e = g^{n-m}
+    \end{align}
+    By Euclid's division lemma, there exist integers $q, s$ such that
+    \begin{align}
+        n-m = qr + s
+    \end{align}
+    where $0\leq s < r$. Substituting this into equation \eqref{eq: e = g^{n-m}},
+    \begin{align}
+        e &= g^{qr}g^s \\
+        e &= (g^r)^q g^s \\
+        e &= e^q g^s \\
+        e &= g^s.
+    \end{align}
+    Since $r$ is the order by assumption, and $s <r$ it cannot be that $s>0$ or else $s$ would be the order of $g$. This implies $s=0$. Hence, $r|(n-m)$ and $m = n \pmod r$.
+
+\section*{Exercise A2.9}
+    Cosets define an equivalence relation between elements. Show that $g_1, g_2 \in G$ are in the same coset of $H$ in $G$ if and only if there exists some $h\in H$ such that $g_2 = g_1 h$.
+    
+    \textbf{Solution:} Suppose $g_2 = g_1 h$ for some $h$. Then, by definition, $g_2 \in g_1 H$. Moreover, $g_1 = g_1 e \in g_1 H$. Thus, $g_1$ and $g_2$ are in the same coset.
+    
+    Conversely, suppose $g_1$ and $g_2$ are in the same coset, so that there exists some $g\in G$ such that $g_1, g_2 \in gH$. This implies there exist $h_1, h_2 \in H$ such that $g_1 = g h_1$ and $g_2 = g h_2$. Inverting the second of these relations gives $g = g_2 h_2^{-1}$, and substituting this into the relation for $g_1$ gives
+    \begin{align}
+        g_1 &= (g_2 h_2^{-1})h_1 \\
+        g_1 &= g_2 h^{-1},
+    \end{align}
+    where $h = h_1^{-1}h_2\in H$. Thus, $g_2 = g_1 h$.
+    
+\section*{Exercise A2.10}
+    How many cosets of $H$ are there in $G$?
+    
+    \textbf{Solution:} All cosets are the same size $\abs{H}$ and form a partition of the total group $G$ (see Exercise A2.2). Hence, the number of cosets $n$ satisfies
+    \begin{align}
+        n = \frac{\abs{G}}{\abs{H}}.
+    \end{align}
+
+\section*{Exercise A2.11: (Characters)}
+    Prove the properties of characters given above.
+    
+    \textbf{Solution:} We will actually assume the result of the subsequent exercise: any (finite) matrix group is equivalent to a unitary matrix group. Hence, we can prove the statements for unitary matrix groups, and the result follows in general since the equivalence preserves character. Note that the proof of unitary equivalence does not rely on the results of this exercise, so there is no circular logic. 
+    
+    (1): The identity element of a matrix group must be the identity matrix itself. The trace of the identity matrix is just the dimension $n$.
+    \begin{align}
+        \tr(\mathbb{1}) = \sum_{i=1}^n \delta_{ii} = n.
+    \end{align}
+    
+    (2): Let $g\in G$. By unitarity, $g$ is diagonalizable, with eigenvalues $\lambda_n = e^{i\phi_k}$ for $\phi_k\in \mathbb{R}$ and $k=1,...,n$. Since the trace is the sum of the eigenvalues,
+    \begin{align}
+        \abs{\chi(g)} &= \abs{\sum_{k=1}^n \lambda_k} \\
+        &\leq \sum_{k=1}^n \abs{e^{i\phi_k}} = n.
+    \end{align}
+    Above, we made use of the triangle inequality and the fact that the eigenvalues have unit norm. This proves this part.
+    
+    (3): Using the notation of the previous part, suppose that $\abs{\chi(g)} = n$. Then we may write $\chi(g) = n e^{i\theta}$ for some phase $\theta\in \mathbb{R}$. This implies $\chi(g') = n$, where $g' = e^{-i\theta} g$. Since $g$ is unitary, so is $g'$, and by the previous relationship the eigenvalues $\lambda_k'$ of $g'$ are given by $e^{i\phi_k'}$, where $\phi_k'=\phi_k-\theta$. 
+    
+    We will show that $\phi_k' = 0$ for all $k = 1,...,n$, which implies that $\phi_k = \theta$. This, in turn, means that all the eigenvalues of $g$ are the same value $e^{i\theta}$, so that $g = e^{i\theta}I$ as desired. To proceed, let's observe that, if $\tr(g') = n$, we have 
+    \begin{align}
+    \begin{aligned}
+        &\sum_{k=1}^n e^{i\phi_k'} = \sum_{k=1}^n 1 \\[6pt]
+        &\implies \sum_{k=1}^n (1-e^{i\phi_k'}) = 0
+    \end{aligned}
+    \end{align}
+    The only way this equality can be satisfied is if $\phi_{k}'=0$, as can be seen by considering, say, the real part of the above equation. This proves  (3).
+    
+    (4): Suppose $g_1, g_2 \in G$ are members of the same conjugacy class, so that they are related by some similarity transform 
+    \begin{align}
+        g_1 = x g_2 x^{-1}
+    \end{align}
+    for some element $x\in G$. The cyclic property of the trace implies it is invariant under a similarity transform. That is,
+    \begin{align}
+        \chi(g_1) = \tr(x g_2 x^{-1}) = \tr(x^{-1} x g_2) = \tr(e g_2) = \tr(g_2) = \chi(g_2)
+    \end{align}
+    Thus, we see that the character is the same for any two members of the same conjugacy class.
+    
+    (5): We make use of our equivalence to a unitary representation, to say $g^{-1} = g^\dagger$. Hence,
+    \begin{align}
+        \chi(g^{-1}) = \tr(g^\dagger) = \sum_{k=1}^n g_{kk}^* = \chi(g)^*
+    \end{align}
+    
+    (6): What is an algebraic number? I don't really know how to do this one.
+    
+\section*{Exercise A2.12: (Unitary matrix groups)}
+    A unitary matrix group is comprised solely of unitary matrices (those which satisfy $U^\dagger U = I$). Show that every matrix group is equivalent to a unitary matrix group. If a representation of a group consists entirely of unitary matrices, we may refer to it as being a \emph{unitary representation}.
+    
+    \textbf{Solution:} Let $G$ be a finite matrix group. Given an inner product $\innerprod{\cdot}{\cdot}$, we wish to construct a new inner product $\innerprod{\cdot}{\cdot}'$ for which $G$ is unitary. In general, we may relate $\innerprod{\cdot}{\cdot}$ and $\innerprod{\cdot}{\cdot}'$ via a positive definite matrix $P$.
+    \begin{align}
+        \innerprod{\cdot}{\cdot}' = \innerprod{\cdot}{P\cdot}
+    \end{align}
+    The property we want from $P$ is that, for any $g\in G$,
+    \begin{align} \label{conj_symm}
+        g^\dagger P g = P.
+    \end{align}
+    We imagine that, whatever $P$ is, it must be expressed in terms of the group $G$ itself. The simplest way to construct positive matrices from $G$ is to take outer products of the form $g^\dagger g$. We know such constructions are strictly positive, since $g$ is never the zero matrix. Moreover, positive linear combinations of positive matrices are themselves positive, so we might consider trying something of the form
+    \begin{align}
+        P = \sum_{g\in G} c_g g^\dagger g, \quad c_g\geq 0.
+    \end{align}
+    To satisfy condition \eqref{conj_symm}, we recall that each element $g\in G$ acts as a permutation on the group via the group multiplication. Because sums over a set are invariant under permutations of the set, we recognize that what we need is $c_g=1$ for all $g$. Let's explicitly check that this works.
+    \begin{align}
+        g^\dagger P g = \sum_{g'\in G} g^\dagger g'^\dagger g' g = \sum_{g'\in G} (g'g)^\dagger (g'g) = \sum_{g\in G} g^\dagger g = P.
+    \end{align}
+    Thus, we have proven our result. As a finally note, if we wish to transform the group itself instead of the inner product of the space, we observe that we can think instead of acting on our vector space with the transformation $\sqrt{P}$, since $\innerprod{\cdot}{P\cdot} = \innerprod{\sqrt{P}^\dagger\cdot}{\sqrt{P}\cdot}$. The group therefore transforms as the corresponding similarity transform.
+    \begin{align}
+        g' = \sqrt{P}g \sqrt{P}^{-1}
+    \end{align}
+    This new matrix group is isomorphic to the original, it has the same characters, and is unitary with respect to the original inner product. This proves our result. 
+    
+\section*{Exercise A2.13}
+    Show that every irreducible Abelian matrix group is one dimensional.
+    
+    \textbf{Solution:} If $A$ is an abelian matrix group, then by definition each element commutes with one another. This implies the collection $A$ is simulaneously diagonalizable with the same unitary $U$. Thus there is an equivalent representation of $A$ consisting of diagonal matrices. Diagonal is a special case of block diagonal, and we have multiple blocks unless the dimension is 1. Thus, the group is irreducible if and only if $\dim(A) = 1$.
+
+\section*{Exercise A2.14}
+    Prove that if $\rho$ is an irreducible representation of $G$, then $\abs{G}/d_{rho}$ is an integer.
+    
+    \textbf{Solution:}
+
+\section*{Exercise A2.15}
+    Using the Fundamental Theorem, prove that characters are orthogonal, that is:
+    \begin{align}
+        \sum_{i=1}^r r_i(\chi_i^p)^*(\chi_i^q) = \abs{G}\delta_{pq} \quad \text{and} \quad \sum_{p=1}^r (\chi_i^p)^*(\chi_j^p) = \frac{\abs{G}}{r_i} \delta_{ij},
+    \end{align}
+    where $p, q$ and $\delta_{pq}$ have the same meaning as in the theorem, and $\chi_i^p$ is the value the character of the $p$th irreducible representation takes on the $i$th conjugacy class of $G$, and $r_i$ is the size of the $i$th conjugacy class.
+    
+    \textbf{Solution:}
+
+\section*{Exercise A2.16}
+    $S_3$ is the group of permutations of three elements. Suppose we order these as mapping 123 to: 123; 231; 312; 213; 132, and 321, respectively. Show that there exist two one-dimensional irreducible representations of $S_3$, one of which is trivial, and the other of which is 1, 1, 1, -1, -1, -1, corresponding in order to the six permutations given earlier. Also show that there exists a two-dimensional irreducible representation, with the matrices
+    \begin{align}
+    \begin{aligned}
+        \begin{bmatrix}
+            1 & 0 \\
+            0 & 1
+        \end{bmatrix}, \quad
+        \frac{1}{2}
+        \begin{bmatrix}
+            -1 & -\sqrt{3} \\
+            \sqrt{3} & -1
+        \end{bmatrix}, \quad
+        \frac{1}{2}
+        \begin{bmatrix}
+            -1 & \sqrt{3} \\
+            -\sqrt{3} & -1
+        \end{bmatrix}, \\
+        \begin{bmatrix}
+            -1 & 0 \\
+            0 & 1
+        \end{bmatrix}, \quad
+        \frac{1}{2}
+        \begin{bmatrix}
+            1 & \sqrt{3} \\
+            \sqrt{3} & -1
+        \end{bmatrix}, \quad
+        \frac{1}{2}
+        \begin{bmatrix}
+            1 & -\sqrt{3} \\
+            -\sqrt{3} & -1
+        \end{bmatrix}.
+    \end{aligned}
+    \end{align}
+    Verify that the representations are orthogonal.
+    
+    \textbf{Solution:}
+
+\section*{Exercise A2.17}
+    Prove that the regular representation is faithful.
+    
+    \textbf{Solution:}
+
+\section*{Exercise A2.18}
+    Show that the character of the regular representation is zero except on the representation of the identity element, for which $\chi(I) = \abs{G}$.
+    
+    \textbf{Solution:}
+    
+\section*{Exercise A2.19}
+    Use Theorem A2.5 to show that the regular representation contains $d_{\rho^p}$ instances of each irreducible representation $\rho^p$. Thus, if $R$ denotes the regular representation, and $\hat{G}$ denotes the set of all inequivalent irreducible representations, then
+    \begin{align}
+        \chi_i^R = \sum_{\rho\in\hat{G}} d_\rho \chi_i^\rho
+    \end{align}
+    
+    \textbf{Solution:}
+    
+\section*{Exercise A2.20}
+    The character of the regular representation is zero except for the conjugacy class $i$ containing $e$, the identity element in $G$. Show, therefore, that
+    \begin{align}
+        \sum_{\rho\in\hat{G}} d_\rho \chi^{\rho}(g) = N \delta_{ge}
+    \end{align}
+    
+    \textbf{Solution:}
+
+\section*{Exercise A2.21}
+    Show that $\sum_{\rho\in\hat{G}} d_\rho^2 = \abs{G}$.
+    
+    \textbf{Solution:}
+
+\section*{Exercise A2.22}
+    Substitute (A2.10) into (A2.9) and prove that $\hat{f}(\rho)$ is obtained.
+    
+    \textbf{Solution:}
+
+\section*{Exercise A2.23}
+    Let us represent an Abelian group $G$ by $g\in [0,N-1]$, with addition as the group operation, and define $\rho_h(g) = \exp[-2\pi i gh/N]$ as the $h$ representation of $g$. This representation is one-dimensional, so $d_\rho = 1$. Show that the Fourier transform relations for $G$ are 
+    \begin{align}
+        \hat{f}(h)= \frac{1}{\sqrt{N}} \sum_{g=0}^{N-1} f(g) e^{-2\pi i g h/N} \quad \text{and} \quad f(h)= \frac{1}{\sqrt{N}} \sum_{g=0}^{N-1} \hat{f}(g) e^{2\pi i h g/N}.
+    \end{align}
+    
+    \textbf{Solution:}
+    
+\section*{Exercise A2.24}
+    Using the results of Exercise A2.16, construct the Fourier transform over $S_3$ and express it as a $6\times6$ unitary matrix.
+    
+    \textbf{Solution:}
+
+
+\chapter*{Appendix 3: The Solovay–Kitaev theorem}
+
+\section*{Exercise A3.1:} 
+    In Chapter we made use of the distance measure $E(U,V)=\max_{\ket{\psi}}\norm{(U-V)\ket{\psi}}$, where the maximum is over all pure states $\ket{\psi}$. Show that when $U$ and $V$ are single qubit rotations, $U = R_{\hat{m}}(\theta)$, $V = R_{\hat{n}}(\varphi)$, $D(U,V) = 2 E(U,V)$, and thus it does not matter whether we use the trace distance or the measure $E(\cdot, \cdot)$ for the Solovay-Kitaev theorem.
+    
+    \textbf{Solution:} First, let's consider $E(U,V)$. We have
+    \begin{align}
+        E(U,V) = \max_{\ket{\psi}} \norm{(U-V)\ket{\psi}} = \max_{\ket{\psi}} \norm{U(\mathbb{1}-U^\dagger V)\ket{\psi}} = \max_{\ket{\psi}} \norm{(\mathbb{1}-W)\ket{\psi}} 
+    \end{align}
+    where $W = U^\dagger V \in SU(2)$. Hence, there exists a unit vector $\hat{q}$ and angle $\alpha\in [0,4\pi)$ such that $W = R_{\hat{q}}(\alpha)$. Let us proceed to calculate the norm in $E$ for an arbitrary state $\ket{\psi}$.
+    \begin{align}
+    \begin{aligned}
+        \norm{(\mathbb{1}-W)\ket{\psi}} &= \sqrt{\bra{\psi}(\mathbb{1}-W^\dagger)(\mathbb{1}-W)\ket{\psi}} \\
+        &= \sqrt{1 + 1 - \bra{\psi}W^\dagger \ket{\psi} - \bra{\psi}W\ket{\psi}} \\
+        &= \sqrt{2-2 \Re(\langle W\rangle)}
+    \end{aligned}
+    \end{align}
+    Here, $\langle W \rangle \equiv \bra{\psi} W \ket{\psi}$. Recall that, since $W$ is a single qubit rotation,
+    \begin{align}
+        W = R_{\hat{q}}(\alpha) = \cos(\alpha/2)\mathbb{1} + i \sin(\alpha/2) (\hat{q}\cdot \sigma).
+    \end{align}
+    Hence,
+    \begin{align}
+        \Re(\langle W \rangle) = \Re(\cos(\alpha /2)) + \Re(i \sin(\alpha/2) \langle \hat{q}\cdot \sigma \rangle) = \cos(\alpha/2),
+    \end{align}
+    where we used the fact that $\langle \hat{q}\cdot \sigma \rangle$ is purely real. Note that this result is independent of the chosen state $\ket{\psi}$. To summarize our findings
+    \begin{align} \label{eq:ExerciseA3.1 E(U,V) result}
+        E(U,V) = \sqrt{2 - 2 \cos(\alpha/2)} = 2 \sin (\alpha/4)
+    \end{align}
+    Now let's consider the trace distance D(U,V). First, note that for any operator $X$ and unitary $U$, $\abs{X} = \abs{UX}$. Hence,
+    \begin{align}
+        \abs{U-V} = \abs{U(\mathbb{1}-U^\dagger V)} = \abs{\mathbb{1}- W}
+    \end{align}
+    with $W$ as before. Consider the eigenvalues of $\abs{\mathbb{1}- W}$. For any operator $X$, if $lambda$ is an eigenvalue, then $\abs{\lambda}$ is an eigenvalue of $\abs{X}$. The eigenvalues of $\mathbb{1}-W$ are given by $1 - e^{\pm i\alpha/2}$, so the eigenvalues of $\abs{\mathbb{1}- W}$ are
+    \begin{align}
+        \abs{1-e^{\pm i\alpha/2}} = 2\abs{\sin(\pm \alpha/4)} = 2 \sin (\alpha/4).
+    \end{align}
+    Note that both eigenvalues are equal. Since the trace is the sum of the eigenvalues (weighted by multiplicity)
+    \begin{align}
+        D(U,V) = \tr \abs{\mathbb{1}-W} = 4\sin(\alpha/4).
+    \end{align}
+    Comparing with \eqref{eq:ExerciseA3.1 E(U,V) result}, we see that $D(U,V) = E(U,V)$, which is the desired result. Note that the arguments used depended crucially on the fact that we are in two dimensions (one qubit).
+    
+\section*{Exercise A3.2}
 
 \chapter*{Appendix 4: Number theory}
 
