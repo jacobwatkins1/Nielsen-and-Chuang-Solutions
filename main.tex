@@ -20,14 +20,22 @@
 
 \title{Nielsen and Chuang Solutions}
 \author{Jacob Watkins}
-\date{May 2021}
+\date{May 2022}
 
 \begin{document}
 
 \maketitle
+
+\setcounter{chapter}{-1}
 \chapter{Plan and Progress}
 \section{Goals of this project}
-There exist other partial solution manuals to N\&C, most of them on github. It appears, taken together, they have covered chapters 2,3,4 and 9 almost completely, with scattered solutions for other chapters. Here, we wish to help fill in the gaps, and perhaps ultimately create the most comprehensive solution manual to date. The strategy here is as follows:
+The textbook \emph{Quantum Computation and Quantum Information} by Nielsen and Chuang (NC) is often considered the authoritative textbook in the subject by those in the field. Since the book was published, not only has the field evolved rapidly, but many more resources have become available for those interested in learning about the subject. These range from additional textbooks, online resources, software packages, and the availability of small quantum devices to the public. Still, NC retains much of its original value and relevance, especially for those seeking an entry into the field.
+
+Surprisingly, there seems to be a lack of complete, easily available, and guided solutions to NC problems. Partial solutions exist in several places on the internet, including github. My goal with this project is to provide comprehensive solutions so that someone with relatively little background can learn from these.
+
+I have often heard from my professors that a ``smart student" can learn directly from a textbook with hard work. However, many of us are not this hypothetical student. It is incredibly helpful and important for students to receive \emph{feedback} on their attempts to practice their knowledge. For those who have access to a teacher or mentor knowledgeable in this area, this might not be so hard to come by. For others who are not at a university, or are at a smaller university where quantum computing is not a big part of the institution, I hope that these worked-through solutions will provide some guidance in place of direct feedback. 
+
+There exist other partial solution manuals to NC, most of them on github. It appears, taken together, they have covered chapters 2,3,4 and 9 almost completely, with scattered solutions for other chapters. Here, we wish to help fill in the gaps, and perhaps ultimately create the most comprehensive solution manual to date. The ``current"\footnote{Current as of May 2022} strategy is as follows:
 \begin{itemize}
     \item Create solution manuals for appendices
     \item Create solution manuals for chapters 5-8
@@ -36,37 +44,47 @@ There exist other partial solution manuals to N\&C, most of them on github. It a
     \item (If REALLY motivated) Compile together solutions already created, and bring them into a common format, so that we may come closer to a universal solutions manual!
 \end{itemize}
 I would enjoy collaboration from the community, if anyone wants to help contribute to this project. 
-\section*{To-do}
-\begin{itemize}
-    \item Fix QFT circuit, recreate it in Qiskit and set barrier option to True
-    \item Double check circuit shown in problem 5.4
-\end{itemize}
 
 \section{Progress so far}
 
-This progress was last updated February 1st, 2021.
+This progress was last updated May 19th, 2022.
 
 \begin{itemize}
-    \item Chapter 2: Exercises 2.1-2.4 complete. Many exercises remain
-    \item Chapter 5: Exercises 5.1-5.14 complete. Exercises 5.15-5.29 remain, along with 6 practice problems
-    \item Chapter 6: Only first few problems completed
+    \item Chapter 1: Two open ended exercises only.
+    \item Chapter 2: Exercises 2.1-2.4 complete. Many exercises remain.
+    \item Chapter 3: Untouched.
+    \item Chapter 4: Untouched.
+    \item Chapter 5: Exercises 5.1-5.14 complete. Exercises 5.15-5.29 remain, along with 6 practice problems.
+    \item Chapter 6: 6.1-6.8 complete.
+    \item Chapter 7: Only first exercise complete.
+    \item Chapter 8: 8.1-8.6 complete.
+    \item Chapter 9: 9.1-9.16 complete.
+    \item Chapter 10: 10.1-10.4, 10.29-10.40.
+    \item Chapter 11: Only first exercise.
+    \item Chapter 12: 12.1-12.4.
     \item Appendix 1: All exercises complete!
-    \item Appendix 4: All exercises complete except A4.17 and part 2 of problem 1
+    \item Appendix 2: Some.
+    \item Appendix 3: Only the first.
+    \item Appendix 4: All exercises complete except A4.17 and part 2 of problem 1.
     \item Appendix 5: Almost done. Problem 1 needs to be cleaned up. 
     \item Appendix 6: All exercises complete!
 \end{itemize}
 
-\chapter{Introduction to quantum mechanics}
+\chapter{Introduction and overview}
+    There are not many problems in this chapter. The last two are pretty open ended and we'll leave them as is for the time being :)
 
+\chapter{Introduction to quantum mechanics}
 
 \section*{Exercise 2.1: (Linear dependence: example)}
     Show that $(1,-1)$, $(1, 2)$ and $(2, 1)$ are linearly dependent.
     
-    \textbf{Solution:} By inspection, one might be able to see that $(2,1)=(1,-1) + (1,2)$, hence,
+    \textbf{Solution:} By inspection (i.e. staring long enough), one might be able to see that $(2,1)=(1,-1) + (1,2)$, hence,
     \begin{align}
         (1,-1)+(1,2) -(2,1) = 0.
     \end{align}
-    This demonstrates linear dependence. A more systematic approach would be to cast this problem as a system of linear equations. A desired set of coefficients can be found by solving
+    This demonstrates linear dependence, the last rearrangement being more of a formality. Essentially, one of the vectors can be reached by ``moving along" the directions of the other two.
+    
+    A more systematic approach would be to cast this problem as a system of linear equations. We want to know if one of the three vectors is in the span of the other two. It turns out that this is equivalent to asking whether the matrix equation
     \begin{align}
     \begin{pmatrix}
         1 & 1 & 2 \\
@@ -77,9 +95,12 @@ This progress was last updated February 1st, 2021.
         b \\
         c
     \end{pmatrix}
-    =0
+    =\begin{pmatrix}
+        0 \\ 
+        0
+    \end{pmatrix}
     \end{align}
-    using standard techniques of linear algebra (such as row reduction).
+    has any ``nontrivial" solutions (nontrivial meaning at least one of $a, b, c$ is nonzero). This can be solved using your favorite method for linear equations (row reduction, substitution, computers). In fact, there are an infinite number of possible answers: give it a try!
 
 \section*{Exercise 2.2: (Matrix representations: example)}
     Suppose $V$ is a vector space with basis vectors $\ket{0}$ and $\ket{1}$, and $A$ is a linear operator from $V$ to $V$ such that $A\ket{0}=\ket{1}$ and $A\ket{1}=\ket{0}$. Give a matrix representation for $A$, with respect to the input basis $\ket{0}, \ket{1}$, and the output basis $\ket{0}, \ket{1}$. Find input and output bases which give rise to a different matrix representation of $A$.
@@ -126,11 +147,11 @@ This progress was last updated February 1st, 2021.
 \section*{Exercise 2.4: (Matrix representation for the identity)}
     Show that the identity operator on a vector space $V$ has a matrix representation which is one along the diagonal and zero everywhere else, if the matrix representation is taken with respect to the same input and output bases. This matrix is known as the \emph{identity matrix}.
     
-    \textbf{Solution:} Let $\mathbb{1}$ be the matrix representation of the identity operator $I$ with respect to some basis $\left\{\ket{v_i}\right\}$. Then,
+    \textbf{Solution:} Let $M$ be the matrix representation of the identity operator $I$ with respect to some basis $\left\{\ket{v_i}\right\}$. Then,
     \begin{align}
         I\ket{v_i} = \ket{v_i} = \sum_j \delta_{ji}\ket{v_j},
     \end{align}
-    where $\delta_{ji}$ is the Kronecker delta. The coefficients $\delta_{ji}$ are exactly those of the identity matrix $\mathbb{1}$, hence the identity matrix is the matrix representation of $I$.
+    where $\delta_{ji}$ is the Kronecker delta. The coefficients $\delta_{ji}$ are exactly those of the identity matrix $\mathbb{1}$, hence $M = \mathbb{1}$.
     
 \section*{Exercise 2.5}
     Verify that $(\cdot,\cdot)$ just defined is an inner product on $\mathbb{C}^n$.
@@ -145,7 +166,7 @@ This progress was last updated February 1st, 2021.
 
 \section*{Exercise 4.1}
 
-\chapter{The Quantum Fourier Transform and its applications}
+\chapter{The quantum Fourier transform and its applications}
 
 
 \section*{Exercise 5.1}
@@ -221,8 +242,8 @@ This progress was last updated February 1st, 2021.
     can be used in the $ABC$ construction of $R_k$. As a final step, primarily one of cosmetics, we notice these gates are related to the $R_k$ through global phases which cancel each other out. Thus, the following circuit implements the controlled-$R_k$, as is easy to verify.
     \begin{align}
         \Qcircuit @C=1em @R=1.6em {
-            \qw & \ctrl{1} & \qw & & & \qw & \qw & \ctrl{1} & \qw & \ctrl{1} & \gate{R_{k+1}} & \qw\\
-            \qw & \gate{R_k} & \qw & \raisebox{2.2em}{=} & & \qw & \gate{R_{k+1}^\dagger} & \targ & \gate{R_{k+1}^\dagger} & \targ & \gate{R_k} & \qw
+            \lstick{} & \ctrl{1} & \qw & & & \qw & \qw & \ctrl{1} & \qw & \ctrl{1} & \gate{R_{k+1}} & \qw\\
+            \lstick{} & \gate{R_k} & \qw & \raisebox{3em}{=} &  & \qw & \gate{R_{k+1}^\dagger} & \targ & \gate{R_{k+1}^\dagger} & \targ & \gate{R_k} & \qw
         } 
     \end{align}
 
@@ -278,11 +299,11 @@ This progress was last updated February 1st, 2021.
     \begin{align}
         \ket{j} = \bigotimes_{k=0}^{t-1} \ket{j_k} \equiv \ket{j_{t-1}}...\ket{j_{0}}.
     \end{align}
-    The action of the controlled-$U^2k$ controlled on the $k$th qubitis given by
+    The action of the controlled-$U^{2^k}$ controlled on the $k$th qubit is given by
     \begin{align}
         \ket{j_k}\ket{u} \longrightarrow  \ket{j_k} U^{2^k j_k}\ket{u}
     \end{align}
-    as can be readily verified. Thus, the full sequence of controlled gates acts as follows.
+    since, if $j_k = 1$, the unitary is applied, otherwise ($j_k = 0$) nothing should happen. Thus, the full sequence of controlled gates acts as follows.
     \begin{align}
     \begin{aligned}
         \ket{j}\ket{u} = \bigotimes_{k=0}^{t-1} \ket{j_k}\ket{u} \longrightarrow &\ket{j}U^{2^{t-1}j_{t-1}}...U^{2^0 j_0}\ket{u} \\
@@ -600,7 +621,7 @@ This progress was last updated February 1st, 2021.
     
     \textbf{Solution:}
 
-\chapter{Quantum Search Algorithms}
+\chapter{Quantum search algorithms}
 
 \section*{Exercise 6.1} 
     Show that the unitary operator corresponding to the phase shift in the Grover iteration is $(2\ket{0}\bra{0}-I)$.
@@ -694,8 +715,9 @@ This progress was last updated February 1st, 2021.
         \textbf{Solution:} Notice that $O'$ amounts to applying the oracle $O$ to the first $n$ qubits, conditioned on qubit $q$ being in the 0 state. We can express this schematically as
         \begin{align}
             \Qcircuit @R=1em @C=2em{
-            \lstick{q} & \gate{X} & \ctrl{1} & \gate{X} \\
-            \qw &{/} \qw & \gate{O} & \qw 
+            \lstick{q} & \gate{X} & \ctrl{1} & \gate{X}
+            \\
+            \lstick{} & {/}\qw & \gate{O} & \qw
             }
         \end{align}
         Thus, we are making a single access to the oracle $O$.
@@ -871,7 +893,7 @@ This progress was last updated February 1st, 2021.
     \end{align}
     which is precisely what we sought to show. 
     
-    \section*{Exercise 8.2} 
+\section*{Exercise 8.2} 
     Recall from Section 2.2.3 (on page 84) that a quantum measurement with outcomes labeled by $m$ is described by a set of measurement operators $M_m$ such that $\sum_m M_m^\dagger M_m = I$. Let the state of the system immediately before the measurement be $\rho$. Show that for $\mc{E}_m(\rho) \equiv M_m \rho M_m^\dagger$, the state of the system immediately after the measurement is
     \begin{align} \label{eq:Exercise 8.2 final state}
         \frac{\mc{E}_m(\rho)}{\tr(\mc{E}_m(\rho))}.
@@ -997,7 +1019,7 @@ This progress was last updated February 1st, 2021.
     \end{align}
     is satisfied.
 
-\chapter*{Distance measures for quantum information}
+\chapter{Distance measures for quantum information}
 
 \section*{Exercise 9.1}
     What is the trace distance between the probability distribution (1, 0) and the probability distribution (1/2, 1/2)? Between (1/2, 1/3, 1/6) and (3/4, 1/8, 1/8)?
@@ -1248,7 +1270,7 @@ This progress was last updated February 1st, 2021.
     \end{align}
     This completes the proof: we only need to maximize one of the two purifications.
     
-\section*{}
+\section*{Exercise 9.16}
     Suppose $R$ and $Q$ are two quantum systems with the same Hilbert space. Let $\ket{i_R}$ and $\ket{i_Q}$ be orthonormal basis sets for $R$ and $Q$. Let $A$ be an operator on $R$ and $B$ an operator on $Q$. Define $\ket{m} \equiv \sum_i \ket{i_R}\ket{i_Q}$. Show that
     \begin{align}
         \tr(A^\dagger B) = \bra{m} A \otimes B \ket{m}
@@ -1265,7 +1287,7 @@ This progress was last updated February 1st, 2021.
     \end{align}
     where $A_{ij} \equiv \bra{i_R}A\ket{j_R}$ are the matrix elements with respect to the basis, as are $B_{ij}$. 
 
-\chapter*{Theory of quantum error correction}
+\chapter{Theory of quantum error correction}
 
 \section*{Exercise 10.1}
     Verify that the encoding circuit in Figure 10.2 works as claimed.
@@ -1327,18 +1349,312 @@ This progress was last updated February 1st, 2021.
     
     (3) What is the minimum fidelity for the error-correction procedure?
     
-    \textbf{Solution:} (1) We can perform this orthogonal measurement in the usual way: measuring each qubit in the computational basis. The projector for bitstring $s$ will be $\ket{s}\bra{s}$. Even though we are using a different measurement scheme for correction, we will only be able to correct for a single bit flip at a time, because if there are two flips it looks the same as a single flip from the other state. Suppose the $j$th bit flips, where $j$ ranges from one to three. To correct the error, we can apply an $X$ gate to the $j$th qubit, bringing the state back to either $\ket{000}$ or $\ket{111}$.
+    \textbf{Solution:} (1) For a measurement of 3 qubits in the computational basis, the corresponding projectors are given by $\ket{s}\bra{s}$, where $s$ is a bit string of length 3. There are eight such bit strings, and therefore eight orthogonal projectors on this $2^3 = 8$ dimensional space. The measurement will return one of the eight bit strings, leaving the system in state $\ket{s}$. Assuming we started in one of the logical states $\ket{000}$ or $\ket{111}$ we the procedure will be to transform $\ket{s}$ to the logical state that is closest in terms of Hamming weight (i.e. fewest number of flips). More explicitly, if there are no flips, then $s$ is already one of the two logical states, and we do nothing. If there is one or two flips, this means one of the qubits is different from the others, and we will flip that qubit to match. Notice this produces the wrong result for two flips. Finally, if all three qubits flip, we do nothing, which also produces the incorrect result. Provided the probability for each flip is small, our correction scheme will work most of the time, bringing us back to the logical state before the error.
     
-    (2) The problem with this error correction scheme is that it destroys coherence (meaning it eliminates superpositions of computational basis states). To see this, suppose an error occurs on the 2nd qubit, so our state $\ket{\psi}$ is of the form (ignoring normalization)
+    (2) The problem with this error correction scheme is that it destroys coherence (meaning it eliminates superpositions of computational basis states). Suppose my system, before error, is in the state (ignoring normalization)
+    \begin{align}
+        \ket{\psi} &= \ket{0}_L + \ket{1}_L \\
+        &= \ket{000}+\ket{111}
+    \end{align}
+    Suppose an error occurs on the 2nd qubit, so our state becomes
     \begin{align}
         \ket{\psi} = \ket{010} + \ket{101}.
     \end{align}
-    Performing our measurement yields the state $\ket{010}$ or $\ket{101}$ with equal probability. Applying our correction scheme gives us either a logical zero or one, but we have lost the original state $\ket{\psi}$. This demonstrates that we need to be more clever about the way we perform measurements, and in particular our measurements cannot reveal \emph{full} information about the encoded state $\ket{\psi}$. This is why partial information such as parity are more suitable. 
+    Performing our measurement yields either the state $\ket{010}$ or $\ket{101}$, with equal probability. Applying our correction scheme gives us either a logical zero or one, but we have lost the original state $\ket{\psi}$. This demonstrates that we need to be more clever about the way we perform measurements, and in particular our measurements cannot reveal \emph{full} information about the encoded state $\ket{\psi}$. This is why partial information such as parity are more suitable. 
     
-    (3) 
+    (3) Since, per part (2), this procedure only works for computational basis states, let's assume our initial state is prepared in either the logical zero or one. Our goal is to recover one of these states after the correction. Without loss of generality, we may just focus on logical zero, since the procedure is symmetric with respect to the states. After applying the error, the fidelity is given by 
+    \begin{align}
+        \mc{F}_{\rm error} = \sqrt{(1-p)^3}
+    \end{align}
+    which is simply the square root of the probability that the state is unaffected by the noise. On the other hand, with correction there is a possibility of recovering the state. The full channel $\mc{E}$, consisting of error and correction, can be expressed as
+    \begin{align}
+        \mc{E}(\ket{0}_L) = (1-p)^3\ket{0}_L\bra{0}_L + (1-p)p^2 \sum_{i=1}^3 X_i \sum_s P_s X_i \ket{0}_L\bra{0}_L X_i P_s X_i + \dots
+    \end{align}
+    where the ellipsis indicates error terms which the correction scheme does not correct properly (more than one flip). The complicated-looking second term is merely the process of an error flip, a measurement along the projectors $P_s$ and a correction of the original flip. It can be simplified to 
+    \begin{align}
+        \mc{E}(\ket{0}_L) = \left((1-p)^3+3(1-p)^2p\right)\ket{0}_L\bra{0}_L + \dots
+    \end{align}
+    which is precisely the expression obtained from the more sophisticated bit flip correction scheme shown in the text. Borrowing those results, we see again that the minimum fidelity for either computational basis state is $\sqrt{1-3p^2 + 2p^3}$. Thus, we come to the conclusion that, if $p < 1/2$, our scheme will improve the fidelity of computational basis states.
+    
+    As a final note, observe that our procedure, even in the absence of noise, could decrease the fidelity if our state was originally in a superposition state. Hence, there is no threshold for $p$ for which this correction scheme would always improve the fidelity. This is a serious flaw which shows why we need a more sophisticated diagnostic, such as the one from the text.
+    
+\section*{Exercise 10.5}
+    \textbf{Solution:}
+    
+\section*{Exercise 10.29}
+    Show that an arbitrary linear combination of any two elements of $V_S$ is also in $V_S$ . Therefore, $V_S$ is a subspace of the $n$ qubit state space. Show that $V_S$ is the intersection of the subspaces fixed by each operator in $S$ (that is, the eigenvalue one eigenspaces of elements of $S$).
+    
+    \textbf{Solution:} Let $\psi, \chi \in V_S$, and let $A \in S$. Then, $A$ is a linear operator, and for $c_1, c_2$ in the underlying field $\mathbb{F}$ (in this case $\mathbb{F}=\mathbb{C}$), we have
+    \begin{align}
+    \begin{aligned}
+        A\left(c_1\psi + c_2\chi\right) &= c_1 A\psi + c_2 A\chi \\
+        &=c_1\psi + c_2 \chi
+    \end{aligned}
+    \end{align}
+    Hence, $A$ stabilizes $c_1\psi + c_2\chi$. Hence, $c_1\psi + c_2 \chi\in V_S$. We conclude $V_S$ is a subspace. 
+    
+    Let $\cap_{s\in S} V_s$ be the intersection of all subspaces stabilized by a single element $s\in S$. We will show that this equals $V_S$ itself by showing they are subsets of each other. Let $\psi \in V_S$, so that $\psi$ is stabilized by $s$ for each $s\in S$. Then, $\psi\in V_s$ for every such $s$, and therefore is also in the intersection. Hence, $V_S \subset \cap_{s\in S} V_s$. Conversely, suppose $\psi \in \cap_{s\in S} V_s$, so that $\psi\in V_s$ for each $s\in S$. Then, $\psi$ is stabilized by every $s \in S$, and therefore is stabilized by $S$ itself. Thus, $\psi \in V_S$. This shows $\cap_{s\in S} V_s \subset V_S$, which completes the proof.
+    
+\section*{Exercise 10.30}
+    Show that $-I \notin S$ imples $\pm i I \notin S$.
+    
+    \textbf{Solution:} To show this, we prove the (equivalent) contrapositive: $\pm i I \in S$ implies $-I \in S$. Phrased in this way, the reasoning follows simply from $S$ being a group, and therefore closed under multiplication. In particular, if $\pm i I \in S$, so is the square
+    \begin{align}
+        (\pm i I)^2 = -I \in S.
+    \end{align}
 
-\chapter*{Appendix 1: Notes on basic probability theory}
+\section*{Exercise 10.31}
+    Suppose $S$ is a subgroup of $G_n$ generated by elements $g_1,\dots, g_l$. Show that all the elements of $S$ commute if and only if $g_i$ and $g_j$ commute for each pair $i$, $j$.
+    
+    \textbf{Solution:} If all the elements of $S$ commute, then clearly so do the generators, since the generators are also in $S$. Conversely, and less trivially, if all of the generators commute, so must the whole group, since any group member is just a product of the generators.
+    
+\section*{Exercise 10.32}
+    Verify that the generators in Figure 10.6 stabilize the codewords for the Steane code, as described in Section 10.4.2.
+    
+    \textbf{Solution:} Here we will only verify that $g_1$ stabilizes the two codewords, which are given by equations (10.78) and (10.79) of the text. We have
+    \begin{align}
+    \begin{aligned}
+        g_1\ket{0_L} = \frac{1}{\sqrt{8}}&[\ket{0001111}+\ket{1011010}+\ket{0111100}+\ket{1101001} + \\
+        &+\ket{0000000}+\ket{1010101}+\ket{0110011}+\ket{1100110}] \\
+    \end{aligned}
+    \end{align}
+    In words, $g_1$ flips the last four bits and leaves the first three alone. Looking at this expression, we can see it is the same as $\ket{0_L}$ itself by swapping each ket on the top row with the one directly below it. This simply amounts to rearranging terms in the sum. Thus, $g_1\ket{0_L} = \ket{0_L}$. To show that $\ket{1_L}$ by $g_1$, we can use a slick trick. Looking at the expression for $\ket{1_L}$, we see it is related to $\ket{0_L}$ by flipping every bit, i.e. the operation $X^{\otimes 7}$.This logical $X$ commutes with $g_1$, since each $X$ commutes with $I$ and $X$. Altogether,
+    \begin{align}
+        g_1\ket{1_L} = g_1 X^{\otimes 7}\ket{0_L} = X^{\otimes 7} g_1 \ket{0_L} = X^{\otimes 7} \ket{0_L} = \ket{1_L}.
+    \end{align}
+    This completes the demonstration for $g_1$. We could check the remaining stabilizers in an overall similar way.
+    
+\section*{Exercise 10.33}
+    \textbf{Solution:}
+    
+\section*{Exercise 10.34}
+    Let $S = \langle g_1,\dots,g_l\rangle$. Show that $-I$ is not an element of $S$ if and only if $g_j^2 =I$ for all $j$, and $g_j \neq -I$ for all $j$.
+    
+    \textbf{Solution:} Before proceeding, there is an unstated assumption in the exercise: that all the generators are independent. To see this, consider the case $S = \langle X, -X \rangle$. Clearly, $g_i^2 = I$ and $g_i \neq -I$ for both generators, yet $-I \in S$. Therefore, the theorem is false if there is no assumption of independence. We will show that, with the added assumption, the theorem is true.
+    
+    ($\implies$) Suppose $-I \notin S$. Then, none of the generators are $-I$, so $g_j \neq -I$. Since any $g_j \in G_n$ is a string of pauli matrices times $\pm 1$ or $\pm i$, we have $g_j^2 = I$ or $g_j^2 = -I$. By assumption, $g_j^2 \neq -I$, so $g_j = I$. This implies the forward direction of the equivalence.
+    
+    ($\impliedby$) Suppose for all $j$, $g_j^2 = I$ and $g_j \neq -I$. Let $s \in S$, so that it can be written as a product of the generators. Since all elements of commute or anticommute, and since $g_j^2 = I$, any such element $s$ can be expressed as 
+    \begin{align}
+        s = \pm g_{j_1}g_{j_2}\dots g_{j_k}
+    \end{align}
+    where all the $j_k$ are different integers between $1$ and $l$. Suppose, for sake of contradiction, that $s = -I$. Then, we can express one of the generators (say, $g_{j_1}$) in terms of the others.
+    \begin{align}
+        g_{j_1} = \mp g_{j_2}\dots g_{j_k}
+    \end{align}
+    This violates our assumption about the independence of the generators, a contradiction. We conclude $s \neq -I$. Since $s$ was arbitrary, $-I \notin S$. This completes the reverse implication, and therefore the proof.
+    
+\section*{Exercise 10.35}
+    Let $S$ be a subgroup of $G_n$ such that $-I$ is not an element of $S$. Show that $g^2 =I$ for all $g\in S$, and thus $g^\dagger = g$.
+    
+    \textbf{Solution:} This was actually shown as part of our solution to Exercise 10.34. In particular, it was argued that any element $g \in G_n$ of the pauli group squares to either $I$ or $-I$. This follows from the fact that every pauli matrix itself squares to the identity, and the coefficient squares to 1 or -1 depending on whether it is imaginary or not. If we assume $-I\notin S$, we must have the case $g^2 = I$ since $S$ (like any group) is closed under the group operation. 
+    
+    Furthermore, any element $g\in G_n$ is either Hermitian or antihermitian, depending on the coefficient being imaginary or real. If $g^2 = I$, the coefficient is real, and therefore $g$ is Hermitian. Note that $g$ is also a reflection, and its eigenvalues are $\pm 1$. Going one step further, $g$ must have the same number of plus and minus eigenvalues, since $\tr(g) = 0$.
+    
+\section*{Exercise 10.36}
+    Explicitly verify that $U X_1 U^\dagger= X_1 X_2$, $U X_2 U^\dagger = X_2$, $U Z_1 U^\dagger = Z_1$, and $U Z_2 U^\dagger = Z_1 Z_2$. These and other useful conjugation relations for the Hadamard, phase, and Pauli gates are summarized in Figure 10.7.
+    
+    \textbf{Solution:} We will show each of these relationships in sequence, but rather than using the matrix representations of the operators we will use the standard operator form of the CNOT operator.
+    \begin{align}
+        \text{CNOT} = \ket{0}\bra{0}I + \ket{1}\bra{1}X.
+    \end{align} 
+    (We've left off the tensor product $\otimes$ for simplicity).  First, we have
+    \begin{align}
+    \begin{aligned}
+        \text{CNOT}X_1 \text{CNOT} &= \left(\ket{0}\bra{1}I  + \ket{1}\bra{0}X\right)\left(\ket{0}\bra{0}I + \ket{1}\bra{1} X\right) \\
+        &=\ket{1}\bra{0} X + \ket{0}\bra{1}X \\
+        &=\left(\ket{1}\bra{0}+\ket{0}\bra{1}\right) X \\
+        &= X_1 X_2
+    \end{aligned}
+    \end{align}
+    Next, we have
+    \begin{align}
+        \text{CNOT} X_2 \text{CNOT} = X_2
+    \end{align}
+    by the simple fact that $X_2$ commutes with $\text{CNOT}$. This can be checked by computation, but it is also easy to see because $X$ commutes with both the identity and $X$, which are, roughly speaking, the two possible operations depending on the control qubit.
+    
+    Similarly, since $Z_1$ commutes with $\text{CNOT}$, it is invariant under conjugation.
+    \begin{align}
+        \text{CNOT} Z_1 \text{CNOT} = Z_1.
+    \end{align}
+    Intuitively, a $Z$ gate does not ``change" the computational basis which is being controlled on. More precisely, $Z$ commutes with the projection operators onto the computational basis. Finally, we can compute the action on $Z_2$ similar to how we did $X_1$.
+    \begin{align}
+    \begin{aligned}
+        \text{CNOT} Z_2 \text{CNOT} &= \left(\ket{0}\bra{0}Z + \ket{1}\bra{1}(XZ)\right)\left(\ket{0}\bra{0}I + \ket{1}\bra{1}X\right) \\
+        &= \ket{0}\bra{0}Z + \ket{1}\bra{1}(XZX) \\
+        &= \ket{0}\bra{0}Z -\ket{1}\bra{1}Z \\
+        &= \left(\ket{0}\bra{0}-\ket{1}\bra{1}\right) Z \\
+        &= Z_1 Z_2
+    \end{aligned}
+    \end{align}
+    
+\section*{Exercise 10.37}
+    What is $U Y_1 U^dagger$?
+    
+    \textbf{Solution:} We can make use of the previous exercise by noting that $Y_1 = -i Z_1 X_1$, and the conjugation by $U$ respects multiplication. More specifically,
+    \begin{align}
+    \begin{aligned}
+        \text{CNOT}Y_1 \text{CNOT} &= -i \text{CNOT}Z_1\text{CNOT} \text{CNOT} X_1 \text{CNOT} \\
+        &=-i Z_1 X_1 X_2 \\
+        &=Y_1 X_2.
+    \end{aligned}
+    \end{align}
+    
+\section*{Exercise 10.38}
+    Suppose $U$ and $V$ are unitary operators on two qubits which transform $Z_1$, $Z_2$, $X_1$, and $X_2$ by conjugation in the same way. Show this implies that $U = V$.
+    
+    \textbf{Solution:} As a first observation, we note that the statement of the exercise must be carefully understood, since $V = e^{i\delta} U$ would have the same conjugation properties as $U$. Of course, we know that this overall phase is irrelevant when it comes to quantum operations. Therefore, we wish to show that $U$ and $V$ must be the same \emph{up to a phase}.
+    
+    With some thought, it's clear that $Z_i$ and $X_i$ for $i=1,2$ generates the full Pauli group on two qubits, $G_2$. Therefore, $U$ and $V$ will also transform \emph{any} element $P\in G_2$ the same way. In light of this observation, let's answer the more general question: if two operators $U$ and $V$ on $n$ qubits transform elements of the pauli group $G_n$ the same way, does $U = V$ (up to a phase)? This result will of course specialize to $n=2$.
+    
+    It seems hard to imagine this couldn't be the case since, thinking of operators as a linear space, the pauli group $G_n$ forms a spanning set for all matrices of dimension $2^n$. Therefore, if $U$ and $V$ transform $G_n$ the same way, they transform any matrix $M \in \mathbb{C}^{2^n} \times \mathbb{C}^{2^n}$ the same way too! It seems hard to imagine $U$ and $V$ acting so similar and yet not being the same.
+    
+    Let's make one final observation before diving into an actual proof. Suppose $U M U^\dagger = V M V^\dagger$ for all complex matrices $M$. Then $M = W M W^\dagger$ where $W \equiv U^\dagger V$. Since $W$ stabilizes all matrices under conjugation, could it really be that $W$ is not the identity, implying $U = V$ (all statements with the addendum ``up to a phase")? This will be our vehicle for the proof. 
+    
+    \emph{Proof of exercise}: Let $L(V)$ be linear operators over a complex vector space $V$, and suppose $W$ is a unitary operator on $V$ such that, for all $M \in L(V)$, $W M W^\dagger = M$. Viewing $L(V)$ as a complex vector space itself, the conjugation operation $W \cdot W^\dagger$ is a linear operator which acts trivially on each vector $M$. In particular, it acts trivially on rank one operators $\ket{a}\bra{b}$. This necessarily implies $W \ket{a} = e^{i\delta} \ket{a}$ for all $\ket{a}$, where $\delta$ is a real phase that does not depend on $\ket{a}$. Of course, $I e^{i\delta}$ also has the same action for every vector in $V$, so we must conclude $W = e^{i\delta} I$. 
+    
+    Now suppose $W$ is an operator that stabilizes the pauli group $G_n$ under conjugation. Since the pauli group forms a basis for the complex vector space of linear operators $L(\mathbb{C^{2^n}})$, then $W$ stabilizes this space as well. By the result of the previous paragraph, $W = e^{i\delta} I$.
+    
+    Suppose now that $W$ only stabilizes a set which generates $G_n$. Since conjugation respects group multiplication, it must be that any product of the generators, hence the whole group itself, must be stabilized by $W$. By the previous paragraph, we conclude $W = e^{i\delta} I $.
+    
+    As a simple corollary, suppose $U P U^\dagger = V P V^\dagger$ for every $P\in G_n$. Then $P = W P W^\dagger$, where $W \equiv U^\dagger V$. From the above results, we must have $W = e^{i\delta}I$, and therefore $V = U e^{i\delta}$. This essentially completes the proof.
+    
+\section*{Exercise 10.39}
+    Verify (10.91).
+    
+    \textbf{Solution:} This can be demonstrated by direct calculation. It also just makes sense: $S$ is a 90 degree rotation about the z axis of the Bloch sphere, thereby taking the vector $X$ to $Y$ and leaving $Z$ unchanged. 
+    
+\section*{Exercise 10.40}
+    Provide an inductive proof of Theorem 10.6 as follows.
+    \begin{enumerate}
+        \item Prove that the Hadamard and phase gates can be used to perform any normalizer operation on a single qubit.
+    
+        \item Suppose $U$ is an $n+1$ qubit gate in $N(G_n+1)$ such that $U Z_1 U^\dagger = X_1 \otimes g$ and $U X_1 U^\dagger = Z_1 \otimes g'$ for some $g,g' \in G_n$. Define $U'$ on $n$ qubits by $U'\ket{\psi} \equiv \sqrt{2}\bra{0} U (\ket{0} \otimes \ket{\psi}$). Use the inductive hypothesis to show that the construction for $U$ in Figure 10.9 may be implemented using $O(n^2)$ Hadamard, phase and controlled-\text{NOT} gates.
+    
+        \item Show that any gate $U \in N(G_n+1)$ may be implemented using $O(n^2)$ Hadamard, phase and controlled-\text{NOT} gates.
+    \end{enumerate}
+    
+    \textbf{Solution:} 1. Let $U$ be a normalizer operation for $G_1$, the pauli group on a single qubit. Then $U$ is defined by how it acts on a set of generators, e.g. $X$ and $Z$. Let's call these elements $u(X)$ and $u(Z)$.
+    \begin{align}
+    \begin{aligned}
+        X \mapsto UXU^\dagger \equiv u(X) \\
+        Z \mapsto UZU^\dagger \equiv u(Z)
+    \end{aligned}
+    \end{align}
+    From the onset, it is clear that $u(X)$ and $u(Z)$ cannot be \emph{any} member of $G_1$. For example, since conjugation preserves hermiticity, the antihermitian elements such as $i X$ are left out. Moreover, any element proportional to the identity is invariant under conjugation, and since conjugation is bijective there is no way $X$ or $Z$ could be mapped to them. Therefore, any normalizer $U$ can only send $X$ and $Z$ to one of the set
+    \begin{align}
+        \{\pm X, \pm Y, \pm Z\}. 
+    \end{align}
+    These aren't the only restrictions! Since $u$ preserves group multiplication (as an isomorphism from the group to itself, aka an automorphism), $u(X)$ and $u(Z)$ must anticommute. This implies $u(X)$ and $u(Z)$ cannot be related by a sign, and therefore the must be proportional to different pauli matrices. Altogether, this leaves us with 24 valid choices for the mapping $u$. Since the Hadamard interchanges $X$ and $Z$, we can effectively consider only 12 of them. 
+    
+    The question is, can these 12 maps be represented as conjugations with a unitary $U$ which is a product of Hadamards and phase gates? Intuitively the answer is yes, because this combination takes us to all ``corners" of the Bloch sphere. Figure (WHAT) illustrates this with a graph. We work out the unitaries $U$ for each of the 12 possibilities in the table below. This proves our result. \textbf{YOU NEED TO ADD THE TABLE}
+    
+    \begin{center}
+    \begin{tabular}{ |c|c|c| } 
+    \hline
+        $X Z$& X Z & $I$ \\ 
+        & X -Z & $HS^2H$ \\ 
+        & X Y & $SHS$ \\
+        & X -Y & $HSH$ \\
+        & -X Z & cell9 \\
+        & -X -Z & cell9 \\
+        & -X Y & cell9 \\
+        & -X -Y & cell9 \\
+        & Y Z & cell9 \\
+        & Y -Z & cell9 \\
+        & -Y Z & cell9 \\
+        & -Y -Z & cell9 \\
+    \hline
+    \end{tabular}
+    \end{center}
+    
+\section*{Exercise 10.41}
+    \textbf{Solution:}
+    
+\chapter{Entropy and information}
 
+\section*{Exercise 11.1 (Simple calculations of entropy)}
+    What is the entropy associated with the toss of a fair coin? With the roll of a fair die? How would the entropy behave if the coin or die were unfair?
+    
+    \textbf{Solution:} For the fair coin, we have two possibilities (heads or tails) and each outcome has equal probability of $1/2$. Hence, the entropy $H_{\rm{coin}}$ is given by
+    \begin{align}
+        H_{\rm{coin}} = -\frac{1}{2}\log1/2--\frac{1}{2}\log1/2 = \log 2.
+    \end{align}
+    Similarly, a fair die has \emph{six} equally likely outcomes, each with probability $1/6$. There are therefore six terms in the expression for the entropy $H_{\rm{die}}$, and each term is given by $(\log 1/6)/6$. Hence
+    \begin{align}
+        H_{\rm{die}} = 6 \times -\frac{1}{6}\log 1/6 = \log 6.
+    \end{align}
+    Following the pattern, a set of $n$ equally likely outcomes yields an entropy of $\log n$. 
+    
+    What happens if the coin is unfair? To model this, we can assign the coin a probability of heads $p$ between $0$ and $1$. Necessarily, the probability of tails is $1-p$. The entropy is now given by
+    \begin{align}
+        H_{\rm{coin}} (p) = -p\log p - (1-p) \log (1-p).
+    \end{align}
+    Try plugging in different values for $p$: what is the behavior? 
+    
+    There are many more ways we can construct an unfair die, since there are more outcomes. What if we make one of the sides much more likely than the others? Try out some options, making sure your probabilities always add to one!
+
+\chapter{Quantum information theory}
+
+\section*{Exercise 12.1}
+    Suppose $\ket{\psi}$ and $\ket{\varphi}$ are two orthogonal quantum states of a single qubit. Design a quantum circuit with two input qubits (the ‘data’ and the ‘target’ qubits), with the data qubit in either the  $\ket{\psi}$ or $\ket{\varphi}$, and the target qubit prepared in the state $\ket{0}$, which produces as output $\ket{\psi}\ket{\psi}$ or $\ket{\varphi}\ket{\varphi}$ depending on whether $\ket{\psi}$ or $\ket{\varphi}$ was input to the data qubit. 
+    
+    \textbf{Solution:} The states $\ket{\psi}, \ket{\varphi}$ define an orthonormal basis, and therefore there is a change of basis unitary $U$ between these states and the computational basis.
+    \begin{align}
+        \ket{\psi} = U \ket{0} \quad \ket{\varphi} = U \ket{1}
+    \end{align}
+    Depending on which state the data qubit is in, we want to apply $U$ or $U X$ to the initial state $\ket{0}$ of the target qubit. This suggests we use a CNOT gate. We will first use the inverse gate $U^\dagger$ to rotate the data qubit to the computational basis, perform the controls, then apply $U$ to the data to bring it to the original value. Figure~\ref{fig:orthogonal_copy} depicts the full circuit.
+    
+    This circuit can be readily generalized to copy any $n$-qubit state from a given orthonormal basis. In this context, the $U^\dagger$ will be an $n$-qubit unitary mapping the chosen basis to the computational basis, and the CNOT gate will become a string of $n$ CNOTs from the $i$th qubit of the data register to the $i$th qubit of the target. These CNOTs are essentially the copy circuit for the computational basis.
+    \begin{figure}
+        \centering
+        \begin{align}
+        \Qcircuit @C=.5em @R=1em {
+            \lstick{\ket{data}} & \qw & \gate{U^\dagger} & \qw & \ctrl{1} & \qw & \gate{U} & \qw & \rstick{\ket{data}} \\
+            \lstick{\ket{0}} & \qw & \qw & \qw & \targ & \qw & \gate{U} & \qw & \rstick{\ket{data}}
+        }
+        \end{align}
+        \caption{Circuit for copying one of two orthogonal states on a qubit. Here $U$ is the change of basis from the states to the computational basis. $\ket{data}$ represents either $\ket{\psi}$ or $\ket{\phi}$.}
+        \label{fig:orthogonal_copy}
+    \end{figure}
+
+\section*{Exercise 12.2}
+    Define $U_y$ to be the unitary operator acting on system $M$ whose action on a basis is $U_y \ket{y'} \equiv \ket{y' + y}$, where the addition is done modulo $n + 1$. Show that $\{\sqrt{E_y} \otimes U_y\}$ is a set of operation elements defining a trace-preserving quantum operation $\mc{E}$ whose action on a state of the form $\sigma \otimes \ket{0}\bra{0}$ agrees with (12.8).
+    
+    \textbf{Solution:} The computation is relatively straightforward. First note that we are assuming $E_y$ are positive, hence their square root is well defined and they are Hermitian. We have
+    \begin{align}
+    \begin{aligned}
+        \mc{E}(\sigma \otimes \ket{0} \bra{0}) &=\sum_y \left(\sqrt{E_y} \otimes U_y\right) \sigma \otimes \ket{0}\bra{0} \left(\sqrt{E_y} \otimes U_y^\dagger\right) \\
+        &= \sum_y \left(\sqrt{E_y} \sigma \sqrt{E_y}\right) \otimes \left(U_y \ket{0}\bra{0} U_y^\dagger\right) \\
+        &= \sum_y \sqrt{E_y} \sigma \sqrt{E_y} \otimes \ket{y}\bra{y}
+    \end{aligned}
+    \end{align}
+    which we see matches (12.8) from the text.
+    
+\section*{Exercise 12.3}
+    Use the Holevo bound to argue that $n$ qubits can not be used to transmit more than $n$ bits of classical information.
+    
+    \textbf{Solution:} Suppose that Alice wishes to communicate $m$ bits of classical information by sending $Bob$ one of an ensemble of $n$-qubit states. According to the Holevo bound, the mutual information $H(X:Y)$ between Alice's choice and Bob's measurement is bounded by
+    \begin{align}
+        H(X:Y) \leq S(\rho) \leq n
+    \end{align}
+    where $\rho$ is some density matrix describing the ensemble of states Bob receives. We interpret this as Alice being limited to transmitting $n$ bits of information with $n$-qubits.
+    
+\section*{Exercise 12.4}
+    Suppose Alice sends Bob an equal mixture of the four pure states
+    \begin{align}
+        \ket{X_1} &= \ket{0} \\
+        \ket{X_2} &= \sqrt{\frac{1}{3}}\left[\ket{0} + \sqrt{2}\ket{1}\right] \\
+        \ket{X_3} &= \sqrt{\frac{1}{3}}\left[\ket{0} + \sqrt{2} e^{2\pi i /3}\ket{1}\right] \\
+        \ket{X_4} &= \sqrt{\frac{1}{3}}\left[\ket{0} + \sqrt{2} e^{4\pi i /3}\ket{1}\right]
+    \end{align}
+    Show that the maximum mutual information between Bob’s measurement and Alice’s transmission is less than one bit. A POVM which achieves $\approx 0.415$ bits is known. Can you construct this or, better yet, one which achieves the Holevo bound?
+
+\appendix
+\renewcommand{\thechapter}{\arabic{chapter}}
+\renewcommand{\theequation}{A\thechapter.\arabic{equation}}
+
+\chapter{Notes on basic probability theory}
 
 \section*{Exercise A1.1} 
     Prove Bayes' rule.
@@ -1354,7 +1670,7 @@ This progress was last updated February 1st, 2021.
     
     \textbf{Solution:} We start with the notion that, in the joint probability distribution for $(X,Y)$, one sums over all outcomes of $X$ to get a probability distribution on $Y$ alone.
     \begin{align}
-        p(y) = \sum_x p(x,y)
+        p(y) := \sum_x p(x,y)
     \end{align}
     We arrive at our result by noting that, from the definition of conditional probability, $p(x,y) = p(y|x)p(x)$.
 
@@ -1424,7 +1740,7 @@ This progress was last updated February 1st, 2021.
     This proves our result.
 
 
-\chapter*{Appendix 2: Group theory}
+\chapter{Group theory}
 
 
 \section*{Exercise A2.1}
@@ -1710,7 +2026,7 @@ This progress was last updated February 1st, 2021.
     \textbf{Solution:}
 
 
-\chapter*{Appendix 3: The Solovay–Kitaev theorem}
+\chapter{The Solovay–Kitaev theorem}
 
 \section*{Exercise A3.1:} 
     In Chapter we made use of the distance measure $E(U,V)=\max_{\ket{\psi}}\norm{(U-V)\ket{\psi}}$, where the maximum is over all pure states $\ket{\psi}$. Show that when $U$ and $V$ are single qubit rotations, $U = R_{\hat{m}}(\theta)$, $V = R_{\hat{n}}(\varphi)$, $D(U,V) = 2 E(U,V)$, and thus it does not matter whether we use the trace distance or the measure $E(\cdot, \cdot)$ for the Solovay-Kitaev theorem.
@@ -1755,7 +2071,7 @@ This progress was last updated February 1st, 2021.
     
 \section*{Exercise A3.2}
 
-\chapter*{Appendix 4: Number theory}
+\chapter{Number theory}
 
 
 \section*{Exercise A4.1 (Transitivity)}
@@ -2022,7 +2338,7 @@ This progress was last updated February 1st, 2021.
     From this, we have $n \leq \log(2n) \pi(2n)$, and we have our result from rearranging.
 
 
-\chapter*{Appendix 5: Public key cryptography and the RSA cryptosystem}
+\chapter{Public key cryptography and the RSA cryptosystem}
 
 
 \section*{Exercise A5.1} 
@@ -2120,7 +2436,7 @@ This progress was last updated February 1st, 2021.
     \end{algorithm}
 
 
-\chapter*{Appendix 6: Proof of Lieb's theorem}
+\chapter{Proof of Lieb's theorem}
 
 
 \section*{Exercise A6.1 ($\leq$ is preserved under conjugation)}
@@ -2214,7 +2530,7 @@ This progress was last updated February 1st, 2021.
     \end{align}
     Hence, $\norm{A} = 3/2$, and we have our result.
     
-\section*{Exercise 6.5: ($AB$ and $BA$ have the same eigenvalues)}
+\section*{Exercise A6.5: ($AB$ and $BA$ have the same eigenvalues)}
     Prove that $AB$ and $BA$ have the same eigenvalues. (\emph{Hint}: For invertible $A$, show that $\det(xI-AB) = \det(xI-BA)$, and thus the eigenvalues of $AB$ and $BA$ are the same. By continuity this holds even when $A$ is not invertible.
     
     \textbf{Solution:} As the hint suggests, first suppose $A$ is invertible. Because the eigenvalues of $AB$ and $BA$ are the zeros of the characteristic polynomial, showing these two polynomials are the same amounts to proving the statement. And these polynomials are precisely the determinants shown in the hint. 
@@ -2232,13 +2548,13 @@ This progress was last updated February 1st, 2021.
     \end{align}
     is invertible. Then the theorem carries over as before for $A'$, and to get the result for $A$ we take $\epsilon\rightarrow 0$. This is valid since the determinant is only a polynomial in $\epsilon$.
     
-\section*{Exercise 6.6}
+\section*{Exercise A6.6}
     Suppose $A$ and $B$ are such that $AB$ is Hermitian. Using the previous two observations show that $\norm{AB}\leq\norm{BA}$.
     
     \textbf{Solution:} Since $AB$ is Hermitian, then $\norm{AB} = \abs{\lambda}$ for some eigenvalue of $AB$. By the previous exercise, $\lambda$ is also an eigenvalue of $BA$, and by that same exercise we have $\lambda \leq \norm{BA}$. Thus, $\norm{AB}
     \leq\norm{BA}$.
     
-\section*{Exercise 6.7}
+\section*{Exercise A6.7}
     Suppose $A$ is positive. Show that $\norm{A}\leq 1$ if and only if $A \leq I$.
     
     \textbf{Solution:} $(\implies)$ Suppose $\norm{A}\leq 1$. Then every eigenvalue $\lambda$ of $A$ is such that $\lambda \in [0,1]$. This implies the eigenvalues of $I-A$, which are given by $1-\lambda$ are also in this range. In particular, $I-A$ is positive, so $A\leq I$.
@@ -2249,16 +2565,24 @@ This progress was last updated February 1st, 2021.
     \end{align}
     This implies $\lambda \leq 1$ for each $\lambda$, so we have $\norm{A}\leq 1$.
 
-\section*{Exercise 6.8}
+\section*{Exercise A6.8}
     Let $A$ be a positive matrix. Define a superoperator (linear operator on matrices) by the equation $\mc{A}(X) \equiv A X$. Show that $\mc{A}$ is positive with respect to the Hilbert-Schmidt inner product. That is, for all $X$, $\tr(X^\dagger \mc{A}(X)) \geq 0$. Similarly, show that the superoperator defined by $\mc{A} (X) \equiv XA$ is positive with respect to the Hilbert–Schmidt inner product on matrices.
     
-    \textbf{Solution:} Suppose $A$ is positive. Then for any matrix $X$, both $XAX^\dagger$ and $X^\dagger A X$ are positive. Moreover, the trace of any positive matrix is itself positive. Therefore, the desired result comes from the simple fact that the condition for positivity of $\mc{A}$ amounts to taking traces of the above matrices. For the first definition of $\mc{A}$,
-    \begin{align}
-        \tr(X^\dagger \mc{A}(X)) &= \tr(X^\dagger AX).
+    \textbf{Solution:} Suppose $A$ is positive, and let $X$ be any complex matrix for which the multiplication $AX$ is defined. Our goal is to show that $\mc{A}$ is positive, that is
+    \begin{align} \label{eq:trace_XAX}
+        \langle X, \mc{A}(X)\rangle \geq 0
     \end{align}
-    For the second definition,
+    with equality only when $X = 0$. The Hilbert-Schmidt inner product is defines as
     \begin{align}
-        \tr(X^\dagger \mc{A}(X)) = \tr(X^\dagger X A) = \tr(XAX^\dagger)
+        \langle A, B \rangle = \tr A^\dagger B.
     \end{align}
-
+    Hence, we need to show
+    \begin{align}
+        \tr X^\dagger A X > 0
+    \end{align}
+    for nonzero X. First of all, note that $X^\dagger A X$ is positive semi-definite. Why? For any vector $\psi$,
+    \begin{align}
+        \langle \psi, X^\dagger A X \psi \rangle = \langle X \psi, A X \psi \rangle = \langle \psi', A \psi'\rangle
+    \end{align}
+    where $\psi' := X \psi$. Since, $A$ is positive, this expression is no less than zero. Going back to \eqref{eq:trace_XAX}, we simply note that the trace of any positive semi-definite operator is always at least zero. In fact, it is only zero if $X^\dagger A X = 0$, which can only happen in the very special case when $X = 0$. We've now shown that $\mc{A}$ is positive.
 \end{document}
