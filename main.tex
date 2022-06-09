@@ -18,7 +18,7 @@
 \newcommand{\mc}[1]{\mathcal{#1}}
 \newcommand{\innerprod}[2]{\langle#1,#2\rangle}
 
-\title{Nielsen and Chuang Solutions}
+\title{Guided solutions to Nielsen and Chuang: Quantum Computation and Quantum Information}
 \author{Jacob Watkins}
 \date{May 2022}
 
@@ -156,8 +156,474 @@ This progress was last updated May 19th, 2022.
 \section*{Exercise 2.5}
     Verify that $(\cdot,\cdot)$ just defined is an inner product on $\mathbb{C}^n$.
     
-    \textbf{Solution:} 
-
+    \textbf{Solution:} Let's use letters $x, y, z$ to denote elements of $\mathbb{C}^n$ (lists of $n$ complex entries), and let $\lambda \in \mathbb{C}$ be a complex number. To check linearity, let's first consider $(x, y+z)$. Using the definition,
+    \begin{align}
+    \begin{aligned}
+        (x, y+z) &= \sum_{i=1}^n x_i^* (y_i + z_i) \\
+        &= \sum_{i=1}^n x_i^* y_i + x_i^* z_i \\
+        &= \sum_{i=1}^n x_i^* y_i + \sum_{i=1}^n x_i^* z_i \\
+        &= (x, y) + (x,z).
+    \end{aligned}
+    \end{align}
+    This shows that $(\cdot, \cdot)$ satisfies the additive portion of linearity. To show the multiplication part, consider $(x, \lambda y)$.
+    \begin{align}
+    \begin{aligned}
+        (x, \lambda y) &= \sum_{i=1}^n x_i^* \lambda y_i \\
+        &= \lambda \sum_{i=1}^n x_i^* y_i \\
+        &= \lambda (x,y).
+    \end{aligned}
+    \end{align}
+    The two properties just shown, used together, can be used to demonstrate linearity as given in the text. Can you see why? As a starting point, can we generalize to have sums of more than two vectors?
+    
+    For the ``skew-symmetry" property (2), we perform the following calculation.
+    \begin{align}
+    \begin{aligned}
+        (x, y) &= \sum_{i=1}^n x_i^* y_i \\
+        &= \left(\sum_{i=1}^n x_i y_i^*\right)^* \\
+        &= (y, x)^*
+    \end{aligned}
+    \end{align}
+    We used the nice property of complex conjugates that they distribute over sums. Finally, we demonstrate property three with another calculation from the definition of $(\cdot, \cdot)$.
+    \begin{align}
+    \begin{aligned}
+        (x, x) &= \sum_{i=1}^n x_i^* x_i \\
+        &= \sum_{i=1}^n \abs{x_i}^2
+    \end{aligned}
+    \end{align}
+    We see that $(x,x)$ is a sum of $n$ nonnegative entries $\abs{x_i}^2$, and is therefore also nonnegative. Moreover, $(x,x)$ will be positive unless every term in the sum is zero, that is, if $x_i = 0$ for every $i$. In this case, we simply have $x = 0$. Therefore $(x,x) = 0$ if and only if $x = 0$. We've now shown that $(\cdot, \cdot)$ defines a valid inner product.
+    
+\section*{Exercise 2.6}
+    Show that any inner product $(\cdot, \cdot)$ is conjugate-linear in the first argument,
+    \begin{align}
+        \left(\sum_i \lambda_i \ket{w_i}, \ket{v}\right) = \sum_i \lambda_i^* (\ket{w_i}, \ket{v})
+    \end{align}
+    
+    \textbf{Solution:} For simplicity, I will drop the ket notation, using $w_i$ instead of $\ket{w_i}$, for example. The conjugate-linearity follows from two of the three properties in the definition of an inner product. The following calculation shows this.
+    \begin{align}
+    \begin{aligned}
+        \left(\sum_i \lambda_i w_i, v\right) &= \left(v, \sum_i \lambda_i w_i\right)^* \\
+        &= \sum_i \lambda_i^* (v, w_i)^* \\
+        &= \sum_i \lambda_i^* (w_i, v).
+    \end{aligned}
+    \end{align}
+    In particular, we only needed to use properties (1) and (2)! Some properties of complex conjugation were invoked such as distribution over multiplication: $(ab)^* = a^* b^*$.
+    
+\section*{Exercise 2.7}
+    Verify that $\ket{w} \equiv (1, 1)$ and $\ket{v} \equiv (1, -1)$ are orthogonal. What are the normalized forms of these vectors?
+    
+    \textbf{Solution:} To see they are orthogonal, we compute their inner product as defined in the text.
+    \begin{align}
+        (w,v) := \sum_{i=1}^2 w_i^* v_i = 1^2 - 1^2 = 0
+    \end{align}
+    Note that the complex conjugate in the definition becomes unimportant when both vectors are real. To normalize the vectors, let's first compute their norms.
+    \begin{align}
+        \norm{w} = \sqrt{1^2 + 1^2} = \sqrt{2} \\
+        \norm{v} = \sqrt{1^2 + (-1)^2} = \sqrt{2}
+    \end{align}
+    Hence, the normalized versions $\hat{w}$, $\hat{v}$ are $(1,1)/\sqrt{2}$ and $(1,-1)/\sqrt{2}$ respectively. As a check, can you verify that each of these really has unit norm?
+    
+\section*{Exercise 2.8}
+    Prove that the Gram-Schmidt procedure produces an orthonormal basis for $V$.
+    
+    \textbf{Solution:} There are several things we need to check that are packed into this sentence. We need to check that the $\ket{v_k}$ are orthonormal, meaning they are orthogonal and normalized. Then we need to check that they are a basis for $V$. 
+    
+    These facts are not necessarily separate. If $d=\dim{V}$ is the dimension of $V$, a set of $d$ orthogonal, nonzero vectors will always form a basis. If it helps, this can be illustrated from the $xy$ axes of the plane, or an $xyz$ grid in three dimensions. We will take this statement for granted to solve the problem, but if you'd like to learn how to prove this, consult a linear algebra textbook with chapters on linear dependence and orthogonality.
+    
+    The Gram-Schmidt procedure works by subtracting off the component of each $\ket{w_{k+1}}$ that is parallel to the preceding $k$ vectors, then normalizing the result. The ``normalization" step means dividing by the norm, which we see is done in equation 2.17 of the text. We just need to make sure that the norm is not actually zero. If it was zero, then from the numerator of 2.17 (in text) we would have
+    \begin{align}
+        \ket{w_{k+1}} = \sum_{i=1}^k \braket{v_i}{w_{k+1}} \ket{v_i}.
+    \end{align}
+    Since each $\ket{v_i}$ is, by construction, in the subspace spanned by the $\ket{w_j}$ for $j \leq i$, this would imply $\ket{w_{k+1}}$ is a superposition of other $\ket{w_j}$, and therefore they are not linearly dependent as we assumed! Since this can't happen, it must be that the norm is not zero, so $\ket{v_i}$ as written is well defined and normalized. 
+    
+    Now let's check that the vectors are orthogonal. By the way we've constructed each $\ket{v_i}$ based on the previous ones, it's easiest to proceed by checking that each $\ket{v_{k+1}}$ is orthogonal to all $\ket{v_j}$ for $j \leq k$. Since, normalization does not matter, we can also just consider the numerator of equation 2.17, which we'll call $\ket{x_{k+1}}$. For any $j \leq k$, we have
+    \begin{align}\label{eq:component_innprod}
+        \braket{v_j}{x_{k+1}} = \braket{v_j}{w_{k+1}} - \sum_{i=1}^k \braket{v_i}{w_{k+1}} \braket{v_j}{v_i}.
+    \end{align}
+    Let's assume we've already successfully shown that all pairs $\ket{v_i}, \ket{v_j}$ are orthogonal for $i,j \leq k$, $i\neq j$. Then $\braket{v_j}{v_i} = \delta_{ij}$ in equation~\eqref{eq:component_innprod}, where $\delta_{ij}$ is the Kronecker delta. This captures the orthonormality. We'll now show that $\ket{v_{k+1}}$ should be included in the set as well, extending the set by one. Using the orthonormality,
+    \begin{align}
+    \begin{aligned}
+        \braket{v_j}{x_{k+1}} &= \braket{v_j}{w_{k+1}} - \braket{v_j}{w_{k+1}} \\
+        &= 0 
+    \end{aligned}
+    \end{align}
+    This shows $\ket{v_1}, \ket{v_2}, \dots, \ket{v_{k+1}}$ form an orthonormal set. Repeating for $k+2, k+3$ and so on up until the dimension $d$, we can show that all the $\ket{v_k}$ form an orthonormal basis. This shows the Gram-Schmidt procedure works.
+    
+    For those interested, one can formalize the above argument into a proof by mathematical induction. For those who found the argument confusion, try drawing some pictures to better understand the first step of the Gram-Schmidt procedure. What is going on and why does it work?
+    
+\section*{Exercise 2.9 (Pauli operators and the outer product)}
+    The Pauli matrices (Figure 2.2 on page 65) can be considered as operators with respect to an orthonormal basis $\ket{0}, \ket{1}$ for a two-dimensional Hilbert space. Express each of the Pauli operators in the outer product notation.
+    
+    \textbf{Solution:} The identity matrix, as was shown in the text, is given by the completeness relation for a single qubit.
+    \begin{align}
+        I = \sigma_0  = \ket{0}\bra{0} + \ket{1}\bra{1}
+    \end{align}
+    To construct the other ones, we'll use the following trick. Any matrix can be broken into a linear combination of matrices, each with only one nonzero entry that is equal to one. For two dimensions, it looks like this.
+    \begin{align} \label{eq:out_prod_decomp}
+        \begin{pmatrix}
+            a & b \\
+            c & d \\
+        \end{pmatrix}
+        = a
+        \begin{pmatrix}
+            1 & 0 \\
+            0 & 0
+        \end{pmatrix}
+        + b 
+        \begin{pmatrix}
+            0 & 1 \\
+            0 & 0
+        \end{pmatrix}
+        + c
+        \begin{pmatrix}
+            0 & 0 \\
+            1 & 0
+        \end{pmatrix}
+        + d
+        \begin{pmatrix}
+            0 & 0 \\
+            0 & 1
+        \end{pmatrix}
+    \end{align}
+    What is the outer product representation of each such matrix? Let $E^{(ij)}$ represent the operator in which only the $ij$th matrix element is one, the rest being zero. This implies that almost all basis vectors, when multiplied by $E^{(ij)}$, are sent to zero. The only one which isn't is $\ket{j}$, and this is sent to $\ket{i}$. This leads to the outer product formula
+    \begin{align}
+        E^{(ij)} = \ket{i}\bra{j},
+    \end{align}
+    which can be checked. Thus using the decomposition~\eqref{eq:out_prod_decomp}, we can convert any matrix into an outer product representation. We do that now for each pauli matrix.
+    \begin{align}
+    \begin{aligned}
+        \sigma_1 &=
+        \begin{pmatrix}
+            0 & 1 \\
+            1 & 0
+        \end{pmatrix} \rightarrow
+        \ket{0}\bra{1} + \ket{1}\bra{0} \\
+        \sigma_2 &=
+        \begin{pmatrix}
+            0 & -i \\
+            i & 0
+        \end{pmatrix} \rightarrow
+        -i \ket{0}\bra{1} + i \ket{1}\bra{0} \\
+        \sigma_3 &=
+        \begin{pmatrix}
+            1 & 0 \\
+            0 & -1
+        \end{pmatrix} \rightarrow
+        \ket{0}\bra{0} - \ket{1}\bra{1}
+    \end{aligned}
+    \end{align}
+    
+    This suggests a general method: notice that the $ij$th element gets mapped to a coefficient for the term with operator $\ket{i}\bra{j}$. Can you write the outer product form of the matrix given in equation~\eqref{eq:out_prod_decomp}?
+    
+\section*{Exercise 2.10}
+    Suppose $\ket{v_i}$ is an orthonormal basis for an inner product space $V$. What is the matrix representation for the operator $\ket{v_j}\bra{v_k}$ with respect to the $\ket{v_i}$ basis?
+    
+    \textbf{Solution:} The operator $\ket{v_j}\bra{v_k}$ sends every $\ket{v_i}$ to zero except when $i = k$, in which case
+    \begin{align}
+        \left(\ket{v_j}\bra{v_k}\right) \ket{v_k} = \ket{v_j}.
+    \end{align}
+    This means the matrix representation $M$ has columns of all zeros except in the $k$th column. And even then, the only nonzero entry is the $j$th row, because that will make sure $\ket{v_k} \rightarrow \ket{v_j}$ as column vectors. Hence, $M$ only has a single nonzero entry, the $jk$th entry, with value one. This agrees with our discussion from the previous exercise. 
+    
+\section*{Exercise 2.11 (Eigendecomposition of the Pauli matrices)}
+    Find the eigenvectors, eigenvalues, and diagonal representations of the Pauli matrices $X$, $Y$, and $Z$.
+    
+    \textbf{Solution:} Let's start with $Z$ since this is the simplest case. Why is it simple? Because $Z$ is already a diagonal matrix! We can read off the eigenvalues as the diagonal entries: $-1$ and $1$. Moreover, as for any diagonal matrix, the eigenvectors are just the standard basis vectors.
+    \begin{align}
+        Z \begin{pmatrix}
+            1 \\
+            0
+        \end{pmatrix}
+        = \begin{pmatrix}
+            1 \\
+            0
+        \end{pmatrix}
+        \quad Z
+        \begin{pmatrix}
+            0 \\
+            1
+        \end{pmatrix}
+        = -\begin{pmatrix}
+            0 \\
+            1
+        \end{pmatrix}
+    \end{align}
+    The diagonal representation is given in the text, equation 2.29.
+    
+    I will give a complete solution for $X$, and I suggest you try to solve for $Y$ in the same manner. Let's proceed with the standard method of the characteristic equation. Suppose $\lambda$ is an eigenvalue of $X$, with eigenvector $\ket{v}$, such that
+    \begin{align} \label{eq:char_matrix}
+    \begin{aligned}
+        X \ket{v} &= \lambda \ket{v} \\
+        (X - \lambda I) \ket{v} &= 0.
+    \end{aligned}
+    \end{align}
+    Take a minute to think about why the second line follows from the first. What rearranging did I do?
+    
+    The fact that there is a nonzero $\ket{v}$ such the 2nd line of equation\eqref{eq:char_matrix} holds means that $X - \lambda I$ is a ``singular matrix". This means many equivalent things, one of which is that the determinant is zero.
+    \begin{align}
+        \det (X - \lambda I) = 0
+    \end{align}
+    As a reminder, all of this applies more generally to determining the eigenvalues and eigenvectors of any square matrix. Let's calculate the determinant to solve for $\lambda$.
+    \begin{align}
+    \begin{aligned}
+        \det (X - \lambda I) = \det \begin{pmatrix}
+            -\lambda & 1 \\
+            1 & -\lambda
+        \end{pmatrix} &= 0 \\
+        \lambda^2 - 1 &= 0 \\
+        \lambda &= \pm 1.
+    \end{aligned}
+    \end{align}
+    Thus, the eigenvalues of X are $\pm 1$. Since $X$ is two-dimensional, each of these eigenvalues will have exactly one eigenvector. How do we find them? Let $\ket{+}$ and $\ket{-}$ correspond to the eigenvectors for $+1$ and $-1$ respectively. Going back to equation~\eqref{eq:char_matrix}, this means
+    \begin{align} \label{eq:eigenvecs_X}
+        (X-I)\ket{+} = 0 \\
+        (X + I) \ket{-} = 0.
+    \end{align}
+    These are linear equations we can solve, using our favorite method! Gaussian elimination is a great one in general. Solving each of these we will find the answer to be
+    \begin{align}
+    \begin{aligned}
+        \ket{+} &\propto \begin{pmatrix}
+            1 \\ 
+            1
+        \end{pmatrix} \\
+        \ket{-} &\propto \begin{pmatrix}
+            1 \\ 
+            -1
+        \end{pmatrix} \\
+    \end{aligned}
+    \end{align}
+    Here, $\propto$ means ``proportional to" by some constant $c$ which is undetermined. Any $c$ will solve~\eqref{eq:eigenvecs_X}, so there are an infinite number of solutions. However, we want \emph{normalized} solutions, so that $\braket{+}{+} = \braket{-}{-} = 1$. Since the norm of $\ket{+}$ and $\ket{-}$ is $\sqrt{2}$ (check it!) a good choice for $c$ then is $1/\sqrt{2}$. But $-1/\sqrt{2}$ would also work, wouldn't it? Anyways, with this normalization, our eigenvectors are determined, and our diagonal decomposition is given as 
+    \begin{align}
+        X = \ket{+}\bra{+} - \ket{-}\bra{-}.
+    \end{align}
+    (Sorry if the notation strains your eyes a bit, it does mine as well!)
+    
+    This concludes our analysis for $X$. I encourage you to try solving for $Y$, referencing the above steps as needed. I will simply list the solution. The eigenvalues are still $+1$ and $-1$, and the corresponding eigenvectors, which we'll call $\ket{+i}$ and $\ket{-i}$, are given by
+    \begin{align}
+    \begin{aligned}
+        \ket{+i} &= \frac{1}{\sqrt{2}} \begin{pmatrix}
+            1 \\
+            i
+        \end{pmatrix} \\
+        \ket{-i} &= \frac{1}{\sqrt{2}} \begin{pmatrix}
+            1 \\
+            -i
+        \end{pmatrix}.
+    \end{aligned}
+    \end{align}
+    Therefore, the diagonal decomposition is given by
+    \begin{align}
+        Y = \ket{+i}\bra{+i} - \ket{-i}\bra{-i}.
+    \end{align}
+    
+    Having solved the problem stated, let me just leave some parting comments. It is no coincidence that all the Paulis have the same eigenvalues, because they are related by a change of basis. Intuitively, changing the basis (``point of view") should not affect the stretching/compressing properties of the matrix. Once the change of basis is known, it can be used to relate all the eigenvectors together as well. These concepts will become more transparent in Chapter 4!
+    
+\section*{Exercise 2.12}
+    Prove that the matrix
+    \begin{align}
+        \begin{pmatrix}
+            1 & 0 \\
+            1 & 1
+        \end{pmatrix}
+    \end{align}
+    is not diagonalizable.
+    
+    \textbf{Solution:} To investigate this claim, let's find the eigenvalues and eigenvectors. Let $A$ be this matrix. The determinant of $A - \lambda I$ is then given by
+    \begin{align}
+        \det \begin{pmatrix}
+            1-\lambda & 0 \\
+            1 & 1-\lambda 
+        \end{pmatrix} = (1-\lambda)^2.
+    \end{align}
+    This is equal to zero only when $\lambda = 1$, so there is only one eigenvalue. It may be tempting to conclude here that $A$ is not diagonalizable: don't we only have one eigenvector? Not so: there could be \emph{two} independent eigenvectors corresponding to this single eigenvalue. This is sometimes called ``degeneracy", especially within physics. Let's determine which case is true by calculating the eigenvectors. If $\ket{v}$ is an eigenvector, it must satisfy
+    \begin{align}
+    \begin{aligned}
+        (A-I)\ket{v} &= 0 \\
+        \begin{pmatrix}
+            0 & 0 \\
+            1 & 0
+        \end{pmatrix} \ket{v} = 0.
+    \end{aligned}
+    \end{align}
+    We can solve this system any way we like. There is only one (linearly independent) solution.\footnote{By this I mean any two solutions are related by a constant.}
+    \begin{align}
+        \ket{v} = \begin{pmatrix}
+            0 \\
+            1
+        \end{pmatrix}
+    \end{align}
+    This is the unique eigenvector of $A$. But $A$ cannot be written in terms of $\ket{v}\bra{v}$ alone (why?). This shows that $A$ is not diagonalizable. 
+    
+\section*{Exercise 2.13}
+    If $\ket{w}$ and $\ket{v}$ are any two vectors, show that $(\ket{w}\bra{v})^\dagger = (\ket{v}\bra{w})$.
+    
+    \textbf{Solution:} We could solve this from the definition, but it also falls out from a more interesting consideration. We can think of $\bra{w}$ as a linear operator from the Hilbert space $H$ to $\mathbb{C}$, and $\ket{v}$ as another linear operator from $\mathbb{C}$ back into $H$. Then $\ket{w}\bra{v}$ is just the composition of the two maps, and we have $(\ket{w}\bra{v})^\dagger = \bra{v}^\dagger \ket{w}^
+    \dagger = \ket{v}\bra{w}$. 
+    
+    But for sake of clarity, let's also work from the definition. For any two vectors $\phi, \psi$, we have
+    \begin{align}
+    \begin{aligned}
+        ((\ket{w}\bra{v})^\dagger \phi,  \psi) &=(\phi, \ket{w}\bra{v} \psi) \\ 
+        &= \bra{\phi}\ket{w}\bra{v}\ket{\psi} \\
+        &=(\bra{\psi}\ket{v}\bra{w}\ket{\phi})^* \\
+        &= (\psi, \ket{v}\bra{w} \phi)^* \\
+        &= (\ket{v}\bra{w} \phi, \psi).
+    \end{aligned}
+    \end{align}
+    Comparing, the first and last line, since this holds for arbitrary $\phi, \psi$, we have 
+    \begin{align}
+        (\ket{w}\bra{v})^\dagger = \ket{v}\bra{w}.
+    \end{align}
+    
+\section*{Exercise 2.14 (Anti-linearity of the adjoint)}
+    Show that the adjoint operation is anti-linear,
+    \begin{align}
+        \left(\sum_i a_i A_i\right)^\dagger = \sum_i a_i^* A_i^\dagger.
+    \end{align}
+    
+    \textbf{Solution:} Like before, we will work directly with the definition from the inner product, making use of conjugate-linearity in the first argument (see Exercise 2.6). For any two $\phi, \psi$,
+    \begin{align}
+    \begin{aligned}
+        ( (\sum_i a_i A_i)^\dagger \phi, \psi) &= (\phi, \sum_i a_i A_i \psi) \\
+        &= \sum_i a_i (\phi, A_i \psi) \\
+        &=\sum_i a_i (A_i^\dagger \phi, \psi) \\
+        &= ((\sum_i a_i^* A_i^\dagger) \phi, \psi) \\
+    \end{aligned}
+    \end{align}
+    Comparing the beginning to end, since $\phi$ and $\psi$ were completely arbitrary, we must have the operators are equal. This gives our result.
+    
+\section*{Exercise 2.15}
+    Show that $(A^\dagger)^\dagger = A$.
+    
+    \textbf{Solution:} Once again, from the definition! Choosing arbitrary $\phi, \psi$,
+    \begin{align}
+        (\phi, A\psi) = (A^\dagger \phi, \psi) = (\psi, A^\dagger\phi)^* = ((A^\dagger)^\dagger \psi, \phi)^* = (\phi, (A^\dagger)^\dagger \psi).
+    \end{align}
+    Thus, comparing the first and last of this string of equations, we see that $A$ and $(A^\dagger)^\dagger$ are necessarily equal.
+    
+\section*{Exercise 2.16}
+    Show that any projector $P$ satisfies $P^2 = P$.
+    
+    \textbf{Solution:} In some treatments, this is given the definition of a projector! Let's prove it from the textbook's definition, using equation (2.35) from the text.
+    \begin{align}
+    \begin{aligned}
+        P^2 = P P &= \left(\sum_i \ket{i}\bra{i}\right)\left(\sum_j \ket{j}\bra{j}\right) \\ 
+        &= \sum_{i,j} \ket{i}\bra{i}\ket{j}\bra{j} \\
+        &= \sum_{i,j} \ket{i}\bra{j} \delta_{i,j} \\
+        &= \sum_{i} \ket{i}\bra{i} = P.
+    \end{aligned}
+    \end{align}
+    Note we took care to use different indices for each copy of $P$, and exploited the orthonormality of the $\ket{i}$ via $\braket{i}{j} = \delta_{i,j}$.
+    
+\section*{Exercise 2.17}
+    Show that a normal matrix is Hermitian if and only if it has real eigenvalues.
+    
+    \textbf{Solution:} $(\implies)$ Suppose $H$ is Hermitian, and let $v$ be an eigenvector of $H$ with eigenvalue $\lambda$. For simplicity, take $v$ to be normalized. Then,
+    \begin{align}
+        (v, Hv) = (v, \lambda v) = \lambda (v, v) = \lambda. 
+    \end{align}
+    On the other hand, we can take the adjoint of $H$, which is just $H$ itself, to compute the same quantity.
+    \begin{align}
+        (v, Hv) = (H^\dagger v, v) = (Hv,v) = (\lambda v, v) = \lambda^* (v,v) = \lambda^*
+    \end{align}
+    where we've used conjugate-linearity in the first argument. Taken together these equations imply $\lambda = \lambda^*$. Hence, $\lambda$ is real. 
+    
+    $(\impliedby)$ Suppose $H$ is normal with real eigenvalues. By the spectral theorem, $H$ has a diagonal representation $H = \sum_i \lambda_i \ket{v_i}\bra{v_i}$ where $\ket{v_i}$ are orthonormal and $\lambda_i$ real. Taking the Hermitian conjugate,
+    \begin{align}
+        H^\dagger = \left(\sum_i \lambda_i \ket{v_i}\bra{v_i}\right)^\dagger
+        = \sum_i \lambda_i^* (\ket{v_i}\bra{v_i})^\dagger = \sum_i \lambda_i \ket{v_i}\bra{v_i} = H.
+    \end{align}
+    Hence, $H$ is equal to its own adjoint, hence it is Hermitian.
+    
+\section*{Exercise 2.18}
+    Show that all eigenvalues of a unitary matrix have modulus 1, that is, can be written in the form $e{i\theta}$ for some real $\theta$.
+    
+    \textbf{Solution:} Let $v$ be an (normalized) eigenvector of unitary $U$ with eigenvalue $\lambda$. Since unitary operators preserve the norm, we must have
+    \begin{align}
+        (Uv, Uv) = (\lambda v, \lambda v) = \lambda^* \lambda = \abs{\lambda}^2 = 1.
+    \end{align}
+    Every complex number $\lambda$ has a polar representation $r e^{i\theta}$ for $r\geq 0$ and real $\theta$. Moreover, $\abs{\lambda}^2 = r^2 = 1$, so $r = 1$. This proves our result.
+    
+\section*{Exercise 19 (Pauli matrices: Hermitian and unitary)}
+    Show that the Pauli matrices are Hermitian and unitary.
+    
+    \textbf{Solution:} There are many ways to show this. In previous exercises we've shown that the Pauli matrices have eigenvalues $\pm 1$ with orthogonal eigenvectors. By Exercise 2.17, this means the paulis are hermitian. Moreover, each pauli squares to unity: $\sigma_i^2 = I$. This means the paulis are their own inverse. Thus
+    \begin{align}
+        \sigma_i^\dagger \sigma_i = \sigma_i \sigma_i = \sigma_i^2 = I.
+    \end{align}
+    Hence, the paulis are also unitary.
+    
+    As an aside operators which are both Hermitian and unitary are \emph{reflections}: they necessarily have eigenvalues $\pm 1$ about orthogonal axes.
+    
+\section*{Exercise 20 (Basis change)}
+    Suppose $A'$ and $A''$ are matrix representations of an operator $A$ on a vector space $V$ with respect to two different orthonormal bases, $\ket{v_i}$ and $\ket{w_i}$. Then the elements of $A'$ and $A''$ are $A'_{ij} = \bra{v_i}A\ket{v_j}$ and $A''_{ij} = \ket{w_i}A''\ket{w_j}$. Characterize the relationship between $A'$ and $A''$.
+    
+    \textbf{Solution:} Consider the matrix elements of $A'$. We would like to express them in terms of the elements of $A''$. One way to do this is to suitably insert two copies of the identity matrix into the matrix element expression, with the copies represented in the basis of $A''$. 
+    \begin{align}
+    \begin{aligned}
+        A'_{ij} = \bra{v_i}A\ket{v_j} &= \bra{v_i}\left(\sum_k \ket{w_k}\bra{w_k}\right) A \left(\sum_l \ket{w_l}\bra{w_l}\right)\ket{v_j} \\
+        &= \sum_{k,l} \bra{v_i}\ket{w_k}\bra{w_k}A\ket{w_l}\bra{w_l}\ket{v_j} \\
+        &= \sum_{k,l}A''_{kl} \braket{v_i}{w_k}\braket{w_l}{v_j}
+    \end{aligned}
+    \end{align}
+    This gives a direct relationship between the two sets of matrix elements, but might not be so illuminating. However, the double sum along with the format of the inner products suggests some kind of matrix multiplication is occurring. To facilitate this interpretation, let's define the inner products as a matrix $M$.
+    \begin{align}
+        M_{ij} := \bra{v_i}\ket{w_j}
+    \end{align}
+    Then we have
+    \begin{align}
+    \begin{aligned}
+        A'_{ij} &= \sum_{k,l} A''_{k,l} M_{ik} M_{jl}^* \\
+        &= \sum_{k,l} M_{ik} A''_{k,l} (M^\dagger)_{lj} \\
+        &= (M A'' M^\dagger)_{ij}
+    \end{aligned}
+    \end{align}
+    Hence, $A' = M A'' M^\dagger$, where $M$ is a matrix of inner products. Can we deduce any further properties of $M$? Well, if $A= I$, then all matrix representations must be the identity matrix. This implies $M I M^\dagger = M M^\dagger = I$, so $M$ is unitary. 
+    
+\section*{Exercise 21}
+    Repeat the proof of the spectral decomposition in Box 2.2 for the case when $M$ is Hermitian, simplifying the proof wherever possible.
+    
+    \textbf{Solution:} I will just point out the places where simplifications can occur assuming $M$ is Hermitian. Once $QMP = 0$ is known, it follows immediately that $PMQ = 0$ by taking the adjoint. It is also immediate that $QMQ$ is normal, since it is Hermitian! Then the inductive step allows for diagonalizing $PMP$ and $QMQ$, and the rest of the proof carries through. 
+    
+\section*{Exercise 22}
+    Prove that two eigenvectors of a Hermitian operator with different eigenvalues are necessarily orthogonal.
+    
+    \textbf{Solution:} Let $u, v$ be normalized eigenvectors of a Hermitian $H$ with eigenvalues $\lambda, \mu$ respectively. We've already proven in Exercise 2.17 that $\lambda, \mu$ are real. Hence
+    \begin{align}
+        (u, Hv) = (u, \mu, v) = \mu (u,v)
+    \end{align}
+    and also
+    \begin{align}
+        (u, Hv) = (H u, v) = (\lambda u, v) = \lambda (u,v).
+    \end{align}
+    Setting these two equal, we see that if $\lambda \neq \mu$, $(u,v) = 0$. Hence, $u$ and $v$ are orthogonal.
+    
+\section*{Exercise 23}
+    Show that the eigenvalues of a projector P are all either 0 or 1.
+    
+    \textbf{Solution:} Let $v$ be an eigenvector of $P$ with eigenvalue $\lambda$. By Exercise 2.16, $P^2 = P$, so
+    \begin{align}
+        P^2 v = P (Pv) = \lambda^2 v = P v = \lambda v.
+    \end{align}
+    Hence $\lambda^2 = \lambda$. There are exactly two solutions to this quadratic equation: zero and one.
+    
+\section*{Exercise 24 (Hermiticity of positive operators)}
+    Show that a positive operator is necessarily Hermitian. (Hint: Show that an arbitrary operator $A$ can be written $A = B + iC$ where $B$ and $C$ are Hermitian.)
+    
+    \textbf{Solution:} There is a clever trick to do the decomposition given in the hint, and it indeed works for any operator $A$. Taking inspiration from Euler's formula for complex numbers, we define
+    \begin{align}
+        B = \frac{A + A^\dagger}{2}, \quad C = \frac{A - A^\dagger }{2i}.
+    \end{align}
+    Indeed, we find that $A = B + i C$, and moreover both $B$ and $C$ are Hermitian! 
+    
+    Now let's assume $A$ is a positive operator. Then for any vector $\psi$, we have $(\psi, A \psi) = (\psi, B\psi) + i (\psi, C\psi) > 0$. In particular, it must be real valued. This must mean that $(\psi, C\psi) = 0$ for every choice of vector $\psi$. The only way this condition can be met is if $C= 0$. Thus, $A = B$, and since $B$ is Hermitian, so is $A$.
+    
+\section*{Exercise 2.25}
+    Show that for any operator $A$, $A^\dagger A$ is positive.
+    
+    \textbf{Solution:} We need to show that $(v, A^\dagger A v) \geq 0$ for any vector $v$. This follows from the definition of the adjoint.
+    \begin{align}
+        (v, A^\dagger A v) = (A v, A v).
+    \end{align}
+    Since the inner product of a vector with itself is always nonnegative, $(A v, A v) \geq 0$ and we've proven our result.
 \chapter{Introduction to computer science}
 
 \section*{Exercise 3.1}
@@ -165,6 +631,313 @@ This progress was last updated May 19th, 2022.
 \chapter{Quantum circuits}
 
 \section*{Exercise 4.1}
+    In Exercise 2.11, which you should do now if you haven’t already done it, you computed the eigenvectors of the Pauli matrices. Find the points on the Bloch sphere which correspond to the normalized eigenvectors of the different Pauli matrices.
+    
+    \textbf{Solution:} The idea is that the Pauli operators $X, Y, Z$ represent different axes in three-dimensional space, and so their eigenvectors should point along these axes on the Bloch sphere. Let's see how this actually pans out, using the formula
+    \begin{align} \label{eq:ket2bloch}
+        \cos\theta/2 \ket{0} + e^{i\varphi}\sin\theta/2 \ket{1} \rightarrow (\theta, \varphi)
+    \end{align}
+    to find the appropriate angles. Let's consider $Z$ first, with normalized eigenstates $\ket{0}, \ket{1}$. For $\ket{0}$, we need $\cos\theta/2 = 1$, which is solved by $\theta = 0$. Note $\sin\theta/2 = 0$ automatically, and $\varphi$ can be set to zero for convenience. On the other hand, for $\ket{1}$ we need $\theta = \pi$. This shows what we expected: the eigenstates point along the z-axis in opposite directions.
+    
+    Let's now consider the trickier case of $X$. The eigenvectors are $\ket{+} = \frac{1}{\sqrt{2}}\ket{0} + \frac{1}{\sqrt{2}}\ket{1}$ and $\ket{-} = \frac{1}{\sqrt{2}}\ket{0}-\frac{1}{\sqrt{2}}\ket{1}$. Comparing the $\ket{0}$ coefficient to the formula~\eqref{eq:ket2bloch}, we see that $\theta = \pi/2$ is the appropriate choice. This sets $\sin\theta/2 = 1/\sqrt{2}$, giving the right magnitude of the $\ket{1}$ component. To get the sign correct ($\pm 1$) we can set $\phi = 0$ for $\ket{+}$ and $\phi = \pi$ for $\ket{-}$. With these choices of angles, the eigenstates are seen to align with the Bloch sphere's $x$-axis.
+    
+    Can you perform a similar analysis to find the location of the $Y$ eigenstates, given by $\ket{\pm i } = \frac{1}{\sqrt{2}}\ket{0}\pm i \frac{1}{\sqrt{2}}\ket{1}$? What should the answer be?
+    
+\section*{Exercise 4.2:}
+    Let $x$ be a real number and $A$ a matrix such that $A^2 = I$. Show that
+    \begin{align}
+        \exp(iAx) = \cos(x)I + i\sin(x)A
+    \end{align}
+    Use this result to verify Equations (4.4) through (4.6).
+    
+    \textbf{Solution:} Let's show this in two different ways: (a) via power series and (b) via diagonalization.
+    
+    (a) Recall (or accept as given by me!) that the power (Taylor) series for the exponential function of a real number $x$ is given by
+    \begin{align}
+        e^x = \sum_{n=0}^\infty \frac{x^n}{n!}.
+    \end{align}
+    This actually holds for any complex number $z$ as well. It can be taken as the \emph{definition} for exponentiating square matrices as well.
+    \begin{align} \label{eq:power_ser_A}
+        e^{i A x} = \sum_{n=0}^\infty \frac{(i A x)^n}{n!}
+    \end{align}
+    Here, we understand that $A^0 = I$. In equation~\eqref{eq:power_ser_A} we are taking successively larger powers of $A$, but we know that any power of $A$ is either $A$ or $I$ (why)? This suggests we split the infinite sum into two sums: one over even and one over odd terms.
+    \begin{align} \label{eq:even_odd_A}
+    \begin{aligned}
+        e^{iAx} &= \sum_{n\; \text{even}} + \sum_{n\;\text{odd}} \\
+        &= \sum_{n = 0}^\infty \frac{(i A x)^{2n}}{2n!} + \sum_{n = 0}^\infty \frac{(i A x)^{2n+1}}{(2n+1)!}
+    \end{aligned}
+    \end{align}
+    In the last line, we reindexed so that $n$ runs over every integer, but includes only even or odd terms in the original sum. For every $n$, we have $A^{2n} = (A^2)^n = I$ and $A^{2n+1} = A$. Moreover,
+    \begin{align}
+        i^{2n} = (i^2)^n = (-1)^n
+    \end{align}
+    This allows us to simplify~\eqref{eq:even_odd_A}.
+    \begin{align}
+        e^{iAx} =  I \sum_{n = 0}^\infty \frac{(-1)^n x^{2n}}{2n!} + i A \sum_{n = 0}^\infty \frac{(-1)^n x^{2n+1}}{(2n+1)!} + 
+    \end{align}
+    Looking at the two remaining series, we may or may not recognize them as the series for $\cos x$ and $\sin x$. But if we did recognize it then we would arrive at our answer.
+    \begin{align}
+        e^{iAx} = I \cos x + i A \sin x
+    \end{align}
+    
+    (b) Eigenvalue transformations: It may not be obvious at first glance, but $A^2 = I$ automatically implies $A$ is diagonalizable without needing to assume that $A$ is Hermitian or unitary (or a normal operator more generally). This means we can write
+    \begin{align}
+        A = S \Lambda S^{-1}
+    \end{align}
+    for some invertible matrix $S$ and diagonal $\Lambda$. Since $A^2 = I$, the eigenvalues are $\pm 1$, and $\Lambda$ can be decomposed as
+    \begin{align} \label{eq:plus_minus_decomp}
+        \Lambda = \begin{pmatrix}
+            I_k & 0 \\
+            0 & -I_{n-k}
+        \end{pmatrix}
+    \end{align}
+    Here, $n$ is the total dimension and $I_k$ is the identity matrix acting on the $k$ eigenvectors with $+1$ eigenvalue.
+    
+    For a scalar valued function $f$, we can define $f(A)$ as acting only on the eigenvalues of $A$: $f(A) = S f(\Lambda) S^{-1}$. For the particular case of the exponential function, and making use of equation~\eqref{eq:plus_minus_decomp},
+    \begin{align}
+        \exp(i\Lambda x) = \begin{pmatrix}
+            e^{i x} I_k & 0 \\
+            0 & e^{-ix} I_{n-k}
+        \end{pmatrix}.
+    \end{align}
+    Using Euler's formula $e^{ix} = \cos x + i \sin x$, we obtain
+    \begin{align}
+        \exp(i \Lambda x) = I \cos x + i \Lambda \sin x. 
+    \end{align}
+    Hence, going back to $A$ itself,
+    \begin{align}
+    \begin{aligned}
+        \exp(i A x) &= S(I \cos x + i \Lambda \sin x)S^{-1} \\
+        &= I \cos x + i S \Lambda S^{-1} \sin x \\
+        &= I \cos x + i A \sin x.
+    \end{aligned}
+    \end{align}
+    
+    which is the result we sought.
+    
+    Comparing (a) and (b), I would say method (a) is a little more straightforward computationally. Still, the idea of functions of (diagonalizable) operators acting only on the eigenvalues is a powerful one, and extends to situations where a power series may not be defined. 
+
+\section*{Exercise 4.3}
+    Show that, up to a global phase, the $\pi/8$ gate satisfies $T = R_z(\pi/4)$.
+    
+    \textbf{Solution:} We need only compare equation 4.3 of the text with the matrix form of $R_z$ given in equation 4.6 of the text. We see that the two matrices align if we set $\theta/2 = \pi/8$, or $\theta = \pi/4$. The overall phase is shown in 4.3 to be $\pi/8$.
+
+\section*{Exercise 4.4}
+    Express the Hadamard gate $H$ as a product of $R_x$ and $R_z$ rotations and $e^{i\varphi}$ for some $\varphi$.
+    
+    \textbf{Solution:} There is value in playing around with the rotation matrices and trying to come up with the answer this way. Shortly later on in the text, you will learn tools that will let you solve this problem systematically (using, e.g. Euler angles). Instead, I will try to outline, as best as a solutions manual can, how one might come about an answer through guess and play.
+    
+    Naturally, we would like to find the shortest solution possible, but it is clear that $R_z$ or $R_x$ alone cannot work. What about $R_x(\alpha) R_z(\beta) e^{i\gamma}$? Well, before doing the matrix multiplication, we can see that this will not send, say, the zero state to the uniform superposition $\ket{0} + \ket{1}$ as the Hadamard should. Can you see why? Moreover, the Hadamard is real symmetric, and it's not clear that this combination possesses the same symmetry. Combinations like $R_z R_x R_x$ don't add anything, since we can just combine two x rotations to produce a single one. This may lead us, therefore, to try something of the form
+    \begin{align}
+        H \stackrel{?}{=}  R_z(\alpha) R_x(\beta) R_z(\gamma) e^{i\delta}.
+    \end{align}
+    Before diving into messy matrix multiplication, let's again consider the action on the computational basis $\ket{0}, \ket{1}$. Thinking geometrically, we need the $z$ axis to get mapped to the $x$ axis. We can accomplish this if $\beta = \pi/2$ and $\alpha = \pi/2$. Think about it! We still haven't determined $\gamma$ because it had no effect on the $z$ basis. However, we also require the $x$ axis to get mapped back to $z$. This happens if we set $\gamma = \pi/2$ (again thinking about the rotations geometrically). 
+    
+    Hence, our guess for the Hadamard becomes something like
+    \begin{align}
+        H \stackrel{?}{=} R_z(\pi/2) R_x(\pi/2) R_z(\pi/2) e^{i\delta}
+    \end{align}
+    Let's carry out the matrix multiplication, simplifying from the onset given the special value $\pi/2$. 
+    \begin{align}
+    \begin{aligned}
+        R_z(\pi/2) &= \begin{pmatrix}
+            e^{-i\pi/4} & 0 \\
+            0 & e^{i\pi/4}
+        \end{pmatrix} = e^{-i\pi/4}\begin{pmatrix}
+                1 & 0 \\
+                0 & i
+        \end{pmatrix} \\
+        R_x(\pi/2) &= \frac{1}{\sqrt{2}} \begin{pmatrix}
+            1 & -i \\
+            -i & 1
+        \end{pmatrix}
+    \end{aligned}
+    \end{align}
+    Therefore,
+    \begin{align}
+        R_z(\pi/2) R_x(\pi/2) R_z(\pi/2) = \frac{e^{-i\pi/2}}{\sqrt{2}} \begin{pmatrix}
+            1 & 1 \\
+            1 & -1
+        \end{pmatrix} = e^{-i\pi/2} H. 
+    \end{align}
+    This confirms our geometric intuition is correct. Setting $\delta = i\pi/2$ or rearranging the equation above gives an answer. 
+    \begin{align}
+        H = e^{i\pi/2} R_z(\pi/2) R_x(\pi/2) R_z(\pi/2)
+    \end{align}
+     
+     Do you think this solution is unique? Can another form of $H$ be given by sandwiching $R_z$ between two $R_x$?
+    
+\section*{Exercise 4.5}
+    Prove that $(\hat{n} \cdot \vec{\sigma})^2 = I$, and use this to verify Equation (4.8).
+    
+    \textbf{Solution:} We will use the algebraic properties of the $\sigma_i$ alone, as this gets closer to the ``reason" this identity holds. First, let's summarize the relevant properties. Every pauli squares to the identity: $\sigma_i^2 = I$. Moreover, the product of two different paulis is antisymmetric: $\sigma_i \sigma_j +\sigma_j \sigma_i = 0$. With these in hand let's consider $(n\cdot \sigma)^2 = (\sum_i n_i \sigma_i)^2$, where the sum goes from $i = 1$ to $3$. We have
+    \begin{align}
+    \begin{aligned}
+        (n\cdot \sigma)^2 &= \sum_i n_i \sigma_i \sum_j n_j  \sigma_j \\
+        &= \sum_{i,j} n_i n_j \sigma_i \sigma_j \\
+        &= \sum_{i = j} n_i^2 \sigma_i^2 + \sum_{i<j} n_i n_j (\sigma_i \sigma_j + \sigma_j \sigma_i).
+    \end{aligned}
+    \end{align}
+    Along the way, we split the sum into pieces where the $i,j$ indices were equal and pieces where they weren't. By the properties we discussed above, the sum on the right equals exactly zero, and $\sigma_i^2 = I$. Therefore,
+    \begin{align}
+        (n\cdot \sigma)^2 = I \sum_i n_i^2 = I \norm{n}^2
+    \end{align}
+    When $n$ is a unit vector, $\norm{n} = 1$ and we arrive at our result.
+    
+\section*{Exercise 4.6: (Bloch sphere interpretation of rotations)}
+    One reason why the $R_{\hat{n}}(\theta)$ operators are referred to as rotation operators is the following fact, which you are to prove. Suppose a single qubit has a state represented by the Bloch vector $\vec{\lambda}$. Then the effect of the rotation $R_{\hat{n}}(\theta)$ on the state is to rotate it by an angle $\theta$ about the $\hat{n}$ axis of the Bloch sphere. This fact explains the rather mysterious looking factor of two in the definition of the rotation matrices.
+    
+    \textbf{Solution:} For simplicity of exposition, we will take the rotation under consideration to be about the $z$ axis. Otherwise the matrix computations can get quite challenging. We could argue that we are just ``choosing a frame" in which the rotation is about $z$, but this might be assuming part of the consequent. 
+    
+    Let $R_{z}(\alpha)$ represent the $2\times 2$ matrix representing the rotation given by (4.6) of the text, while $S_z(\alpha)$ represents the actual rotation in three-dimensional space.
+    \begin{align}
+        S_z (\theta) = \begin{pmatrix}
+            \cos\theta & -\sin\theta & 0\\
+            \sin\theta & \cos\theta & 0 \\
+            0 & 0 & 1
+        \end{pmatrix}
+    \end{align}
+    Let $\vec{\lambda} = (\cos\varphi \sin\theta, \sin\varphi \sin\theta, \cos\theta)$ represent the unit vector on the Bloch sphere, with corresponding state 
+    \begin{align}
+        \ket{\lambda} = \begin{pmatrix}
+            \cos\theta/2 \\
+            e^{i\varphi}\sin\theta/2.
+        \end{pmatrix}
+    \end{align}
+    Applying the rotation of angle $\alpha$ to $\lambda$ gives
+    \begin{align}
+        R_z(\alpha)\ket{\lambda} = \begin{pmatrix}
+            e^{-i\alpha/2}\cos\theta/2 \\
+            e^{i\alpha/2}e^{i\varphi} \sin\theta/2
+        \end{pmatrix} \cong \begin{pmatrix}
+            \cos\theta/2 \\
+            e^{i(\varphi + \alpha)} \sin\theta/2.
+        \end{pmatrix}
+    \end{align}
+    Where $\cong$ here denotes equivalence up to a phase. We see that the final state $\ket{\lambda'}$ after the rotation has a corresponding Bloch sphere representation with the same polar angle $\theta$ but azimuthal angle $\varphi' = \phi + \alpha$. Thus, we obtain the expected rotation of the state. 
+
+\section*{Exercise 4.7}
+    Show that $XYX = -Y$ and use this to prove that $XR_y(\theta)X = Ry(-\theta)$.
+    
+    \textbf{Solution:} Since each pauli is its own inverse (e.g. $X^2 = I$), we see that the first equation is a direct consequence of rearranging $XY = - YX$. This antisymmetry property should really be thought of as a \emph{defining} property of the paulis, with the specific matrix form being only a representation producing the desired relations. Nevertheless, we can compute the matrix product $XYX$ and see that the answer is indeed $-Y$.
+    
+    As for the second part, we can proceed from the power series which defines the exponential for $R_y$, but it is easier to use the result of Exercise 4.2.
+    \begin{align}
+    \begin{aligned}
+        X R_y(\theta) X &= x e^{-i Y \theta /2} X \\
+        &= X (I \cos \theta/2 - iY\sin\theta/2 ) X \\
+        &= XIX \cos\theta/2 - i XYX\sin\theta/2 \\
+        &= I \cos\theta/2 + i Y \sin\theta/2 \\
+        &= e^{i Y \theta/2} \\
+        &= R(-\theta).
+    \end{aligned}
+    \end{align}
+
+\section*{Exercise 4.8}
+    An arbitrary single qubit unitary operator can be written in the form
+    \begin{align}
+        U = \exp(i\alpha) R_{\hat{n}}(\theta)
+    \end{align}
+    for some real numbers $\alpha$ and $\theta$, and a real three-dimensional unit vector $\hat{n}$.
+    
+    \begin{enumerate}
+        \item Prove this fact.
+        \item Find values for $\alpha$, $\theta$, and $\hat{n}$ giving the Hadamard gate $H$.
+        \item Find values for $\alpha$, $\theta$, and $\hat{n}$ giving the phase gate
+        \begin{align}
+            S = \begin{bmatrix}
+                1 & 0 \\
+                0 & i
+            \end{bmatrix}.
+        \end{align}
+    \end{enumerate}
+    
+    \textbf{Solution:} 1. As our guiding idea, we will want use the spectral theorem to connect $U$ to the notion of a rotation. The eigenvectors of $U$ should correspond to the axis of rotation because they are unchanged by the action of $U$, and the eigenvalues should have to do with the angle of rotation. 
+    
+    Let's pursue this more formally. Any $2\times2$ unitary $U$ can be written in diagonalized form as 
+    \begin{align}
+        U = e^{i\varphi_1} \ket{v_1}\bra{v_1} + e^{i\varphi_2} \ket{v_2}\bra{v_2}.
+    \end{align}
+    Since an overall phase is irrelevant, only the different in eigenvalues should matter. To capture this, define $\alpha = (\varphi_1 + \varphi_2)/2$ and $\theta = \varphi_2 - \varphi_1$. In terms of these parameters, $U$ can be written as 
+    \begin{align} \label{eq:factor_phase}
+        U = e^{i\alpha}(e^{-i\theta/2} \ket{v_1}\bra{v_1} + e^{i\theta/2} \ket{v_2}\bra{v_2}).
+    \end{align}
+    Since $v_1$ and $v_2$ are orthogonal, they should lie on opposite ends of the Bloch sphere. Let $\hat{n}$ correspond to the unit vector pointing in the direction of $\vec{v_1}$. Then, the piece in parenthesis equation~\eqref{eq:factor_phase} is exactly the rotation matrix $R_{\hat{n}}(\theta)$. Thus, $U = e^{i\alpha} R_{\hat{n}}(\theta)$. 
+    
+    2. The rotation information will be given by the eigenvectors and eigenvalues of $H$. Try to calculate them yourself! The eigenvalues are $+1$ and $-1$ with corresponding vectors 
+    \begin{align}
+        \ket{v_\pm} = \frac{1\pm\sqrt{2}}{\sqrt{2(2\pm\sqrt{2})}}\ket{0} + \frac{1}{\sqrt{2(2\pm\sqrt{2})}}\ket{1}.
+    \end{align}
+    Since there is no complex phase anywhere, these vectors must lie in the $xz$ plane of the bloch sphere. We can get the appropriate polar angle by looking at the $\ket{0}$ component of one of the eigenvectors, $\ket{v_+}$ say. We need to solve
+    \begin{align}
+        \cos\theta/2 = \frac{1 + \sqrt{2}}{\sqrt{2(2+\sqrt{2})}}
+    \end{align}.
+    This may seem daunting, but the answer is actually quite simple: $\theta = \pi/4$! The rotation angle should be the difference in phase between the two eigenvalues, which is $\pi$. The overall phase is the average of the eigenvalue phases: $(\pi + 0)/2 = \pi/2$. Hence,
+    \begin{align}
+        H = e^{i\pi/2} R_{\hat{n}}(\pi)
+    \end{align}
+    where $\hat{n} = (\sin\theta/4, 0, \cos\theta/4) = (1,0,1)/\sqrt{2}$. Can you verify that this answer is correct? Now that you know $H$ can be thought of as a rotation, are you able to picture the trajectory of the computational basis state as they are acted on with $H$?
+    
+    3. For the $S$ gate, we are going to use a bit more intuition. $S$ is diagonal, so we should be dealing with a $z$ rotation. Factoring out an overall phase of $e^{-i\pi/4}$ (recall that $i = e^{i\pi/2}$),
+    \begin{align}
+        S = e^{-i\pi/4}\begin{pmatrix}
+            e^{-i\pi/4} & 0 \\
+            0 & e^{i\pi/4}
+        \end{pmatrix} = e^{-i\pi/4} R_z(\pi/2).
+    \end{align}
+    This gives our solution.
+    
+\section*{Exercise 4.9} 
+    Explain why any single qubit unitary operator may be written in the form (4.12).
+    
+    \textbf{Solution:} Let's start with $U$ having entries $z_1, z_2, z_3, z_4$ being complex, and understand what conditions are in place. Any complex number can be written as $z = re^{i\varphi}$ with $r\geq 0$ and $\varphi \in [0,2\pi)$. Hence, we must have a form
+    \begin{align}
+        U = \begin{pmatrix}
+            r_1 e^{i\varphi_1} & r_3 e^{i\varphi_3} \\
+            r_2 e^{i\varphi_2} & r_4 e^{i\varphi_4}
+        \end{pmatrix}.
+    \end{align}
+    What does the normalization constraint on the columns and rows impose on $U$? It says nothing about the phases, but does forces the amplitudes $r_i$ to be closely related: $r_2 = r_3 = \sqrt{1-r_1^2}$ and $r_4 = r_1$. For ease of notation, let's now call $r_1 = r$, which lies in $[0,1]$. The phases are contrained by the orthogonality of the rows and the columns. It turns out only one of these constraints is independent, so we focus on the inner product of the two columns. It is given by
+    \begin{align} \label{eq:U_inn_prod}
+        r\sqrt{1-r^2} e^{i(\varphi_1-\varphi_3)} + r\sqrt{1-r^2} e^{i(\varphi_2-\varphi_4)} = 0.
+    \end{align}
+    Before proceeding further with this, we need to handle edge cases where we can't divide by $r\sqrt{1-r^2}$. Consider the edge cases $r=0$ and $r=1$ separately from the more general $r \in (0,1)$. If $r=0$, then $U$ is off-diagonal only, and we can achieve this by setting $\gamma = \pi$. Then we just need to set $\alpha, \beta, \delta$ to match $\varphi_2$ and $\varphi_3$, and some algebra shows that $\alpha = (\varphi_2 + \varphi_3 -\pi)/2$, $\beta = \varphi_2 - \varphi_3 + \pi$ and $\delta = 0$ work for this case. This handles the $r = 0$ case. For $r = 1$, the matrix $U$ is diagonal, so we choose $\gamma = 0$. Only the phases $\varphi_1$ and $\varphi_4$ need to be expressed in terms of $\alpha, \beta, \delta$. The exact same solution given for $r = 0$ works here too. 
+    
+    Now going back to the main case, in equation~\eqref{eq:U_inn_prod} we can divide by $r\sqrt{1-r^2}$ and rearrange. The result is
+    \begin{align}
+        \varphi_1 +\varphi_4 - \varphi_2 -\varphi_3 = \delta_k
+    \end{align}
+    where $\delta_k$ is some odd multiple of $\pi$. Rearranging in terms of $\varphi_3$ gives
+    \begin{align}
+        \varphi_3 = \varphi_1 + \varphi_4 - \varphi_2 + \delta_k.
+    \end{align}
+    Plugging this into $U$,
+    \begin{align}
+        U = \begin{pmatrix}
+            r e^{i\varphi_i} & -\sqrt{1-r^2} e^{i\varphi_1 + \varphi_4 -\varphi_2} \\
+            \sqrt{1-r^2} e^{i\varphi_2} & r e^{i\varphi_4}
+        \end{pmatrix}
+    \end{align}
+    Let's choose $\gamma \in (0,\pi)$ such that $r = \cos\gamma/2$. This handles the amplitude part of $U$ correctly. To parameterize the phases of $U$ in terms of $\alpha, \beta, \delta$ we will need to construct a solution to the following linear equations.
+    \begin{align}
+        \begin{pmatrix}
+            \varphi_1 \\
+            \varphi_2 \\
+            \varphi_4
+        \end{pmatrix} = \begin{pmatrix}
+            1 & -1/2 & -1/2 \\
+            1 & 1/2 & -1/2 \\
+            1 & 1/2 & 1/2 
+        \end{pmatrix} \begin{pmatrix}
+            \alpha \\
+            \beta \\
+            \gamma
+        \end{pmatrix}. 
+    \end{align}
+    Indeed, a unique solution can be found by inverting the matrix, meaning that the $\alpha,\beta,\gamma$ can be used instead of the $\varphi$ to parameterize the matrix. Hence, equation (4.12) of the textbook gives a completely general characterization of $2\times 2$ unitary matrices. 
+    
+\section*{Exercise 4.10}
+    Give a decomposition analogous to Theorem 4.1 but using Rx instead of Rz.
 
 \chapter{The quantum Fourier transform and its applications}
 
