@@ -28,30 +28,24 @@
 
 \setcounter{chapter}{-1}
 \chapter{Plan and Progress}
-\section{Goals of this project}
-The textbook \emph{Quantum Computation and Quantum Information} by Nielsen and Chuang (NC) is often considered the authoritative textbook in the subject by those in the field. Since the book was published, not only has the field evolved rapidly, but many more resources have become available for those interested in learning about the subject. These range from additional textbooks, online resources, software packages, and the availability of small quantum devices to the public. Still, NC retains much of its original value and relevance, especially for those seeking an entry into the field.
+\section{Purpose of this solution manual}
+The textbook \emph{Quantum Computation and Quantum Information} by Nielsen and Chuang (NC) is often considered the authoritative textbook in the subject by those in the field. Since the book was published, the field has grown and evolved enormously, and rich subfields have branched off to be of interest in their own right. In parallel with the science, more resources have become available for those interested in learning quantum computing. These include textbooks, tutorials, blog posts, software packages, and small quantum devices available to the public for playful exploration. Despite these developments, NC retains much of its original value and relevance as a comprehensive introduction to this subject.
 
-Surprisingly, there seems to be a lack of complete, easily available, and guided solutions to NC problems. Partial solutions exist in several places on the internet, including github. My goal with this project is to provide comprehensive solutions so that someone with relatively little background can learn from these.
+Surprisingly, there seems to be a lack of complete, easily available, and guided solutions to NC problems. Partial solutions exist in several places on the internet, including GitHub. It appears, taken together, they have covered chapters 2,3,4 and 9 almost completely, with scattered solutions for other chapters. In many cases, these solutions are not worked through pedagogically. The goal of this document is to provide a comprehensive set of worked-through solutions to as many (if not all) NC exercises as possible, as a supplement to the textbook for those who need assistance in getting unstuck on a problem.
 
-I have often heard from my professors that a ``smart student" can learn directly from a textbook with hard work. However, many of us are not this hypothetical student. It is incredibly helpful and important for students to receive \emph{feedback} on their attempts to practice their knowledge. For those who have access to a teacher or mentor knowledgeable in this area, this might not be so hard to come by. For others who are not at a university, or are at a smaller university where quantum computing is not a big part of the institution, I hope that these worked-through solutions will provide some guidance in place of direct feedback. 
+Under what conditions can a student best learn a technical subject such as quantum computing? For those students who learn in a formal class setting at a university, or under mentorship from an expert, the student, ideally, has access not only to the relevant information, but also \emph{feedback} that allows them to refine their skills. In today's age of the internet, almost everyone has some access to the same raw information on quantum computing. However, this may not be enough to truly equalize the playing field for those outside academic institutions, or for those who attend a university with little to no expertise in the subject. A lack of feedback and guidance for independent learners could hamper their progress, since they are unaware of conceptual traps or useful mental shortcuts that are often discussed in informal settings such as office hours.
 
-There exist other partial solution manuals to NC, most of them on github. It appears, taken together, they have covered chapters 2,3,4 and 9 almost completely, with scattered solutions for other chapters. Here, we wish to help fill in the gaps, and perhaps ultimately create the most comprehensive solution manual to date. The ``current"\footnote{Current as of May 2022} strategy is as follows:
-\begin{itemize}
-    \item Create solution manuals for appendices
-    \item Create solution manuals for chapters 5-8
-    \item Create solutions for chapters 10-12
-    \item (If motivated) Fill in remaining problems in chapters already covered by others (in chapters 2-4 for example.)
-    \item (If REALLY motivated) Compile together solutions already created, and bring them into a common format, so that we may come closer to a universal solutions manual!
-\end{itemize}
-I would enjoy collaboration from the community, if anyone wants to help contribute to this project. 
+It has sometimes been suggested to me, by my previous professors or certain textbook authors, that a bright, motivated student can learn on their own directly from a textbook, without recurse to much else. While this might be true in some sense, a more important question is how efficiently this learning occurs, compared to those who have guided practice with feedback. I hope that these worked-through solutions will provide a different kind of resource to independent quantum learners, a kind which is sorely needed.
 
-\section{Progress so far}
+\textbf{I would greatly appreciate any involvement from the community on this project. If anyone wants to help contribute, please send me a message!}
+
+\section{Progress to completion}
 
 This progress was last updated May 19th, 2022.
 
 \begin{itemize}
-    \item Chapter 1: Two open ended exercises only.
-    \item Chapter 2: Exercises 2.1-2.4 complete. Many exercises remain.
+    \item Chapter 1: All in-text exercises done. Two open ended problems left alone.
+    \item Chapter 2: Exercises 2.1-2.56 complete. Many exercises remain.
     \item Chapter 3: Untouched.
     \item Chapter 4: Untouched.
     \item Chapter 5: Exercises 5.1-5.14 complete. Exercises 5.15-5.29 remain, along with 6 practice problems.
@@ -71,14 +65,35 @@ This progress was last updated May 19th, 2022.
 \end{itemize}
 
 \chapter{Introduction and overview}
-    There are not many problems in this chapter. The last two are pretty open ended and we'll leave them as is for the time being :)
+
+\section*{Exercise 1.1 (Probabilistic classical algorithm)}
+    Suppose that the problem is not to distinguish between the constant and balanced functions with certainty, but rather, with some probability of error $\epsilon < 1/2$. What is the performance of the best classical algorithm for this problem?
+    
+    \textbf{Solution:} Intuitively, we should be able to check whether a function $f$ as constant or balanced by looking at the output of a few randomly chosen inputs. If $f$ were balanced, it would be very unlucky if all of the inputs we tried gave the same answer, just as flipping a coin ten times rarely gives all heads (or tails).
+    
+    Lets make these ideas more precise. Suppose I sample $s$ inputs at random from the $2^n$ possible bitstrings of length $n$. If any two of these inputs have a different output under $f$, I can be certain that $f$ is balanced. If all of my inputs give the same answer, it makes sense to guess that $f$ is constant. Of course, there is a chance that $f$ is balanced, and I merely got unlucky. The probability that all my outputs are the same, assuming $f$ is in fact balanced, is 
+    \begin{align}
+        \frac{1}{2^s}
+    \end{align}
+    where we've assumed each input is sampled (uniformly) randomly and independently. We can make this ``failure probability" as small as we like. By choosing $s > \log 1/\epsilon$, the failure probability is less than $\epsilon$. Therefore, we will be able to distinguish $f$ constant vs balanced with an arbitrarily small chance of failure.
+
+    Notice that, not only can we make $\epsilon$ arbitrarily small, we can do so ``exponentially quickly". Each new sample shrinks our failure probability by $1/2$. This suggests that, in practice, we should have no trouble solving this problem with regular computers with a high probability of success.
+    
+\section*{Exercise 1.2}
+    Explain how a device which, upon input of one of two non-orthogonal quantum states $\ket{\psi}$ or $\ket{\varphi}$ correctly identified the state, could be used to build a device which cloned the states $\ket{\psi}$ and $\ket{\varphi}$, in violation of the no-cloning theorem. Conversely, explain how a device for cloning could be used to distinguish non-orthogonal quantum states.
+    
+    \textbf{Solution:} Suppose we could distinguish any two quantum states $\ket{\psi}$ and $\ket{\varphi}$ perfectly, given only a single copy. Such a device could store the result in a single (classical or quantum) bit, with, say, zero for $\ket{\psi}$ and one for $\ket{\varphi}$. Then we can define a unitary operation which will reconstruct the state from the result. Specifically, let $CU$ be the controlled unitary which acts on a ``blank" quantum system $S$ by preparing the state $\ket{\psi}$ or $\ket{\varphi}$ depending on whether the result bit was zero or one. Applying this operation after the measurement would prepare another copy of the original state, effectively cloning it. 
+    
+    Conversely, cloning could be used to distinguish any two quantum states. By creating many copies of the state of interest, and performing suitable measurements on the copies, we can fully determine the quantum state to arbitrary precision. Or at least enough to tell them apart. 
+    
+    Together, this shows that the ability to clone and the ability to distinguish arbitrary states are equivalent in power. Since we cannot do one of them, we cannot do either!
 
 \chapter{Introduction to quantum mechanics}
 
 \section*{Exercise 2.1: (Linear dependence: example)}
     Show that $(1,-1)$, $(1, 2)$ and $(2, 1)$ are linearly dependent.
     
-    \textbf{Solution:} By inspection (i.e. staring long enough), one might be able to see that $(2,1)=(1,-1) + (1,2)$, hence,
+    \textbf{Solution:} By inspection (i.e. staring long enough), one might be able to see that $(1,-1) + (1,2) = (2,1)$, hence,
     \begin{align}
         (1,-1)+(1,2) -(2,1) = 0.
     \end{align}
@@ -160,7 +175,7 @@ This progress was last updated May 19th, 2022.
     \begin{align}
     \begin{aligned}
         (x, y+z) &= \sum_{i=1}^n x_i^* (y_i + z_i) \\
-        &= \sum_{i=1}^n x_i^* y_i + x_i^* z_i \\
+        &= \sum_{i=1}^n (x_i^* y_i + x_i^* z_i) \\
         &= \sum_{i=1}^n x_i^* y_i + \sum_{i=1}^n x_i^* z_i \\
         &= (x, y) + (x,z).
     \end{aligned}
@@ -183,7 +198,7 @@ This progress was last updated May 19th, 2022.
         &= (y, x)^*
     \end{aligned}
     \end{align}
-    We used the nice property of complex conjugates that they distribute over sums. Finally, we demonstrate property three with another calculation from the definition of $(\cdot, \cdot)$.
+    We used a nice property of complex conjugates: they distribute over sums and products of complex numbers. Finally, we demonstrate property (3) with another calculation from the definition of $(\cdot, \cdot)$.
     \begin{align}
     \begin{aligned}
         (x, x) &= \sum_{i=1}^n x_i^* x_i \\
@@ -534,27 +549,27 @@ This progress was last updated May 19th, 2022.
     Hence, $H$ is equal to its own adjoint, hence it is Hermitian.
     
 \section*{Exercise 2.18}
-    Show that all eigenvalues of a unitary matrix have modulus 1, that is, can be written in the form $e{i\theta}$ for some real $\theta$.
+    Show that all eigenvalues of a unitary matrix have modulus 1, that is, can be written in the form $e^{i\theta}$ for some real $\theta$.
     
     \textbf{Solution:} Let $v$ be an (normalized) eigenvector of unitary $U$ with eigenvalue $\lambda$. Since unitary operators preserve the norm, we must have
     \begin{align}
         (Uv, Uv) = (\lambda v, \lambda v) = \lambda^* \lambda = \abs{\lambda}^2 = 1.
     \end{align}
-    Every complex number $\lambda$ has a polar representation $r e^{i\theta}$ for $r\geq 0$ and real $\theta$. Moreover, $\abs{\lambda}^2 = r^2 = 1$, so $r = 1$. This proves our result.
+    Every complex number $\lambda$ has a polar representation $r e^{i\theta}$ for $r\geq 0$ and real $\theta$. Moreover, $\abs{\lambda}^2 = r^2 = 1$, so $r = 1$. This proves our result: $\lambda = e^{i\theta}$ for some real $\theta$.
     
-\section*{Exercise 19 (Pauli matrices: Hermitian and unitary)}
+\section*{Exercise 2.19 (Pauli matrices: Hermitian and unitary)}
     Show that the Pauli matrices are Hermitian and unitary.
     
-    \textbf{Solution:} There are many ways to show this. In previous exercises we've shown that the Pauli matrices have eigenvalues $\pm 1$ with orthogonal eigenvectors. By Exercise 2.17, this means the paulis are hermitian. Moreover, each pauli squares to unity: $\sigma_i^2 = I$. This means the paulis are their own inverse. Thus
+    \textbf{Solution:} There are many ways to show this. In previous exercises we've shown that the Pauli matrices have eigenvalues $\pm 1$ with orthogonal eigenvectors. By Exercise 2.17, this means the Paulis are hermitian. Moreover, each Pauli squares to unity: $\sigma_i^2 = I$. This means the Paulis are their own inverse. Thus
     \begin{align}
         \sigma_i^\dagger \sigma_i = \sigma_i \sigma_i = \sigma_i^2 = I.
     \end{align}
-    Hence, the paulis are also unitary.
+    Hence, the Paulis are also unitary.
     
     As an aside operators which are both Hermitian and unitary are \emph{reflections}: they necessarily have eigenvalues $\pm 1$ about orthogonal axes.
     
-\section*{Exercise 20 (Basis change)}
-    Suppose $A'$ and $A''$ are matrix representations of an operator $A$ on a vector space $V$ with respect to two different orthonormal bases, $\ket{v_i}$ and $\ket{w_i}$. Then the elements of $A'$ and $A''$ are $A'_{ij} = \bra{v_i}A\ket{v_j}$ and $A''_{ij} = \ket{w_i}A''\ket{w_j}$. Characterize the relationship between $A'$ and $A''$.
+\section*{Exercise 2.20 (Basis change)}
+    Suppose $A'$ and $A''$ are matrix representations of an operator $A$ on a vector space $V$ with respect to two different orthonormal bases, $\ket{v_i}$ and $\ket{w_i}$. Then the elements of $A'$ and $A''$ are $A'_{ij} = \bra{v_i}A\ket{v_j}$ and $A''_{ij} = \bra{w_i}A''\ket{w_j}$. Characterize the relationship between $A'$ and $A''$.
     
     \textbf{Solution:} Consider the matrix elements of $A'$. We would like to express them in terms of the elements of $A''$. One way to do this is to suitably insert two copies of the identity matrix into the matrix element expression, with the copies represented in the basis of $A''$. 
     \begin{align}
@@ -578,12 +593,14 @@ This progress was last updated May 19th, 2022.
     \end{align}
     Hence, $A' = M A'' M^\dagger$, where $M$ is a matrix of inner products. Can we deduce any further properties of $M$? Well, if $A= I$, then all matrix representations must be the identity matrix. This implies $M I M^\dagger = M M^\dagger = I$, so $M$ is unitary. 
     
-\section*{Exercise 21}
+    We can summarize these results by saying $A'$ and $A''$ are related via a \emph{unitary similarity transformation}. Since $A'$ and $A''$ were arbitrary matrix representations in terms of orthonormal bases, all such representations are related this way. 
+    
+\section*{Exercise 2.21}
     Repeat the proof of the spectral decomposition in Box 2.2 for the case when $M$ is Hermitian, simplifying the proof wherever possible.
     
     \textbf{Solution:} I will just point out the places where simplifications can occur assuming $M$ is Hermitian. Once $QMP = 0$ is known, it follows immediately that $PMQ = 0$ by taking the adjoint. It is also immediate that $QMQ$ is normal, since it is Hermitian! Then the inductive step allows for diagonalizing $PMP$ and $QMQ$, and the rest of the proof carries through. 
     
-\section*{Exercise 22}
+\section*{Exercise 2.22}
     Prove that two eigenvectors of a Hermitian operator with different eigenvalues are necessarily orthogonal.
     
     \textbf{Solution:} Let $u, v$ be normalized eigenvectors of a Hermitian $H$ with eigenvalues $\lambda, \mu$ respectively. We've already proven in Exercise 2.17 that $\lambda, \mu$ are real. Hence
@@ -605,12 +622,12 @@ This progress was last updated May 19th, 2022.
     \end{align}
     Hence $\lambda^2 = \lambda$. There are exactly two solutions to this quadratic equation: zero and one.
     
-\section*{Exercise 24 (Hermiticity of positive operators)}
+\section*{Exercise 2.24 (Hermiticity of positive operators)}
     Show that a positive operator is necessarily Hermitian. (Hint: Show that an arbitrary operator $A$ can be written $A = B + iC$ where $B$ and $C$ are Hermitian.)
     
-    \textbf{Solution:} There is a clever trick to do the decomposition given in the hint, and it indeed works for any operator $A$. Taking inspiration from Euler's formula for complex numbers, we define
+    \textbf{Solution:} There is a clever trick to do the decomposition given in the hint, and it indeed works for any square operator $A$. Taking inspiration from Euler's formula for complex numbers, we define
     \begin{align}
-        B = \frac{A + A^\dagger}{2}, \quad C = \frac{A - A^\dagger }{2i}.
+        B := \frac{A + A^\dagger}{2}, \quad C := \frac{A - A^\dagger }{2i}.
     \end{align}
     Indeed, we find that $A = B + i C$, and moreover both $B$ and $C$ are Hermitian! 
     
@@ -624,9 +641,1034 @@ This progress was last updated May 19th, 2022.
         (v, A^\dagger A v) = (A v, A v).
     \end{align}
     Since the inner product of a vector with itself is always nonnegative, $(A v, A v) \geq 0$ and we've proven our result.
+    
+\section*{Exercise 2.26}
+    Let $\ket{\psi} = (\ket{0}+\ket{1})/\sqrt{2}$. Write out $\ket{\psi}^{\otimes 2}$ and $\ket{\psi}^{\otimes{3}}$ explicitly, both in terms of tensor products like $\ket{0}\ket{1}$, and using the Kronecker product.
+    
+    \textbf{Solution:} I will not do all steps because it is a bit tedious. I will just outline some things. Consider $\ket{\psi}^{\otimes n}$. Since the dimension of the Hilbert space is the product of the individual dimensions, the full space is of dimension $2^{n}$ (hence dimension four and eight for $n = 2, 3$). Moreover, the overall normalization factor will just be a product of all the $1/\sqrt{2}$, so it is $1/2^{n/2}$. Now we can just focus on the unnormalized $\ket{0} + \ket{1}$ and their tensor product. 
+    
+    I find it easier to work with the tensor product form instead of the Kronecker product, since we don't need to worry about "stacking" everything properly. We have a basis in terms of all possible bitstrings of length $n$. When we take the $n$-fold tensor product of $\ket{0} + \ket{1}$, we will find that we obtain a uniform superposition of all length $n$ bitstrings. Try to reason this out yourself ($n = 2$ makes a good example case). Hence,
+    \begin{align}
+        \ket{\psi} = \frac{1}{2^{n/2}} \sum_j \ket{j}
+    \end{align}
+    where the sum is taken over all bitstrings $j$ of length $n$. This means, in the Kronecker product column vector, every single entry will be 1, with an overall normalization factor.
+
+\section*{Exercise 2.27}
+    Calculate the matrix representation of the tensor products of the Pauli operators (a) $X$ and $Z$; (b) $I$ and $X$; (c) $X$ and $I$. Is the tensor product commutative?
+    
+    \textbf{Solution:} I will work out part (a) explicitly and just give the answer for the other cases. It's important to remember that the basis we are using is $\ket{00}, \ket{01}, \ket{10}, \ket{11}$, in that order. For larger numbers of qubits, by convention we will always count up in binary to order the basis vectors. As for any matrix representation, the ordering of the basis vectors matters!
+    
+    With this convention in mind, the usual procedure is to to ``insert" the second matrix into each element of the first. So for $X\otimes Z$ we have
+    \begin{align}
+        X \otimes Z = \begin{pmatrix}
+            0 & Z \\
+            Z & 0
+        \end{pmatrix} = \begin{pmatrix}
+            0 & 0 & 1 & 0 \\
+            0 & 0 & 0 & -1 \\
+            1 & 0 & 0 & 0 \\
+            0 & -1 & 0 & 0
+        \end{pmatrix}.
+    \end{align}
+    We can (and should) check that this representation matches what we expect from the simpler tensor product representation. For example,
+    \begin{align}
+       \bra{1}\bra{1} X\otimes Z \ket{0}\ket{1} = \bra{1}X\ket{0} \bra{1}Z\ket{1} = -1.
+    \end{align}
+    Thus, a -1 should be located in the 2nd row and 4th column, and indeed there is. Note that $00$ corresponds to the 1st row/column. This check is helpful to make sure the right matrix was inserted in the other. 
+    
+    Let's now work out the matrix reps for (b) and (c).
+    \begin{align}
+    \begin{aligned}
+        I\otimes X &= \begin{pmatrix}
+            X & 0 \\
+            0 & X
+        \end{pmatrix} = \begin{pmatrix}
+            0 & 1 & 0 & 0 \\
+            1 & 0 & 0 & 0 \\
+            0 & 0 & 0 & 1 \\
+            0 & 0 & 1 & 0
+        \end{pmatrix} \\
+        X \otimes I &= \begin{pmatrix}
+            0 & I \\
+            I & 0
+        \end{pmatrix} = \begin{pmatrix}
+            0 & 0 & 1 & 0 \\
+            0 & 0 & 0 & 1 \\
+            1 & 0 & 0 & 0 \\
+            0 & 1 & 0 & 0
+        \end{pmatrix}.
+    \end{aligned}
+    \end{align}
+    From these matrix representations it is evident that the tensor product is not commutative $I \otimes X \neq X \otimes I$. However, this is perhaps more transparent from the tensor product directly. $A\otimes B$ is different from $B \otimes A$ because we care whether $A$ acts on the first or second space. They are two different spaces!
+    
+\section{Exercise 2.28}
+    Show that the transpose, complex conjugation, and adjoint operations distribute over the tensor product,
+    \begin{align}
+        (A\otimes B)^* = A^* \otimes B^*; (A\otimes B)^T = A^T \otimes B^T; (A\otimes B)^\dagger = A^\dagger \otimes B^\dagger.
+    \end{align}
+    
+    \textbf{Solution:} As an initial caution, I'll mention that complex conjugation and transposing are only defined with respect to a \emph{specified basis}. Only the adjoint $\dagger$ is basis independent, which we can see from its definition. So we will assume these operations are with respect to bases $\ket{v_j}$ and $\ket{w_k}$ on the first and second spaces respectively. 
+    
+    Let's consider matrix elements in (the tensor product of) the bases above. We have
+    \begin{align}
+    \begin{aligned}
+        \bra{v_j}\bra{w_k} (A\otimes B)^* \ket{v_{j'}}\ket{w_{k'}} &:= (\bra{v_j}\bra{w_k} A\otimes B \ket{v_{j'}}\ket{w_{k'}})^* \\
+        &= (\bra{v_j}A\ket{v_j'} \bra{w_k}B\ket{w_k'})^* \\
+        &= (\bra{v_j}A\ket{v_j'})^* (\bra{w_k}B\ket{w_k'})^* \\
+        &:=\bra{v_j}A^*\ket{v_j'}\bra{w_k}B^*\ket{w_k'}\\
+        &= \bra{v_j}\bra{w_k} A^*\otimes B^* \ket{v_{j'}}\ket{w_{k'}}.
+    \end{aligned}
+    \end{align}
+    Looking at the first and last line, we see that the matrix elements of $(A\otimes B)^*$ and $A^* \otimes B^*$ are the same in the basis of interest. Hence, they are also equal as operators in general, by linearity. Let's carry out a similar argument for the transpose.
+    \begin{align}
+    \begin{aligned}
+        \bra{v_j}\bra{w_k} (A\otimes B)^T \ket{v_{j'}}\ket{w_{k'}} &:= \bra{v_j'}\bra{w_k'} A\otimes B \ket{v_{j}}\ket{w_{k}} \\
+        &= \bra{v_j'}A\ket{v_j} \bra{w_k'}B\ket{w_k} \\
+        &:=\bra{v_j}A^T\ket{v_j'}\bra{w_k}B^T\ket{w_k'}\\
+        &= \bra{v_j}\bra{w_k} A^T\otimes B^T \ket{v_{j'}}\ket{w_{k'}}.
+    \end{aligned}
+    \end{align}
+    Again, this must imply that $(A\otimes B)^T = A^T \otimes B^T$ by linearity.
+    
+    The adjoint operator is just complex conjugation and transposition in sequence: $A^\dagger = A^{T*}$. We've shown both of these operations distribute over the tensor product. Therefore, so must the adjoint.
+    
+\section*{Exercise 2.29}
+    Show that the tensor product of two unitary operators is unitary.
+    
+    \textbf{Solution:} Let $U$ and $V$ be operators on the first and second space, respectively, and consider the tensor product $U\otimes V$. We've shown in the previous exercise that $(U \otimes V)^\dagger = U^\dagger \otimes V^\dagger$. Hence,
+    \begin{align}
+        (U\otimes V)(U \otimes V)^\dagger = (U\otimes V)(U^\dagger \otimes V^\dagger) = U U^\dagger \otimes V V^\dagger = I. 
+    \end{align}
+    Here we've used the fact that $U$ and $V$ are unitary, and that $I\otimes I = I$ (and being somewhat sloppy by not labelling the identity differently on each space). This shows that $U\otimes V$ is unitary, and therefore the tensor product of any unitaries remains unitary.
+
+\section*{Exercise 2.30}
+    Show that the tensor product of two Hermitian operators is Hermitian.
+    
+    \textbf{Solution:} If $H$ and $G$ are Hermitian on the first and second spaces, we have
+    \begin{align}
+        (H\otimes G)^\dagger = H^\dagger \otimes G^\dagger = H \otimes G.
+    \end{align}
+    Hence, $H\otimes G$ is also Hermitian.
+
+\section*{Exercise 2.31}
+    Show that the tensor product of two positive operators is positive.
+    
+    \textbf{Solution:} Let $P$ and $Q$ be positive operators on the first and second space, respectively. As shown in the previous exercise, $P\otimes Q$ is Hermitian since $P$ and $Q$ are. Moreover, the eigenvalues of $P\otimes Q$ are just the product of the eigenvalues of $P$ and $Q$ (why is this true?). Since the eigenvalues of $P$ and $Q$ are nonnegative, same for $P\otimes Q$. This means $P \otimes Q$ is a positive operator. 
+    
+\section*{Exercise 2.32}
+    Show that the tensor product of two projectors is a projector.
+    
+    \textbf{Solution:} Let $P$ and $Q$ be projectors and consider $P\otimes Q$. Since $P$ and $Q$ are Hermitian, so is $P\otimes Q$. Moreover,
+    \begin{align}
+        (P \otimes Q)^2 = P^2 \otimes Q^2 = P \otimes Q.
+    \end{align}
+    Altogether, this implies $P\otimes Q$ is a projection operator.
+    
+\section*{Exercise 2.33}
+    The Hadamard operator on one qubit may be written as
+    \begin{align}
+        H = \frac{1}{\sqrt{2}}\big[(\ket{0}+\ket{1})\bra{0}+ (\ket{0}-\ket{1})\bra{1}\big].
+    \end{align}
+    Show explicitly that the Hadamard transform on n qubits, $H^{\otimes n}$, may be written as
+    \begin{align}
+        H^{\otimes n} = \frac{1}{\sqrt{2^n}} \sum_{x,y} (-1)^{x\cdot y} \ket{x}\bra{y}.
+    \end{align}
+    Write out an explicit matrix representation for $H^{\otimes 2}$.
+    
+    \textbf{Solution:} First, let's express $H$ as
+    \begin{align}
+        H = \frac{1}{\sqrt{2}}\sum_{x,y = 0}^1 (-1)^{x\cdot y} \ket{x}\bra{y}.
+    \end{align}
+    we see then that the statement holds for $n = 1$. The $x\cdot y$ here is just the multiplication of two bits $x, y$, which ensures that only the last matrix element is negative. Moving now to the tensor product,
+    \begin{align}
+        H^{\otimes n} &= \frac{1}{\sqrt{2^n}} \bigotimes_{j = 1}^n \sum_{x_j, y_j = 0}^1 (-1)^{x_j\cdot y_j} \ket{x_j}\bra{y_j} \\
+        &= \frac{1}{\sqrt{2^n}} \sum_{x_1, y_1 = 0}^1 \sum_{x_2, y_2 = 0}^1 \dots \sum_{x_n, y_n = 0}^1 (-1)^{x_1 y_1 + x_2 y_2 + \dots + x_n y_n} \ket{x_1 x_2 \dots x_n} \bra{y_1 y_2 \dots y_n},
+    \end{align}
+    where we used the distributive property of the tensor product to expand the sums. Identifying $x$ with the length $n$ binary string $x_1 x_2 \dots x_n$, and similar for $y$, we see that the many sums in the above equation represent a sum over all possible bitstrings $x$ and $y$. Moreover, the exponent of $-1$ is just the bitwise dot product $x\cdot y$. Making these identifications in the above equation,
+    \begin{align}
+        H^{\otimes n} = \frac{1}{\sqrt{2^n}} \sum_{x,y \in \text{bitstrings}} (-1)^{x\cdot y} \ket{x}\bra{y}.
+    \end{align}
+    This is the result we sought. 
+    
+\section*{Exercise 2.34}
+    Find the square root and logarithm of the matrix
+    \begin{align}
+    \begin{bmatrix}
+        4 & 3 \\
+        3 & 4
+    \end{bmatrix}.
+    \end{align}
+    
+    \textbf{Solution:} As described in the text, these functions can be seen as acting on the eigenvalues of the matrix. Let's begin by diagonalizing this matrix. We can take some shortcuts because this matrix has a very simple form: it is Hermitian and real, so it is a real linear combination of $I$, $Z$, and $X$. In fact, we can readily see it is just $4 I + 3 X$. This has the same eigenstates as $X$, with eigenvalues $4 \pm 3 = 7, 1$. If $\ket{+}$ and $\ket{-}$ are the eigenstates of $X$, we can write this matrix as 
+    \begin{align}
+        \begin{bmatrix}
+            4 & 3 \\
+            3 & 4
+        \end{bmatrix} = 7 \ket{+}\bra{+} + 1 \ket{-}\bra{-}.
+    \end{align}
+    Where the projections are given by
+    \begin{align}
+    \begin{aligned}
+        \ket{+}\bra{+} = \frac{1}{2} \begin{bmatrix}
+            1 \\
+            1
+        \end{bmatrix} \begin{bmatrix}
+            1 & 1
+        \end{bmatrix} = \frac{1}{2} \begin{bmatrix}
+            1 & 1 \\
+            1 & 1
+        \end{bmatrix} \\
+        \ket{-}\bra{-} = \frac{1}{2} \begin{bmatrix}
+            1 \\
+            -1
+        \end{bmatrix} \begin{bmatrix}
+            1 & -1
+        \end{bmatrix} = \frac{1}{2} \begin{bmatrix}
+            1 & -1 \\
+            -1 & 1
+        \end{bmatrix}.
+    \end{aligned}
+    \end{align}
+    For any function $f$ on a single variable, we can evaluate $f(M)$ for this particular matrix as 
+    \begin{align}
+        f(7) \ket{+}\bra{+} + f(3) \ket{-}\bra{-} = \frac{1}{2} \begin{bmatrix}
+            f(7) + f(3) & f(7)-f(3) \\
+            f(7)-f(3) & f(7) + f(3)
+        \end{bmatrix}.
+    \end{align}
+    Using square root and logarithm functions, we obtain
+    \begin{align}
+        \frac{1}{2}\begin{bmatrix}
+            \sqrt{7} + \sqrt{3} & \sqrt{7}-\sqrt{3} \\
+            \sqrt{7}-\sqrt{3} & \sqrt{7} + \sqrt{3}
+        \end{bmatrix}
+    \end{align}
+    and
+    \begin{align}
+        \frac{1}{2}\begin{bmatrix}
+            \log(21) & \log(7/3) \\
+            \log(7/3) & \log(21)
+        \end{bmatrix}
+    \end{align}
+    respectively.
+    
+\section*{Exercise 2.35 (Exponential of the Pauli matrices)}
+    Let $\vec{v}$ be any real, three-dimensional unit vector and $\theta$ a real number. Prove that
+    \begin{align}
+        \exp(i\theta \vec{v}\cdot \vec{\sigma}) = \cos \theta I + i \sin\theta \vec{v}\cdot\vec{\sigma},
+    \end{align}
+    where $\vec{v}\cdot\vec{\sigma}\equiv \sum_{i=1}^3 v_i\sigma_i$. This exercise is generalized in Problem 2.1 on page 117.
+
+    \textbf{Solution:} To understand this, it will be helpful to use the fact that $(\vec{v}\cdot\vec{\sigma})^2 = I$. The essential reason for this is that, just as the individual Pauli matrices square to the identity, any other choice of axis $\vec{v}$ should give this property as well, being essentially equivalent. We can also verify this from the 
+    
+\section*{Exercise 2.36}
+    Show that the Pauli matrices except for I have trace zero.
+    
+    \textbf{Solution:} We can simply see that the diagonal elements of each matrix add to zero.
+    \begin{align}
+    \begin{aligned}
+        \tr(X) = 0 + 0 = 0 \\
+        \tr(Y) = 0 + 0 = 0 \\
+        \tr(Z) = 1 - 1 = 0. 
+    \end{aligned}
+    \end{align}
+    There are other ways to understand why the trace is zero, which are insightful. First, suppose we know at least one of the Paulis has trace zero. Then, because all the Paulis are equivalent up to a change of basis, the other two Pauli's have trace zero as well. This can be seen as a consequence of the cyclicity of the trace. For example,
+    \begin{align}
+        \tr(X) = \tr(H Z H^{-1}) = \tr( H^{-1} H Z) = \tr(Z).
+    \end{align}
+    
+    From the perspective of the Lie algebra (commutation relations), each Pauli is the commutator of the other two. Since the commutator is always trace zero, so is each Pauli. 
+
+\section*{Exercise 2.37 (Cyclic property of trace)}
+    If $A$ and $B$ are two linear operators show that
+    \begin{align}
+        \tr(AB) = \tr(BA). 
+    \end{align}
+    
+    \textbf{Solution:} Let's compute the trace with respect to some basis indexed by $i$. We have, starting from the definition,
+    \begin{align}
+    \begin{aligned}
+        \tr(AB) &= \sum_{i} (AB)_{ii} \\
+        &= \sum_{i}\sum_{j} A_{ij} B_{ji} \\
+        &= \sum_{j} \sum_{i}B_{ji} A_{ij} \\
+        &= \sum_{j} (BA)_{jj} \\
+        &:= \tr(BA).
+    \end{aligned}
+    \end{align}
+    In the above, we expanded the diagonal elements of $AB$ in terms of elements of $A$ and $B$, and rearranged the sums. 
+    
+    It's important to realize that, despite how it appears, we can't just \emph{arbitrarily} rearrange terms in the trace, only cyclically. So $\tr(ABC) = \tr(CAB) = \tr(BCA)$, but it is not necessary that $\tr(ABC) = \tr(BAC)$. The result we proved only implies invariance under \emph{cyclic} permutations.
+
+\section*{Exercise 2.38 (Linearity of the trace)}
+    If $A$ and $B$ are two linear operators, show that
+    \begin{align}
+        \tr(A+B) = \tr(A) + \tr(B)
+    \end{align}
+    and if $z$ is an arbitrary complex number show that 
+    \begin{align}
+        \tr(z A) = z \tr(A).
+    \end{align}
+    
+    \textbf{Solution:} Since $(A+B)_{ii} = A_{ii} + B_{ii}$, $\tr(A+B) = \sum_i (A+B)_{ii} = \sum_i A_{ii} + B_{ii} = \tr(A) + \tr(B)$. Moreover,
+    \begin{align}
+        \tr(z A) = \sum_i z A_{ii} = z \sum_i A_{ii} = z\tr(A).
+    \end{align}
+    Together, these facts show that the trace is linear.
+    
+\section*{Exercise 2.39 (The Hilbert-Schmidt inner product on operators)}
+    The set $L_V$ of linear operators on a Hilbert space $V$ is obviously a vector space – the sum of two linear operators is a linear operator, $zA$ is a linear operator if $A$ is a linear operator and $z$ is a complex number, and there is a zero element $0$. An important additional result is that the vector space $L_V$ can be given a natural inner product structure, turning it into a Hilbert space.
+    
+    \begin{enumerate}
+        \item Show that the function $(\cdot, \cdot)$ on $L_V \times L_V$ defined by 
+        \begin{align}
+            (A,B) \equiv \tr(A^\dagger B)
+        \end{align}
+        is an inner product function. This inner product is known as the \emph{Hilbert-Schmidt} or \emph{trace} inner product
+        
+        \item If $V$ has dimension $d$, show that $L_V$ has dimension $d^2$.
+        
+        \item Find an orthonormal basis of Hermitian matrices for the Hilbert space $L_V$.
+    \end{enumerate}
+    
+    \textbf{Solution:} We need to show that $(\cdot, \cdot)$ is linear in the second argument. This follows directly from linearity of the trace.
+    \begin{align}
+        (A, c_1 B_1 + c_2 B_2) = \tr(A^\dagger (c_1 B_1 + c_2 B_2)) = c_1 \tr(A^\dagger B_1) + c_2 \tr(A^\dagger B_2) = c_1 (A,B_1) + c_2 (A, B_2)
+    \end{align}
+    Next we need to show that $(A,B)$ is conjugate-symmetric: $(A,B) = (B,A)^*$. To see this, note that for any operator $M$, $\tr(M^\dagger) = \tr(M)^*$. This follows because in a given matrix representation, the trace is just transposition follows by complex conjugation, so each diagonal entry gets a complex conjugate before being added together. Using this fact, we have
+    \begin{align}
+        (A, B) = \tr(A^\dagger B) = \tr((B^\dagger A)^\dagger) = \tr(B^\dagger A)^* = (B,A)^*,
+    \end{align}
+    which shows conjugate symmetry. Finally, we need to show $(A,A) \geq 0$ for all $A \in L_V$, with equality iff $A = 0$. We can see this holds because for any $A$, $A^\dagger A$ is a positive operator. Hence, $\tr(A^\dagger A)$, when viewed in the eigenbasis, is the sum over all eigenvalues, all of which are nonnegative. Thus, the trace is also nonnegative. The only way it equals zero is if every eigenvalue of $A^\dagger A$ is zero, which implies $A^\dagger A = 0$. In fact, this directly implies $A = 0$, because if $A^\dagger A = 0$, then for every choice of vectors $v$, we have $(Av, Av) = 0$, so that $Av = 0$. This completes part 1: we've shown $(A,B)$ as defined is truly an inner product.
+    
+    To show that $L_V$ is a Hilbert space of dimension $d^2$, we can think about expanding an operator $A$ into the $d^2$ entries. Specifically, any operator $A$ can be written as 
+    \begin{align}
+        A = \sum_{ij} A_{ij} \ket{i}\bra{j}
+    \end{align}
+    for some orthonormal basis $\ket{i}$, where $A_{ij} = \bra{i}A\ket{j}$ are the matrix elements. The operators $\ket{i}\bra{j}$ form an orthonormal basis. Indeed,
+    \begin{align}
+        (\ket{i}\bra{j}, \ket{k}\bra{l}) = \tr(\ket{j}\bra{i}\ket{k}\bra{l}) = \braket{i}{k} \braket{j}{l} = \delta_{ik}\delta_{jl}.
+    \end{align}
+    So that the inner product is zero unless the two operators are equal, in which case it is one. Hence, we've found a set of $d^2$ orthonormal operators which span $L_V$. Hence, $L_V$ is dimension $d^2$.
+    
+    Although we have found a basis, we have not found a Hermitian basis, as asked in part (3). The operators of the form $\ket{i}\bra{i}$ are Hermitian automatically, but those of the form $\ket{i}\bra{j}$ for $i\neq j$ are not. However, as discussed in Exercise 2.24, we can still write $\ket{i}\bra{j}$ as $B + iC$ for Hermitian $B$ and $C$. In this case, we have
+    \begin{align} \label{eq:B_C_Hermitian}
+        B^{(ij)} := \frac{\ket{i}\bra{j}+\ket{j}\bra{i}}{2} \quad  C^{(ij)} := \frac{\ket{i}\bra{j}-\ket{j}\bra{i}}{2i}.
+    \end{align}
+    Thus, using these operators, we can express the original basis of $\ket{i}\bra{j}$ in terms of the $B^{(ij)}$ and $C^{(ij)}$. Since $B^{(ij)}$ and $B^{(ji)}$ are not independent (and similar for $C^{(ij)}$, we should only take $i <j$. Hence, our candidate basis consists of the $d$ operators $\ket{i}\bra{i}$, and the $d^2 - d$ operators $B^{(ij)}$ and $C^{(ij)}$ for $i < j$. However, these are not properly normalized: we have $(B^{(ij)}, B^{(ij)}) = 1/2$, and similar for $C^{(ij)}$. Multiplying these operators by $\sqrt{2}$ fixes this.
+    
+    We need to check that these operators are all orthogonal. This can be checked using the orthonormality of the $\ket{i}\bra{j}$ under the Hilbert-Schmidt inner product. 
+    
+\section*{Exercise 2.40 (Commutation relations for the Pauli matrices)}
+    Verify the commutation relations
+    \begin{align}
+        [X, Y] = 2iZ; \quad [Y, Z] = 2iX; \quad [Z, X] = 2iY.
+    \end{align}
+    There is an elegant way of writing this using $\epsilon_{jkl}$, the antisymmetric tensor on three indices, for which $\epsilon_{jkl} = 0$ except for $\epsilon_{123} = \epsilon_{231} = \epsilon_{312} = 1$, and $\epsilon_{321} = \epsilon_{213} = \epsilon_{132} = -1$:
+    \begin{align}
+        [\sigma_j, \sigma_k] = 2i \sum_{l=1}^3 \epsilon_{jkl} \sigma_l.
+    \end{align}
+    
+    \textbf{Solution:} We could check this with direct matrix multiplication, of course. We won't perform that calculation here. A deeper explanation comes from the algebraic properties of the Pauli operators, which are independent of a specific matrix representation. To start, the Pauli operators \emph{anticommute}, which implies, for instance,
+    \begin{align}
+        [X,Y] := XY-YX = 2 XY.
+    \end{align}
+    The product of two (different) Pauli operators is $i$ times the third Pauli, with a plus or minus depending on the cyclic ordering according to $XYZ$. Thus, for example, $XY = iZ$. These properties show the commutator results, and also show why the antisymmetric tensor $\epsilon_{jkl}$ captures these relationships. 
+    
+\section*{Exercise 2.41 (Anti-commutation relations for the Pauli matrices)}
+    Verify the anti-commutation relations
+    \begin{align}
+        \{\sigma_i, \sigma_j\}
+    \end{align}
+    where $i\neq j$ are both chosen from the set $1, 2, 3$. Also verify that ($i = 0,1,2,3$)
+    \begin{align}
+        \sigma_i^2 = I.
+    \end{align}
+    
+    \textbf{Solution:} We won't go through the verification of these properties in this solution set: just compute, say, $XY + YX$ and verify that it equals zero. 
+    
+    As a general comment, at some level the statements we are being asked to show here should be considered as \emph{definitions} for the set of Pauli operators. Any set of Pauli operators must satisfy the anti-commutation relations and square to the identity. Any such set gives a valid set of operators to be used for describing qubit states. This abstraction may seem peculiar, but one benefit is it takes away some of the arbitrariness in the form of the Pauli matrices (e.g. making $Z$ diagonal). 
+    
+\section*{Exercise 2.42} 
+    Verify that 
+    \begin{align}
+        AB = \frac{[A,B] + \{A,B\}}{2}.
+    \end{align}
+    
+    \textbf{Solution:} In essence, we are breaking $AB$ into its ``symmetric and antisymmetric pieces". By this, I mean that $AB$ does not relate nicely to $BA$, the operator obtained by swapping $A \Leftrightarrow B$. However, it can be written in terms of operators which do have nice swapping properties (commutators and anticommutators). These sorts of decompositions occur in other contexts as well, such as when we decomposed an operator into the sum of a Hermitian part $B$ and an antihermitian part $iC$. 
+    
+    Having said this, the verification of the equation above is straightforward.
+    \begin{align}
+    \begin{aligned}
+        AB &= \frac{AB}{2} + \frac{BA}{2} + \frac{AB}{2} - \frac{BA}{2} \\
+        &= \frac{\{A,B\}}{2} + \frac{[A,B]}{2} \\
+        &= \frac{[A,B] + \{A,B\}}{2}.
+    \end{aligned}
+    \end{align}
+    
+\section*{Exercise 2.43}
+    Show that for $j,k = 1,2,3$,
+    \begin{align}
+        \sigma_j \sigma_k = \delta_{jk} I + i \sum_{l=1}^3 \epsilon_{jkl} \sigma_l.
+    \end{align}
+    
+    \textbf{Solution:} Like several of the previous exercises, this could be computed directly from the matrices. However, we can also reason more from the algebraic properties. Since $\sigma_j^2 = I$, we see that the equation is satisfied since the antisymmetric tensor $\epsilon_{jkl} = 0$ if $j = k$. If $j\neq k$, then $\delta_{jk} = 0$, and we just have to check that the second term equals the product. But this follows from antisymmetry along with the commutation relations of Exercise 2.40.
+    
+\section*{Exercise 2.44}
+    Suppose $[A, B] = 0$, $\{A, B\} = 0$, and $A$ is invertible. Show that $B$ must be 0.
+    
+    \textbf{Solution:} From Exercise 2.42, we necessarily have that $AB = 0$. Since $A$ is invertible, we also have $A^{-1} (AB) = I B = B = 0$. 
+    
+\section*{Exercise 2.45}
+    Show that $[A, B]^\dagger = [B^\dagger, A^\dagger]$.
+    
+    \textbf{Solution:} We use the linearity of $\dagger$ and the way it reverses multiplication order.
+    
+    \begin{align}
+        [A,B]^\dagger = (AB-BA)^\dagger = (AB)^\dagger - (BA)^\dagger = B^\dagger A^\dagger - A^\dagger B^\dagger = [B^\dagger, A^\dagger].
+    \end{align}
+    
+\section*{Exercise 2.46}
+    Show that $[A, B] = -[B, A]$.
+    
+    \textbf{Solution:} This is the statement that the commutator is antisymmetric, and important property. Showing this is straightforward.
+    \begin{align}
+        [A,B] :=AB - BA = -(BA-AB) = -[B,A].
+    \end{align}
+    
+\section*{Exercise 2.47}
+    Suppose $A$ and $B$ are Hermitian. Show that $i[A, B]$ is Hermitian.
+    
+    \textbf{Solution:} We need to check that $(i[A,B])^\dagger = i[A,B]$. Using the results of Exercise 2.45,
+    \begin{align}
+        (i[A,B])^\dagger = -i [B^\dagger, A^\dagger].
+    \end{align}
+    Since $B$ and $A$ are Hermitian, $[B^\dagger, A^\dagger] = [B,A]$. Finally, $[B,A] = -[A,B]$ by Exercise 2.46. This shows our result.
+    
+\section*{Exercise 2.48}
+    What is the polar decomposition of a positive matrix $P$? Of a unitary matrix $U$? Of a Hermitian matrix, $H$?
+    
+    \textbf{Solution:} A positive operator $P$ can be written as $P I$ where $I$ is the identity operator. Since $I$ is unitary, this gives the correct decomposition. For unitary operators, we note that $I$ is also positive, and therefore $U I = I U$ give the correct polar decomposition for any unitary $U$. 
+    
+    Finally, let $H$ be a Hermitian operator. The positive operator part of $H$ is given by $\sqrt{H H^\dagger} = \sqrt{H^2} = \abs{H}$, where $\abs{H}$ has the same eigenvectors as $H$, but with all eigenvalues taken in absolute value. We know $\abs{H}$ is quite close to $H$, but we need to flip the sign of some of the eigenvalues as a correction. Thankfully, this can be done by a unitary operation! Let $R$ act on the eigenbasis of $H$ by flipping the sign of vectors with negative eigenvalues, leaving other eigenvectors alone. More succinctly, for eigenvector $\ket{i}$ of $H$,
+    \begin{align}
+        R \ket{i} = \operatorname{sgn}(\lambda_i) \ket{i}
+    \end{align}
+    where $\lambda_i$ is the associated eigenvalue. This defines the action of $R$ on the whole space by linearity. Moreover, the eigenvectors of $H, \abs{H}$ and $R$ are the same, so they all commute. Finally, we have
+    \begin{align}
+        H  = \abs{H} R = R \abs{H}
+    \end{align}
+    since, for any eigenvector $\ket{i}$,
+    \begin{align}
+        \abs{H} R \ket{i} = \abs{\lambda_i} \operatorname{sgn}(\lambda_i)\ket{i} = \lambda_i \ket{i} = H\ket{i}.
+    \end{align}
+    Since the action on the eigenbasis is the same, the operators are the same for all input vectors.
+    
+\section*{Exercise 2.49}
+    Express the polar decomposition of a normal matrix in the outer product representation.
+    
+    \textbf{Solution:} Let $N$ be a normal operator, so that by the spectral theorem it may be diagonalized: 
+    \begin{align}
+        N = \sum_i \lambda_i \ket{i}\bra{i}
+    \end{align}
+    for orthonormal eigenbasis $\{\ket{i}\}$ and eigenvalues $\lambda_i$. The positive operator part $J = K = \sqrt{N N^\dagger}$ is given by 
+    \begin{align}
+        \sum_{i} \abs{\lambda_i} \ket{i}\bra{i}.
+    \end{align}
+    Every complex number $\lambda_i$ has a polar representation $\lambda_i = \abs{\lambda_i} e^{i\theta_i}$ for some phase $\theta_i$. Let $U$ provide these phases
+    \begin{align}
+        U = \sum_i e^{i\theta_i} \ket{i}\bra{i}.
+    \end{align}
+    We see that $UJ = JU = N$, completing the polar decomposition. We see that left and right decompositions are the same for normal operators. In hindsight this may make sense: can you see why from the definition of $J$ and $K$?
+    
+\section*{Exercise 2.50}
+    Find the left and right polar decompositions of the matrix
+    \begin{align}
+        \begin{bmatrix}
+            1 & 0 \\
+            1 & 1
+        \end{bmatrix}.
+    \end{align}
+    
+    \textbf{Solution:} Calling this matrix $M$, we have
+    \begin{align}
+        J^2 = M^\dagger M = \begin{bmatrix}
+            2 & 1 \\
+            1 & 1
+        \end{bmatrix}
+    \end{align}
+    and
+    \begin{align}
+        K^2 = M M^\dagger = \begin{bmatrix}
+            1 & 1 \\
+            1 & 2
+        \end{bmatrix}.
+    \end{align}
+    We can take the square root through diagonalization, either by hand or by computer. Once you get the hang of matrix square roots, using a computer becomes quite convenient. The results will be
+    \begin{align}
+    \begin{aligned}
+        J &= \frac{1}{\sqrt{5}}\begin{bmatrix}
+            3 & -1 \\
+            -1 & 2
+        \end{bmatrix} \\
+        K &= \frac{1}{\sqrt{5}} \begin{bmatrix}
+            2 & -1 \\
+            -1 & 3
+        \end{bmatrix}.
+    \end{aligned}
+    \end{align}
+    Since $M$ is invertible, our expression for the unitary part $U$ will be unique, and given by $U = M J^{-1} = K^{-1} M$. We can compute $U$ using either formula, and a good check is to see if we get the same answer each way. The result should be
+    \begin{align}
+        U = \frac{1}{\sqrt{5}}\begin{bmatrix}
+            2 & -1 \\
+            1 & 2
+        \end{bmatrix}.
+    \end{align}
+    Indeed, this matrix is unitary, and we have $M = UJ = KU$. This completes the polar decomposition.
+    
+\section*{Exercise 2.51}
+    Verify that the Hadamard gate H is unitary.
+    
+    \textbf{Solution:} The two columns of $H$ are normalized and orthogonal to each other, can be checked quickly. For example, we see that the columns are orthogonal, since
+    \begin{align}
+        \frac{1}{\sqrt{2}}\begin{bmatrix}
+            1 & 1
+        \end{bmatrix} \frac{1}{\sqrt{2}} \begin{bmatrix}
+            1 \\
+            -1
+        \end{bmatrix} = \frac{1}{2}(1\cdot 1 - 1\cdot 1) = 0.
+    \end{align}
+    
+\section*{Exercise 2.52}
+    Verify that $H^2 = I$.
+    
+    \textbf{Solution:} Here's an interesting fact: any operator that is Hermitian and unitary satisfies this property. Such operators are sometimes called \emph{reflections} (can you see why?). In the case of $H$, we showed it was unitary in Exercise 2.51, and it is clearly Hermitian (since it is real and symmetric). Hence,
+    \begin{align}
+        H^2 = H H^\dagger = I.
+    \end{align}
+    
+\section*{Exercise 2.53}
+    What are the eigenvalues and eigenvectors of $H$?
+    
+    \textbf{Solution:} Here's a clever trick to find the eigenvalues: since $H^2 = I$ from Exercise 2.52, the eigenvalues are either $+1$ or $-1$ (why?). There are two eigenvalues, and since $\tr(H) = 0$, their sum is zero. This means the two eigenvalues are $\lambda_{\pm} = \pm 1$. To find the eigenvalues, which we call $v_+$ and $v_-$, we can solve 
+    \begin{align}
+    \begin{aligned}
+        H v_+ = v_+ \\
+        H v_- = -v_-.
+    \end{aligned}
+    \end{align}
+    and then normalize. This becomes an exercise in solving systems of linear equations. The unnormalized eigenvectors are 
+    \begin{align}
+        v_{\pm} = \begin{bmatrix}
+            1 \pm \sqrt{2} \\
+            1
+        \end{bmatrix}.
+    \end{align}
+    Normalizing these expressions is a bit messy, though straghtforward.
+    
+\section*{Exercise 2.54}
+    Suppose $A$ and $B$ are commuting Hermitian operators. Prove that $\exp(A) \exp(B) = \exp(A + B)$. (Hint: Use the results of Section 2.1.9.)
+    
+    \textbf{Solution:} Showing this can be done using power series, but we take a different approach by using the spectral theorem. If $A$ and $B$ commute, then $A$, $B$, and $A+B$ all commute and therefore have a shared eigenbasis $\ket{i}$. By definition of functions of operators, the exponentials $\exp(A)$, $\exp(B)$ and $\exp(A+B)$ all commute as well and have the same shared eigenbasis $\ket{i}$. Let $\lambda_i$ and $\eta_i$ represent the $i$th eigenvalue of $A$ and $B$ respectively. Then for every eigenvector $\ket{i}$ in the basis, we have that $\exp(A)\exp(B)$ and $\exp(A+B)$ act the same way.
+    \begin{align}
+        \exp(A)\exp(B) \ket{i} = \exp(A) e^{\eta_i} \ket{i} = e^{\lambda_i + \eta_i} \ket{i} = \exp(A+B) \ket{i}.
+    \end{align}
+    By linearity, the two operators act on the entire space the same way, meaning they are equal. This proves our result.
+    
+\section*{Exercise 2.55}
+    Prove that $U(t_1,t)2)$ defined in Equation (2.91) is unitary.
+    
+    \textbf{Solution:} The unitary $U(t_1,t_2)$ is the exponential of $A$, where $A = -i H (t_2 - t_1)\hbar$. Since $H$ is Hermitian, it is diagonalizable with real eigenvalues. Let
+    \begin{align}
+        \sum_j E_j \ket{j}\bra{j}
+    \end{align}
+    be the diagonal form of $H$ with eigenvalues $E_j$ and eigenstate $\ket{j}$. Then by definition of the exponential, we have
+    \begin{align}
+        U(t_1, t_2) = \sum_j e^{-i E_j (t_2-t_1)} \ket{j}\bra{j}.
+    \end{align}
+    This operator is unitary, since all eigenvalues have unit norm and it is diagonalizable. This proves the result.
+    
+\section*{Exercise 2.56}
+    Use the spectral decomposition to show that $K \equiv -i \log(U)$ is Hermitian for any unitary $U$, and thus $U = \exp(iK)$ for some Hermitian $K$.
+    
+    \textbf{Solution:} In many ways this is the reverse of the previous exercise. Since $U$ is unitary, it may be expressed in diagonal form as 
+    \begin{align}
+        U = \sum_{j} e^{i \theta_j} \ket{j}\bra{j}
+    \end{align}
+    for some orthonormal basis $\{\ket{j}\}$ and real $\theta_j$. In fact, we may take $\theta_j \in [0, 2\pi)$ by cyclicity of the phase. This will help us uniquely define the logarithm in $K = -i \log(U)$, which is given by
+    \begin{align}
+    \begin{aligned}
+        K &= \sum_j -i \log(e^{i \theta_j}) \ket{j}\bra{j} \\
+        &= \sum_j \theta_j \ket{j}\bra{j}.
+    \end{aligned}
+    \end{align}
+    Observing this expression, we see that $U \exp(iK)$, which makes sense because the logarithm should give the inverse of the exponential. Moreover, $K$ is Hermitian since it has a diagonal decomposition with real eigenvalues. This gives our result.
+    
+    Notice that $K$ is not unique: what other $K'$ exist such that $U = \exp(iK')$? Can you characterize all of them? (Hint: it's easiest to work first with one-dimensional matrices, i.e. numbers.)
+    
+\section*{Exercise 2.57 (Cascading measurements are single measurements)}
+	Suppose $\{L_l\}$ and $\{M_m\}$ are two sets of measurement operators. Show that a measurement defined by the measurement operators $\{L_l\}$ followed by a measurement defined by the measurement operators $\{M_m\}$ is physically equivalent to a single measurement defined by measurement operators $\{N_{lm}\}$ with the representation $N_{lm} \equiv M_m L_l$.
+	
+	\textbf{Solution:} Suppose the sequence of measurements yields first the result $l$, then result $m$. After measuring $l$, the state of the system is given by 
+	\begin{align}
+		\ket{\psi'} = \frac{L_l \ket{\psi}}{\sqrt{\bra{\psi}L_l^\dagger L_l \ket{\psi}}},
+	\end{align}
+	where $\ket{\psi}$ is the initial state. Next we measure the result $m$ for state $\ket{\psi'}$. The resulting state is given by 
+	\begin{align}
+	\begin{aligned}
+		\ket{\psi''} &= \frac{M_m \ket{\psi'}}{\sqrt{\bra{\psi'}M_m^\dagger M_m \ket{\psi'}}} \\
+		&= \frac{M_m L_l \ket{\psi}}{\sqrt{\bra{\psi}L_l^\dagger M_m^\dagger M_m L_l\ket{\psi}}} \frac{\sqrt{\bra{\psi} L_l^\dagger L_l \ket{\psi}}}{\sqrt{\bra{\psi} L_l^\dagger L_l \ket{\psi}}} \\
+		&= \frac{N_{lm}\ket{\psi}}{\sqrt{\bra{\psi}N_{lm}^\dagger N_{lm}\ket{\psi}}}
+	\end{aligned}
+	\end{align}
+	where $N_{lm} \equiv M_m L_l$. Hence, we see that the final state is the same as if the single measurement represented by $N_{lm}$ was applied. 
+	
+	Let's check that the operators $\{N_{lm}\}$ gives the same probability as the cascading measurements. The probability of measuring both $l$ and $m$ is given by 
+	\begin{align}
+		p(m,l) = p(m|l) p(l),
+	\end{align}
+	where $p(m|l)$ is the probability of measuring $m$ conditioned on having measured $l$ previously. Each probability on the right side can be given in terms of the individual meaasurements.
+	\begin{align}
+	\begin{aligned}
+		p(l) &= \bra{\psi}L_l^\dagger L_l \ket{\psi} \\
+		p(m|l) &=\bra{\psi'} M_m^\dagger M_m \ket{\psi'} = \frac{\bra{\psi} L_l^\dagger M_m^\dagger M_m L_l \ket{\psi}}{\bra{\psi}L_l^\dagger L_l \ket{\psi}}
+	\end{aligned}
+	\end{align}
+	Multiplying the above expressions yields a nice cancellation, giving
+	\begin{align}
+		p(m,l) = \bra{\psi} N_{lm}^\dagger N_{lm} \ket{\psi}
+	\end{align}
+	as desired. Finally, let's check the completeness relation for the $\{N_{lm}\}$.
+	\begin{align}
+		\sum_{l,m} N_{lm}^\dagger N_{lm} = \sum_{l,m}L_l^\dagger M_m^\dagger M_m L_l =  \sum_l L_l^\dagger (\sum_m M_m^\dagger M_m) L_l = I \sum_l L_l^\dagger L_l = I.
+	\end{align}
+	This shows that the sequence of measurements gives rise to a description in terms of an effective single measurement described by operators $N_{lm}$. 
+
+\section*{Exercise 2.58}
+    Suppose we prepare a quantum system in an eigenstate $\ket{\psi}$ of some observable $M$ , with corresponding eigenvalue $m$. What is the average observed value of $M$, and the standard deviation?
+
+    \textbf{Solution:} The average observed value, or expectation value, is given by
+    \begin{align}
+        \langle M\rangle = \bra{\psi}M\ket{\psi} = \bra{\psi}m\ket{\psi} = m.
+    \end{align}
+    Similarly,
+    \begin{align}
+        \langle M^2 \rangle = \bra{\psi}M^2\ket{\psi} = m^2
+    \end{align}
+    hence,
+    \begin{align}
+        \Delta(M)^2 = \langle M^2 \rangle - \langle M \rangle ^2  = m^2 - m^2 = 0.
+    \end{align}
+    Since the standard deviation is zero, every single measurement of $M$ yields value $m$. This is consistent with the interpretation of $\ket{\psi}$ ``having value $m$." Thus, when an eigenstate of an observable is measured with respect to that observable, the answer is certain, and the usual probabilistic aspects of quantum mechanics aren't present.
+
+\section*{Exercise 2.59}
+    Suppose we have qubit in the state $\ket{0}$, and we measure the observable $X$. What is the average value of $X$? What is the standard deviation of $X$?
+
+    \textbf{Solution:} The expectation value $\langle X \rangle$ is given by
+    \begin{align}
+        \langle X \rangle = \bra{0} X \ket{0} = \bra{0} \ket{1} = 0.
+    \end{align}
+    while the standard deviation $\Delta(X)$ is given by
+    \begin{align}
+    \begin{aligned}
+        \Delta(X)^2 := \langle X^2 \rangle - \langle X \rangle^2 &= \langle X^2 \rangle \\
+        &= \langle I \rangle \\
+        &= 1.
+    \end{aligned}
+    \end{align}
+    In the above we used the nice fact that $X^2 = I$.
+
+\section*{Exercise 2.60}
+    Show that $\vec{v} \cdot \vec{\sigma}$ has eigenvalues $\pm 1$, and that the projectors onto the corresponding eigenspaces are given by $P_\pm = (I \pm \vec{v} \cdot \vec{\sigma})/2$.
+
+    \textbf{Solution:} Rather than diagonalizing $\vec{v}\cdot \vec{\sigma}$ directly, let's take a slightly different approach. Let $\lambda_1$ and $\lambda_2$ denote the eigenvalues (we know there are at most two distinct values since $\vec{v}\cdot \vec{\sigma}$ is two-dimensional). Since $\tr(\vec{v}\cdot \vec{\sigma}) = 0$ we must have $\lambda_1 + \lambda_2 = 0$, or $\lambda_1 = -\lambda_2$. Moreover, using the algebraic properties of the Pauli operators, which will be explored in greater detail in chapter 4 (see Exercise 4.5), we can show that $(\vec{v}\cdot \vec{\sigma})^2 = I$. This implies $\lambda_1^2 = \lambda_2^2 = 1$. Hence the eigenvalues must be $\pm 1$. 
+
+    Now let's move on to check that $P_+$ and $P_-$ are indeed orthogonal projectors. The $P_{\pm}$ are Hermitian (can you see how?). Next, we need to show that $P_+^2 = P_+$, $P_-^2 = P_-$, and $P_+ P_- = 0$. Indeed, computing the square directly gives
+    \begin{align}
+        P_{\pm}^2 = \left(\frac{I \pm \vec{v}\cdot \vec{\sigma}}{2}\right)^2 = \frac{I^2 + (\vec{v}\cdot \vec{\sigma})^2 \pm 2 \vec{v}\cdot \vec{\sigma}}{4} = \frac{2 I \pm 2 \vec{v}\cdot \vec{\sigma}}{4} = P_\pm,
+    \end{align}
+    where we again used the fact that $(\vec{v}\cdot \vec{\sigma})^2 = I$. As for orthogonality, we have
+    \begin{align}
+        P_+ P_- = \left(\frac{I + \vec{v}\cdot \vec{\sigma}}{2}\right) \left(\frac{I - \vec{v}\cdot \vec{\sigma}}{2}\right) = \frac{I^2 - I^2 + \vec{v}\cdot \vec{\sigma} - \vec{v}\cdot \vec{\sigma}}{4} = 0.
+    \end{align}
+    Why don't we need to check $P_- P_+ = 0$ independently? This shows that $P_+$ and $P_-$ are orthogonal projectors. Moreover, $\vec{v} \cdot \vec{\sigma} = P_+ - P_-$, which gives the proper relation between the observable, the eigenvalues, and the projectors.
+
+\section*{Exercise 2.61}
+    Calculate the probability of obtaining the result $+1$ for a measurement of $\vec{v} \cdot \vec{\sigma}$, given that the state prior to measurement is $\ket{0}$. What is the state of the system after the measurement if $+1$ is obtained?
+
+    \textbf{Solution:} To calculate the probability we can use equation (2.103) from the text, which is derived from the more general rule (2.92) for obtaining measurement probabilities. In our case, we are looking for
+    \begin{align}
+        p(+1) = \bra{0} P_+ \ket{0} = \frac{1}{2} + \bra{0}\vec{v} \cdot \vec{\sigma}\ket{0}/2.
+    \end{align}
+    We showed in Exercise 2.59 that $\langle X \rangle = 0$ for the $\ket{0}$ state. Similarly, $\langle Y \rangle = 0$ for much the same reason. On the other hand, since $\ket{0}$ is an eigenstate of $Z$, $\langle Z \rangle = +1$. Putting these altogether, $\bra{0}\vec{v} \cdot \vec{\sigma}\ket{0} = v_z$, so that 
+    \begin{align}
+        p(+1) = \frac{1 + v_z}{2}.
+    \end{align}
+    For the special cases $v_z = \pm 1$, this answer corresponds with the expected probabilities (can you check this?). 
+
+    After the measurement, the state is projected onto the $P_+$ subspace, and normalized. 
+
+    \begin{align}
+    \begin{aligned}
+        P_+ \ket{0} &= \ket{0}/2 + \frac{1}{2} \left(v_x \ket{1} + v_y i \ket{1} + v_z \ket
+        0\right) \\
+        &= \frac{1}{2} \left((1+v_z)\ket{0} + (v_x + i v_y) \ket{1}\right).
+    \end{aligned}
+    \end{align}
+    The norm of this projection is given by
+    \begin{align}
+        \norm{P_+ \ket{0}}^2 = \frac{1}{4} ((1+v_z)^2 + v_x^2 + v_y^2) = \frac{1}{2}(1+v_z^2)
+    \end{align}
+    where we used the fact that $v_x^2 + v_y^2 = v_z^2 = 1$. Hence, the state $\ket{\psi}$ after measurement is given by
+    \begin{align}
+        \ket{\psi} = \frac{P_+ \ket{0}}{\norm{P_+ \ket{0}}} = \frac{1}{\sqrt{2(1+v_z^2)}}((1+v_z)\ket{0} + (v_x + i v_y)\ket{1}).
+    \end{align}
+    As a check, we see that when $v_z = 1$ (so that $v_x = v_y = 0$) this corresponds to the expected projection along the $\ket{0}$ state. Other projections along each of the pauli axes give the expected answer as well.
+
+\section*{Exercise 2.62}
+    Show that any measurement where the measurement operators and the POVM elements coincide is a projective measurement.
+
+    \textbf{Solution:} Suppose the POVM element $E$ equals the corresponding measurement operator $M$. Combining this with the usual relationship, we have
+    \begin{align}
+        M = M^\dagger M.
+    \end{align}
+    Since $E$ is a positive operator, so is $M$, hence $M^\dagger = M$. We have that $M$ is a positive operator such that $M^2 = M$. This is one way of \emph{defining} what a projector is. We've shown that each $E$ in the POVM is a projector, hence this is a projective measurement.
+
+\section*{Exercise 2.63}
+    Suppose a measurement is described by measurement operators $M_m$. Show that there exist unitary operators $U_m$ such that $M_m = U_m \sqrt{E_m}$ where $E_m$ is the POVM associated to the measurement.
+
+    \textbf{Solution:} The key is to realize that, by the polar decomposition, we can express any operator $M_m$ as $U_m P_m$ for some unitary $U_m$ and positive operator $P_m$. We can further constrain $P_m$ by using the fact that
+    \begin{align}
+        E_m = M_m^\dagger M_m = P_m^\dagger U_m^\dagger U_m P_m = P_m^2. 
+    \end{align}
+    Since $P_m^2 = E_m$ we have $P_m = \sqrt{E_m}$ (careful, we were only able to define the square root nicely since the operators involved are positive). This gives us the desired formula.
+
+\section*{Exercise 2.64}
+    Suppose Bob is given a quantum state chosen from a set $\ket{\psi_1},\dots, \ket{\psi_m}$ of linearly independent states. Construct a POVM $\{E_1, E_2, \dots, E_{m+1}\}$ such that if outcome $E_i$ occurs, $1 \leq i \leq m$, then Bob knows with certainty that he was given the state $\ket{\psi_i}$. (The POVM must be such that $\bra{\psi_i}E_i \ket{\psi_i} > 0$ for each $i$.
+
+    \textbf{Solution:} In order to ensure that outcome $E_i$ guarantees state $\ket{\psi_i}$, we need to make the probability of every other possibility $p_j$ zero for $j \neq i$. That is, the operators $E_j$ must satisfy
+    \begin{align} \label{eq:2.64_condition}
+        \bra{\psi_i}E_j \ket{\psi_i} = 0 \quad \text{for each}\;i \neq j.
+    \end{align}
+    In other words, $E_j$ must be ``orthogonal" to every vector $\ket{\psi_i}$ except when $i = j$. We can satisfy this by making $E_j$ a projector onto a subspace perpendicular to all but the vector $\ket{\psi_i}$. 
+    
+    Let's build up this idea mathematically. Since the collection $\{\ket{\psi_i}\}_{i=1}^m$ are linearly independent, the underlying Hilbert space is dimension at least $m$, and for simplicity we can consider the $m$-dimensional subspace $\mathcal{V}$ spanned by the $\ket{\psi_i}$. Let $\mathcal{V}_i$ be the space spanned by all the $\ket{\psi_j}$ except for one special $j = i$. This subspace is $(m - 1)$-dimensional, so the orthogonal complement is one-dimensional. Let $\ket{\phi_i}\bra{\phi_i}$ be the unique projector onto this orthogonal subspace. By construction, we have
+    \begin{align}        
+        \bra{\psi_j} \ket{\phi_i} \bra{\phi_i}\ket{\psi_j} = 0 \quad (i \neq j).
+    \end{align}
+    This shows that the projector satisfies the requirements set by equation~\eqref{eq:2.64_condition}. In fact, it is almost the unique positive operator that does so. Hence, our only good candidate for $E_i$ is of the form
+    \begin{align}
+        E_i = \gamma_i \ket{\phi_i}\bra{\phi_i} \quad (1 \leq i \leq m)
+    \end{align}
+    for some $\gamma_i >0$. Note that $\ket{\phi_i}$ must have nonzero overlap with $\ket{\psi_i}$ (why?) so $p_i = \bra{\psi_i}E_i \ket{\psi_i} > 0$. 
+
+    Our positive operators $\{E_i\}$ are defined for $1 \leq i \leq m$, but we haven't defined $E_{m+1}$. By the POVM condition, we actually have no freedom in this matter.
+    \begin{align}
+        E_{m+1} = I - \sum_{i=1}^m \gamma_i \ket{\phi_i}\bra{\phi_i}
+    \end{align}
+    This defines $E_{m+1}$, however, we need to make sure $E_{m+1} \geq 0$ (i.e. it's a positive operator). This is satisfied if the smallest eigenvalue of $E_{m+1}$ is nonnegative, or equivalently, if the \emph{largest} eigenvalue of $\sum_{i=1}^m E_i$ is no greater than one. The largest eigenvalue of an operator $A$ (in absolute value, a distinction which doesn't matter here since all eigenvalues are positive) is given by the \emph{spectral norm} $\norm{A}$. All norms satisfy the triangle inequality, hence
+    \begin{align}
+        \norm{\sum_{i=1}^m \gamma_i \ket{\phi_i}\bra{\phi_i}} \leq \sum_{i=1}^m \abs{\gamma_i} \;\norm{\ket{\phi_i}\bra{\phi_i}} = \sum_{i=1}^m \gamma_i.
+    \end{align}
+    We want the left hand side of the above to be bounded by 1. Thankfully, we can choose $\gamma_i$ appropriately to do this. One such choice is
+    \begin{align}
+        \gamma_i = 1/m
+    \end{align}
+    for every $i$. With this choice $E_{m+1} \geq 0$, and all operators involved are positive and sum to the identity. We have constructed the POVM with the desired properties. 
+
+    How does this POVM look when the states $\ket{\psi_i}$ are orthogonal? When they are nearly parallel? Could any improvement be made?
+
+\section*{Exercise 2.65}
+    Express the states $(\ket{0}+\ket{1})/\sqrt{2}$ and $(\ket{0}-\ket{1})/\sqrt{2}$ in a basis in which they are \emph{not} the same up to a relative phase shift.
+
+    \textbf{Solution:} As a first step, let's just notice these two states are orthonormal! Check this if you haven't before; you may even recognize these states already. Taken together, and labelling them $\ket{+}$ and $\ket{-}$ respectvely, they form a basis. Moreover, they aren't related by a relative phase, which becomes more obvious when we express things as 
+    \begin{align}
+    \begin{aligned}
+        \ket{+} &= 1\ket{+} + 0 \ket{-} \\
+        \ket{-} &= 0\ket{+} + 1\ket{-}.
+    \end{aligned}
+    \end{align}
+    The coefficients in this basis do not even have the same magnitude. This example shows that two states which "differ by a relative phase" can really be quite different: even orthogonal!
+
+\section*{Exercise 2.66} 
+    Show that the average value of the observable $X_1 Z_2$ for a two qubit system measured in the state $(\ket{00}+\ket{11})/\sqrt{2}$ is zero.
+
+    \textbf{Solution:} As usual, we compute averages via the usual ``sandwich" formula. Letting $\ket{\psi}= (\ket{00}+\ket{11})/\sqrt{2}$, we have
+    \begin{align} \label{eq:2.66_ev}
+        \langle X_1 Z_2\rangle = \bra{\psi}X_1 Z_2 \ket{\psi} = \frac{1}{2}\big(\bra{00}X_1 Z_2 \ket{00} + \bra{00}X_1 Z_2 \ket{11} + \bra{11}X_1 Z_2 \ket{00} + \bra{11}X_1 Z_2 \ket{11}\big).
+    \end{align}
+
+    We can show that each of these four terms in the right side of~\eqref{eq:2.66_ev} is zero. We'll show this for the first two terms. Using the standard rules for tensor products, we have
+    \begin{align}
+        \bra{00}X_1 Z_2 \ket{00} = (\bra{0}X\ket{0})\times (\bra{0}Z\ket{0}) = 0 \times 1 = 0.
+    \end{align}
+    Essentially, the $X_1$ flips the first qubit, so $\ket{00}$ has no overlap with the result of the flip. Similarly, the second term can be computed as
+    \begin{align}
+        \bra{00}X_1 Z_2 \ket{11} = (\bra{0}X\ket{1})\times(\bra{0}Z\ket{1}) = 1 \times 0 = 0.
+    \end{align}
+    Hopefully you can see the trend: we'll find that the other terms vanish too. Hence, the expectation value is indeed zero.
+
+\section*{Exercise 2.67}
+    Suppose $V$ is a Hilbert space with a subspace $W$. Suppose $U: W \to V$ is a linear operator which preserves inner products, that is, for any $\ket{w_1}, \ket{w_2}$ in $W$,
+    \begin{align}
+        \bra{w_1}U^\dagger U \ket{w_2} = \braket{w_1}{w_2}.
+    \end{align}
+    Prove that there exists a unitary operator $U': V\to V$ which \emph{extends} $U$. That is $U'\ket{w} = U\ket{w}$ for all $\ket{w}$ in $W$, but $U'$ is defined on the entire space $V$. Usually we omit the prime symbol and just write $U$ to denote the extension.
+
+    \textbf{Solution:} Let $U(W) \subset V$ be the image of $W$ under $U$. By restricting the codomain of $U$ from $V$ to its image $U(W)$, $U$ becomes a unitary map. Try to convince yourself of this. 
+
+    The picture we have is that $U$ maps a subspace (``hyperplane") to another hyperplane in a way that preserves the lengths and angles between vectors. To extend the map to $U'$, we need to define $U$ on the ``other piece" of $V$ which is not in $W$. This notion is captured by the \emph{orthogonal complement} $W^\perp$ of $W$, which is the set of vectors orthogonal to every vector in $W$. We will map these to the orthogonal complement $U(W)^\perp$ of the output space. There are many ways to do this, so the extension is by no means unique.
+
+    One way to go about this is to define $U'$ on the orthogonal complement via some basis. We will take a slightly more general approach. We may write $V$ as a \emph{direct sum} $W\oplus W^\perp$, meaning that every vector $v \in V$ can be uniquely written as $w + w^\perp$, where $w\in W$ and $w^\perp \in W^\perp$. Let $U^\perp: W^\perp \to U(W)^\perp$ be a unitary map (i.e. it preserves inner product and relates two spaces of the same dimension). We define $U'$ on a general element of $V$ in a natural way.
+    \begin{align}
+        U'v = U'(w + w^\perp) = Uw + U^\perp w^\perp
+    \end{align}
+    That is, $U'$ maps each piece of $V$ independently. Let's check that it satisfies the properties we need. First off, if $v \in W$, then $w^\perp = 0$, so we can see that $U' v  = U v$ as desired. We also need to check that $U'$ is unitary. I'll leave that to you (remember, $U(W)$ and $U(W)^\perp$ are orthogonal by construction!)
+
+    One of the benefits of our abstract approach is that we've also classified \emph{all} such extensions of $U$. The freedom to choose extension is completely determined by the choice of map $U^\perp$. 
+
+\section*{Exercise 2.68}
+    Prove that $\ket{\psi} \neq \ket{a}\ket{b}$ for all single qubit states $\ket{a}$ and $\ket{b}$.
+
+    \textbf{Solution:} One way to see that $\ket{\psi}$ cannot factorize as a simple tensor product is that the measurement statistics on each qubit would be uncorrelated. Yet clearly, the result of a $0, 1$ measurement on one qubit affects the result on the other. Our proof will make these ideas mathematically precise through the use of projections onto $0, 1$ states. 
+
+    Suppose, for sake of contradiction, that $\ket{\psi} = \ket{a}\ket{b}$. Then any projections (measurements) onto a single qubit must also be equal. In particular, a projection of $\ket{\psi}$ onto the zero state of the first qubit must yield
+    \begin{align} \label{eq:2.68_zeroproj}
+        (\bra{0}\otimes I) \ket{\psi} = \frac{1}{\sqrt{2}} \ket{0}
+    \end{align}
+    from the definition of $\ket{\psi}$ (it's implicitly understood that the remaining state is on the second qubit; there is no ambiguity here). On the other hand, performing the same projection on $\ket{a}\ket{b}$ gives $\braket{0}{a}\ket{b}$. Equating the two gives two insights.
+    \begin{enumerate}
+        \item $\bra{0}\ket{a} \neq 0$ (otherwise we could not match~\eqref{eq:2.68_zeroproj})
+        \item $\ket{b} \propto \ket{0}$
+    \end{enumerate}
+    The second bullet is most important. Since $\ket{b}$ is normalized, the proportionality constant must be a complex phase, which we can readily absorb into the definition of $\ket{a}$. Hence, we see that we can write $\ket{\psi}$ as $\ket{a}\ket{0}$.
+
+    We can perform an identical argument for the other qubit, projecting onto $I \otimes \bra{0}$, and we would reach an analogous conclusion: $\ket{\psi} = \ket{0}\ket{b}$ for some $b$. Putting these two together, we have that $\ket{\psi} = e^{i\varphi} \ket{00}$. But we've clearly reached a contradiction.
+    \begin{align}
+        \frac{\ket{00}+\ket{11}}{\sqrt{2}} \neq e^{i\varphi} \ket{00}
+    \end{align}
+    We conclude that $\ket{\psi}$ does not have a factorization $\ket{a}\ket{b}$. We say that $\ket{\psi}$ is not \emph{separable}, hence it is \emph{entangled}.
+
+\section*{Exercise 2.69}
+    Verify that the Bell basis forms an orthonormal basis for the two qubit state space.
+
+    \textbf{Solution:} There are four Bell states, which is the same number as the dimension of the space. Hence, if they are linearly independent, we automatically know they span the space and therefore form a basis. Moreover, nonzero orthogonal vectors are automatically linearly independent. Clearly, all four Bell states are nonzero, so we just need to check they are orthogonal. (You may have found several of the sentences above to be more information than necessary. If you thought to go ahead and start computing inner products, that's essentially the conclusion I reached above. I just wanted to give more detail for those who are less familiar with these notions)
+
+    We can almost get away without computing an inner product. The first two Bell states are automatically orthogonal to the second two since they have no computational basis states in common. Moreover, if the first two Bell states are orthogonal, then clearly so are the second two, since the mathematical forms are the same. Therefore we will just check the first two are orthogonal.
+
+    We have
+    \begin{align}
+    \begin{aligned}
+        \left(\frac{\bra{00}+\bra{11}}{\sqrt{2}}\right) \left(\frac{\ket{00} - \ket{11}}{\sqrt{2}}\right) &= \frac{1}{2}\left(\braket{00}{00} + \braket{11}{00} - \braket{00}{11}-\braket{11}{11}\right) \\
+        &=\frac{1}{2}(1 - 1) = 0
+    \end{aligned}
+    \end{align}
+    Note that we could have left off the $1/\sqrt{2}$ normalization, as it wouldn't have changed the answer. Coupled with the arguments given above, this is enough to conclude the Bell states are orthogonal. If you're not comfortable with some of the shortcuts, go ahead and compute more inner products yourself!
+
+\section*{Exercise 2.70}
+    Suppose $E$ is any positive operator acting on Alice’s qubit. Show that $\bra{\psi} E \otimes I\ket{\psi}$ takes the same value when $\ket{\psi}$ is any of the four Bell states. Suppose some malevolent third party (‘Eve’) intercepts Alice’s qubit on the way to Bob in the superdense coding protocol. Can Eve infer anything about which of the four possible bit strings 00, 01, 10, 11 Alice is trying to send? If so, how, or if not, why not?
+
+    \textbf{Solution:} As before, let's try to reduce the amount of computation as much as possible before we dive in. As the text describes, we know that any of the Bell states can be achieved by taking the ``initial" Bell state $(\ket{00}+\ket{11})/\sqrt{2}$ and acting on Alice's qubit with $X, Z$ or both ($iY = ZX$). Let $\ket{\psi_{ij}}$ be the $ij$ Bell state for $i, j = 0,1$ (counting in binary as per the text). We have
+    \begin{align}
+        \ket{\psi_{ij}} = (X^i Z^j \otimes I) \ket{\psi_{00}},
+    \end{align}
+    hence, the expectation value is given for any Bell state by
+    \begin{align}
+        \bra{\psi_{ij}} E\otimes  I \ket{\psi_{ij}} = \bra{\psi_{00}} E_{ij} \otimes I \ket{\psi_{00}}
+    \end{align}
+    where
+    \begin{align}
+        E_{ij} := (X^i Z^j)^\dagger E (X^i Z^j)
+    \end{align}
+    is \emph{also} and arbitrary positive operator on Alice's qubit. How do we know it's positive? Having done this pre-conditioning, let's compute the expectation value.
+    \begin{align}
+    \begin{aligned}
+        \bra{\psi_{00}} E_{ij}\otimes I \ket{\psi_{00}} &= \left(\frac{\bra{00}+\bra{11}}{\sqrt{2}}\right) E_{ij} \otimes I\left(\frac{\ket{00} + \ket{11}}{\sqrt{2}}\right) \\
+        &=\frac{1}{2} (\bra{0}E_{ij} \ket{0} + \bra{1}E_{ij} \ket{1}) \\
+        &= \frac{1}{2} \tr(E_{ij})
+    \end{aligned}
+    \end{align}
+    We've skipped some steps here, but the important aspect is that we can simplify many of these inner products by exploiting the tensor product, e.g.
+    \begin{align}  
+        \bra{00}E_{ij} \otimes I \ket{00} = \bra{0}E_{ij}\ket{0} \times \bra{0} I \ket{0} = \bra{0}E_{ij}\ket{0}.
+    \end{align}
+    In the last line, we just observed that the result took the form of a trace over the computational basis. Observe that, since $E_{ij}$ is conjugated by a unitary, and the trace is cyclic,
+    \begin{align}
+        \tr (E_{ij}) = \tr (E),
+    \end{align}
+    hence independent of $ij$. This is exactly what we wanted to show: the result is independent of choice of Bell state.
+
+    A consequence of this fact is that any local measurement on Alice's qubit is independent of the choice of Bell state. Indeed, $E$ could represent a POVM element for a measurement scheme. Therefore, if a third party (Eve) obtains access to Alice's qubit, she cannot learn which Bell state Alice had chose for encoding her message.
+
+\section*{Exercise 2.71 (Criterion to decide if a state is mixed or pure)}
+    Let $\rho$ be a density operator. Show that $\tr(\rho^2) \leq  1$, with equality if and only if $\rho$ is a pure state.
+
+    \textbf{Solution:} 
+    
+    Let $\rho$ be a state with diagonal decomposition
+    \begin{align} \label{eq:2.71_diag}
+        \rho = \sum_{j = 1}^n p_j \ket{j}\bra{j}.
+    \end{align}
+    Since $\rho$ is positive with unit trace, the $p_j$ satisfy $0 \leq p_j \leq 1$ and $\sum_j p_j = 1$. On the other hand, we have
+    \begin{align} \label{eq:2.71_diagsquared}
+        \tr(\rho^2) = \sum_{j=1}^n p_j^2.
+    \end{align}
+    Since $p_j^2 \leq p_j$ for each $j$, we have $\tr(\rho^2) \leq \tr(\rho) = 1$. Hence, we have $\tr(\rho^2) \leq 1$. 
+    
+    Under what conditions does $\tr(\rho^2) = 1$? This is certainly true for a pure state, since $\rho^2 = \rho$ for any pure state, hence the trace remains the same. Suppose, conversely, that $\rho$ is a quantum state such that $\tr(\rho^2) = \tr(\rho)$. Using the diagonal decomposition of equation~\eqref{eq:2.71_diagsquared}, we have
+    \begin{align}
+    \begin{aligned}
+        \tr(\rho^2) = \tr(\rho) \implies \sum_{j} p_j^2 &= \sum_j p_j \\
+        0 &= \sum_j p_j(1-p_j).
+    \end{aligned}
+    \end{align}
+    Since $p_j(1-p_j) \geq 0$ for each $j$, the equality holds only if $p_j(1-p_j) = 0$ for each $j$, so that either $p_j = 0$ or $1-p_j = 0$ (i.e. $p_j = 1$). By normalization, exactly one of the $p_j$ is one, the rest zero. Going back to the expression for $\rho$ in~\eqref{eq:2.71_diag}, this is equivalent to
+    \begin{align}
+        \rho = \ket{j}\bra{j}
+    \end{align}
+    for some $j$. We conclude that $\tr(\rho^2) = \tr(\rho)$ corresponds exactly to $\rho$ being pure.
+
+    This result suggests that $\tr(\rho^2)$ is a measure of the \emph{purity} of the state. It ranges from zero to one, taking on the maximum value of one when $\rho$ is pure. 
+
+\section*{Exercise 2.72 (Bloch sphere for mixed states)}
+    The Bloch sphere picture for pure states of a single qubit was introduced in Section 1.2. This description has an important generalization to mixed states as follows.
+
+    \begin{enumerate}
+        \item Show that an arbitrary density matrix for a mixed state qubit may be written as
+        \begin{align}
+            \rho = \frac{I + \vec{r}\cdot \vec{\sigma}}{2},
+        \end{align}
+        where $\vec{r}$ is a real three-dimensional vector such that $\norm{\vec{r}} \leq 1$. This vector is known as the \emph{Bloch vector} for the state $\rho$. 
+        \item What is the Bloch vector representation for the state $\rho = I/2$?
+        \item Show that a state $\rho$ is pure if and only if $r = 1$.
+        \item Show that for pure states the description of the Bloch vector we have given coincides with that in Section 1.2.
+    \end{enumerate}
+
+    \textbf{Solution:} (1) Let $\rho$ be a density matrix for a qubit, so that it is a $2\times 2$ operator. Any such operator can be written as a linear combination of the Pauli operators and the identity, since they form a basis on $2\times 2$ matrices.
+    \begin{align}
+        \rho = a I + b X + c Y + d Z
+    \end{align}
+    What other conditions must be imposed on $\rho$? Since $\rho^\dagger = \rho$, the coefficients $a, b, c, d$ must be real. Moreover, the trace of $\rho$ must equal one. This places no restrictions on $b, c, d$ since the trace of Paulis is zero, but we must have $a = 1/2$. Finally, we need $\rho \geq 0$, meaning that $\bra{\psi}\rho \ket{\psi}$ for any qubit state $\ket{\psi}$. Making use of the Bloch sphere picture for pure states, we can parametrize our $\ket{\psi}$ as $\cos(\theta/2) \ket{0} + e^{i\varphi}\sin(\theta/2) \ket{1}$ for spherical angles $\theta, \varphi$ on the Bloch sphere. The expectation values of each Pauli then become the projection along the corresponding axis (as can be checked).
+    \begin{align}
+        \langle X\rangle = \cos\varphi \sin\theta \qquad \langle Y \rangle = \sin\varphi \sin\theta \qquad \langle Z \rangle = \cos\theta
+    \end{align}
+    In particular, the vector of expectation values $\langle \vec{\sigma}\rangle = (\langle X \rangle, \langle Y \rangle, \langle Z \rangle)$ is an arbitrary unit vector. Hence,
+    \begin{align}
+        \langle \rho \rangle = \bra{\psi} \rho \ket{\psi} = \frac{1}{2} + \vec{b} \cdot \langle \vec{\sigma} \rangle,
+    \end{align}
+    where $\vec{b} = (b,c,d)$.
+    Our condition for $\rho \geq 0$ therefore amounts to $\vec{b} \cdot \langle \vec{\sigma} \rangle \geq -1/2$. Since $\langle \vec{\sigma} \rangle$ is an arbitrary unit vector, and this relation must hold for every such vector, a necessary and sufficient condition becomes $\norm{\vec{b}} \leq 1/2$. Reparametrizing as $\vec{r} := 2 \vec{b}$, we see that $\vec{r}$ is an arbitrary unit vector. With this, we've established all criteria for $\rho$ to be a density operator. The final parametrization of $\rho$ is as given in the problem statement. Quantum states (mixed or pure) are therefore in exact correspondence with points in a three-dimension unit ball. 
+
+    (2) Comparing with the general form of $\rho$ from part (1), this state has Bloch vector $\vec{r} = 0$. Thus, $I/2$ lies at the very center of the ball.
+
+    (3) To test the purity of $\rho$, let's use the results from exercise 2.71. In fact, all we really need to check is, under what circumstances does $\rho^2 = \rho$? To do this, it will be helpful to use the fact that $(\vec{r}\cdot \vec{\sigma})^2 = r^2 I$. We have
+    \begin{align}
+    \begin{aligned}
+        \rho^2 = \frac{1}{4}(I + \vec{r}\cdot \vec{\sigma})^2 &= \frac{1}{4}(I^2 + (\vec{r}\cdot\vec{\sigma})^2 + 2 \vec{r}\cdot\vec{\sigma}) \\
+        &= \frac{1}{2}\left(I\frac{1+r^2}{2} + \vec{r}\cdot\vec{\sigma}\right).
+    \end{aligned}
+    \end{align}
+    Comparing with $\rho$ itself, we see that $\rho^2 = \rho$ exactly when $r = 1$. Thus, $\rho$ being a pure state is equivalent to $r = 1$, meaning $\vec{r}$ is a unit vector.
+
+    (4) If $\rho$ is a pure state, then there is some state vector $\ket{\psi}$ such that $\rho = \ket{\psi}\bra{\psi}$. We've seen in Section 1.2 that such a state vector has a Bloch sphere representation $\ket{\psi} = \cos(\theta/2) \ket{0} + e^{i\varphi} \sin(\theta/2)\ket{1}$. Using this expression, we can write $\rho$ in matrix form as
+    \begin{align}
+        \rho = \begin{pmatrix}
+            \cos^2 (\theta/2) & e^{-i\varphi} \sin(\theta/2)\cos(\theta/2) \\
+            e^{i\varphi} \sin(\theta/2)\cos(\theta/2) & \sin^2(\theta/2).
+        \end{pmatrix}
+    \end{align}
+    Let's expand this in the Pauli basis. Know that the diagonal parts of $\rho$ are a mixture of $I$ and $Z$, while the off-diagonals are combinations of $X$ and $Y$. Let's therefore write $\rho = \rho_{\rm diag} + \rho_{\rm off}$, and handle each part separately. For the diagonal part, we always have
+    \begin{align}
+        \begin{pmatrix}
+            a & 0 \\
+            0 & b
+        \end{pmatrix} = 
+            \frac{a+b}{2} I + \frac{a-b}{2} Z.
+    \end{align}
+    In our case,
+    \begin{align}
+    \begin{aligned}
+        \frac{a+b}{2} &= \frac{\cos^2 (\theta/2) + \sin^2 (\theta/2)}{2} = \frac{1}{2} \\
+        \frac{a-b}{2} &= \frac{\cos^2 (\theta/2) - \sin^2 (\theta/2)}{2} = \frac{\cos\theta}{2}.
+    \end{aligned}
+    \end{align}
+    Hence, $\rho_{\rm diag} = I/2 + \cos\theta Z/2$. Moving to the off-diagonal part, let's make the simplification $\sin(\theta/2)\cos(\theta/2) = \sin(\theta)/2$. Then,
+    \begin{align}
+        \rho_{\rm off} = \frac{\sin\theta}{2} \begin{pmatrix}
+            0 & e^{-i\varphi} \\
+            e^{i\varphi} & 0
+        \end{pmatrix} = \frac{\sin\theta}{2} (\cos\varphi X + \sin\varphi Y),
+    \end{align}
+    where we've expanded the remaining matrix along the real and imaginary parts to extract $X$ and $Y$. Altogether, we therefore have
+    \begin{align}
+    \begin{aligned}
+        \rho &= \frac{I + \cos\varphi \sin\theta X + \sin\varphi\sin\theta Y + \cos\theta Z}{2} \\
+        &= \frac{I + \vec{r}\cdot \vec{\sigma}}{2},
+    \end{aligned}
+    \end{align}
+    where $\vec{r} = (\cos\varphi \sin\theta, \sin\varphi\sin\theta, \cos\theta)$ represents the unit Bloch vector corresponding to the pure state. Thus, we see a correspondence between the parametrization of pure state vectors $\ket{\psi}$ as given in Section 1.2, and the parametrization of Bloch vectors for density operators given presently.
+
+\section*{Exercise 2.73}
+    Let $\rho$ be a density operator. A \emph{minimal ensemble} for $\rho$ is an ensemble $\{p_i, \ket{\psi_i}\}$ containing a number of elements equal to the rank of $\rho$. Let $\ket{\psi}$ be any state in the support of $\rho$. (The \emph{support} of a Hermitian operator $A$ is the vector space spanned by the eigenvectors of $A$ with non-zero eigenvalues.) Show that there is a minimal ensemble for $\rho$ that contains $\ket{\psi}$, and moreover that in any such ensemble $\ket{\psi}$ must appear with probability
+    \begin{align}
+        p = \frac{1}{\bra{\psi}\rho^{-1} \ket{\psi}}
+    \end{align}
+    where $\rho^-1$ is defined to be the inverse of $\rho$, when $\rho$ is considered as an operator acting only on the support of $\rho$. (This definition removes the problem that $\rho$ may not have an inverse.)
+
+    \textbf{Solution:} The \emph{rank} of a Hermitian operator is the dimension of the support (also known as the \emph{range}). Let $\rho$ have rank $r$, and diagonal decomposition
+    \begin{align}
+        \rho = \sum_{i=1}^r p_i \ket{i}\bra{i}
+    \end{align}
+    where each probability $p_i \in (0,1]$ is strictly positive. The vectors $\ket{i}$ for $i = 1,\dots r$ form an orthonormal basis for the support of $\rho$. From now on, we will forget the ambient vector space completely, restricting ourselves to the support. This implies, for example, that $\rho$ is invertible. Since $\ket{\psi}$ is in the support of $\rho$, we decompose $\ket{\psi}$ in the eigenbasis of $\rho$.
+    \begin{align} \label{eq:2.73_basis}
+        \ket{\psi} = \sum_{i=1}^r c_i \ket{i}
+    \end{align}
+
+    We wish to know whether there exists a minimal ensemble for $\rho$ containing $\ket{\psi}$. Suppose $\{q_i, \ket{\psi_i}\}$ were such an ensemble, with $i = 1, \dots, L$ and $\ket{\psi_1} = \ket{\psi}$ being the state of interest. By Theorem 2.6 of the text, such a minimal ensemble exists exactly when there is an $L\times L$ unitary matrix $U$ such that 
+    \begin{align}
+        \sqrt{q_i}\ket{\psi_i} = \sum_{j=1}^r U_{ij} \sqrt{p_j} \ket{j}.
+    \end{align}
+    In particular, we require $\sqrt{q_1} \ket{\psi_1} = \sum_{j=1}^r U_{1 j} \sqrt{p_j}\ket{j}$. Comparing this with equation \eqref{eq:2.73_basis}, we can relate the coefficients $c_i$ to the other parameters as follows.
+    \begin{align} \label{eq:2.73_Ucoeff}
+        c_j = U_{1j} \sqrt{\frac{p_j}{q_1}}
+    \end{align}
+    By unitarity, we require $\sum_j \abs{U_{1j}}^2 = 1$. This implies, via rearranging \eqref{eq:2.73_Ucoeff}, that
+    \begin{align}
+        q_1 \sum_{j=1}^r \frac{\abs{c_j}^2}{p_j} = 1,
+    \end{align}
+    i.e. the probability $p = q_1$ of finding the state $\ket{\psi}$ in our ensemble is given by
+    \begin{align}
+        q_1 = \frac{1}{\sum_{j=1}^r \abs{c_j}^2/p_j} = \frac{1}{\bra{\psi}\rho\ket{\psi}}.
+    \end{align}
+    With this choice of $q_1$, the coefficients $U_{1j}$ are determined via equation~\eqref{eq:2.73_Ucoeff}. 
+    \begin{align}
+        U_{1j} = c_j \sqrt{\frac{q_1}{p_j}} = \frac{c_j/ \sqrt{p_j}}{\sum_{k} \abs{c_k}^2/p_k}
+    \end{align}
+    The remainder of the elements of $U$ may be chosen freely, subject to constraints of unitarity. In particular, the remaining rows will be normalized vectors, orthogonal to each other and to the first row $U_{1j}$. We've therefore shown the appropriate unitary can be constructed relating a minimal ensemble containing $\ket{\psi}$ to the diagonal basis of $\rho$. By Theorem 2.6, this ensemble is a perfectly valid one for $\rho$. We saw that the probability $p \equiv q_1$ was constrained by unitarity to be as stated in the problem. 
+
+\section*{Exercise 2.74}
+    
 \chapter{Introduction to computer science}
 
-\section*{Exercise 3.1}
+\section*{Exercise 3.1 (Non-computable processes in Nature)}
+    How might we recognize that a process in Nature computes a function not computable by a Turing machine?
+
+    \textbf{Solution:} This is a big and open-ended question, and I can't pretend to give a definitive answer. I encourage you to think about this on your own, then feel free to consider my ideas alongside your own.
+
+    Perhaps there is a process in nature which is not computable by a Turing machine. It seems reasonable that this process would also lie outside the capabilities of conventional computers. It would be strange if we discovered a function which our laptop can compute, but not a Turing machine, especially if our laptops essentially perform massive but elementary arithmetic. If this is the case, then we might suspect something once our computers fail to compute/model the phenomenon under consideration. Like any scientific investigation, this would never amount to a proof refuting the Church-Turing thesis, since we could never be sure we had not discovered the proper algorithm. Yet such issues would form the basis of evidence for a new type of computation. 
+
+    There are problems known to be uncomputable for a Turing machine (such as the well-known Halting problem discussed later in the text). Should humans ever observe a natural process compute these functions (whatever that means) for various inputs, or should humans utilize these processes to compute the functions themselves, then this should yield strong evidence for superior computational models.
+
+    One should scrutinize what is meant when we say Nature "computes a function." Is this necessarily a function on the positive integers? By what means is the input and output stored? We typically think of intelligent agents computing a function, but in the case of Nature at large we should abandon this notion. It is also difficult to currently imagine what these processes might look like, since both classical and quantum mechanics are computable (i.e. all of physics as we know it). Hence, even quantum computers do not provide the kind of computational power we are describing. 
+
+    Though perhaps ``power" is not the right word here necessarily. One could imagine an exotic situation in which there is a process which computes functions intractable for a Turing machine, yet which cannot compute functions that a Turing machine can. Such a system would violate the idea that certain types of computational problems are objectively more difficult than others, as codified by the hierarchy of complexity classes.
+
+    Though this answer is necessarily incomplete, I hope it inspires your own thinking on this interesting question.
+
+\section*{Exercise 3.2 (Turing numbers)}
+    Show that single-tape Turing machines can each be given a number from the list $1, 2, 3, \dots$ in such a way that the number uniquely specifies the corresponding machine. We call this number the \emph{Turing number} of the corresponding Turing machine. (Hint: Every positive integer has a unique prime factorization $p_1^{a_1} p_2^{a_2} \dots p_k^{a_k}$, where $p_i$ are distinct prime numbers, and $a_1, . . . , a_k$ are non-negative integers.)
+
+    \textbf{Solution:} Finish later, but essentially give a different prime number to each ``attribute" of the machine (number of internal states, all possible programs, ...). Note this isn't a bijective map, but we'll get a unique integer guaranteed.
+    
 
 \chapter{Quantum circuits}
 
