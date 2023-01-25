@@ -15,6 +15,7 @@
 
 \setlength{\parskip}{1em}
 
+\DeclareMathOperator{\diag}{diag}
 \newcommand{\mc}[1]{\mathcal{#1}}
 \newcommand{\innerprod}[2]{\langle#1,#2\rangle}
 
@@ -1637,7 +1638,7 @@ This progress was last updated May 19th, 2022.
     \end{align}
     i.e. the probability $p = q_1$ of finding the state $\ket{\psi}$ in our ensemble is given by
     \begin{align}
-        q_1 = \frac{1}{\sum_{j=1}^r \abs{c_j}^2/p_j} = \frac{1}{\bra{\psi}\rho\ket{\psi}}.
+        q_1 = \frac{1}{\sum_{j=1}^r \abs{c_j}^2/p_j} = \frac{1}{\bra{\psi}\rho^{-1}\ket{\psi}}.
     \end{align}
     With this choice of $q_1$, the coefficients $U_{1j}$ are determined via equation~\eqref{eq:2.73_Ucoeff}. 
     \begin{align}
@@ -1646,6 +1647,35 @@ This progress was last updated May 19th, 2022.
     The remainder of the elements of $U$ may be chosen freely, subject to constraints of unitarity. In particular, the remaining rows will be normalized vectors, orthogonal to each other and to the first row $U_{1j}$. We've therefore shown the appropriate unitary can be constructed relating a minimal ensemble containing $\ket{\psi}$ to the diagonal basis of $\rho$. By Theorem 2.6, this ensemble is a perfectly valid one for $\rho$. We saw that the probability $p \equiv q_1$ was constrained by unitarity to be as stated in the problem. 
 
 \section*{Exercise 2.74}
+    Suppose a composite system $A$ and $B$ is in the state $\ket{a}\ket{b}$, where $\ket{a}$ is a pure state of system $A$, and $\ket{b}$ is a pure state of system $B$. Show that the reduced density operator of system $A$ alone is a pure state. 
+
+    \textbf{Solution:} If the system is in pure state $\ket{a}\ket{b}$, this means the density operator representation of the state is given by
+    \begin{align}
+        \rho^{AB} = \ket{a}\ket{b}\bra{a}\bra{b} = \ket{a}\bra{a}\otimes \ket{b}\bra{b}.
+    \end{align}
+    If this equality is unfamiliar to you, verify it by multiplying both size by an arbitrary product state $\ket{\varphi} \ket{\psi}$. (Recall that $\ket{a}\ket{b}$ is shorthand for $\ket{a}\otimes \ket{b}$.) Now let's compute the partial trace, using the definition in equation (2.178) of the text.
+    \begin{align}
+        \tr_B(\rho^{AB}) = \tr_B(\ket{a}\bra{a}\otimes \ket{b}\bra{b}) = \ket{a}\bra{a} \tr(\ket{b}\bra{b})
+    \end{align}
+    Since $\ket{b}\bra{b}$ is a density operator, it has trace one. Hence, $\rho^A = \tr_B(\rho^{AB}) = \ket{a}\bra{a}$. This state is a pure state, which we can see because it corresponds with the state vector $\ket{a}$. An explicit check reveals that $\rho^2 = \rho$.
+    \begin{align}
+        (\ket{a}\bra{a})^2 = \ket{a}\bra{a}\ket{a}\bra{a} = \ket{a}\bra{a}.
+    \end{align}
+
+\section*{Exercise 2.75}
+    For each of the four Bell states, find the reduced density operator for each qubit.
+
+    \textbf{Solution:} This has already been calculated for the Bell state $\frac{1}{\sqrt{2}}(\ket{00}+\ket{11})$ in the text. Rather than performing the calculation for the other three states (which falls under very similar lines), we will discuss some ways you can get the answer using certain properties of the partial trace, as well as the answer for the first Bell state. These properties are valuable tools in general, so it will be more broadly useful to discuss them.
+
+    First, since the Bell state is completely symmetric with respect to the two qubits, we should get the same answer regardless of which qubit we trace over (convince yourself of this fact). Hence, we'll consider tracing over the second qubit, exclusively. 
+
+    Intuitively, the density operator for $A$ shouldn't change when we perform operations solely on $B$. The reason for this is because $\rho^A$ is supposed to only contain information accessible from system $A$ alone. More mathematically, for any unitary $U_B \equiv I \otimes U$ acting on system $B$ alone, the partial trace obeys the usual cyclical relation, so that
+    \begin{align}
+        \tr_B(U_B \rho^{AB} U_B^\dagger) = \tr_B(\rho^{AB} U_B^\dagger U_B) = \rho^A.
+    \end{align}
+    Thus, any two pure states $\ket{\phi}_{AB}$ and $\ket{\psi}_{AB}$ which are related by a local unitary on $B$ ($\ket{\phi}_{AB} = U_B \ket{\psi}_{AB}$ will give the same density matrix on $A$.
+
+    Now comes the interesting part: all of the Bell states are related by a local unitary transformation on system $B$. Given one of the Bell states, we can obtain the others by applyin $Z$, $X$, or both to one of the qubits. Since these are local operations, the density operator will remain unchanged. 
     
 \chapter{Introduction to computer science}
 
@@ -3194,6 +3224,218 @@ This progress was last updated May 19th, 2022.
     As a final note, observe that our procedure, even in the absence of noise, could decrease the fidelity if our state was originally in a superposition state. Hence, there is no threshold for $p$ for which this correction scheme would always improve the fidelity. This is a serious flaw which shows why we need a more sophisticated diagnostic, such as the one from the text.
     
 \section*{Exercise 10.5}
+    Show that the syndrome measurement for detecting phase flip errors in the Shor code corresponds to measuring the observables $X_1 X_2 X_3 X_4 X_5 X_6$ and $X_4 X_5 X_6 X_7 X_8 X_9$.
+    
+    \textbf{Solution:} To detect a phase flip error, we need to measure ``$X$-like" operators which are capable of distinguishing $\ket{000} + \ket{111}$ and $\ket{000} - \ket{111}$ (ignoring normalization). This is just like the case of the phase flip code introduced earlier, except now we have tripled up each 0 and 1. So we need to modify the ``syndrome" (error detection) procedure of the regular phase flip code to account for this repetition. We should require that $\ket{000} \mapsto \ket{111}$ and vice versa. This is accomplished by simply repeating $X$ on each qubit. Thus, we wish to measure $X^{\otimes 3}$ on each block. We can check straightforwardly that this operator distinguishes the phases of the two states, since the eigenvalues are different.
+    \begin{align}
+        X^{\otimes 3} \frac{ \left(\ket{000} \pm \ket{111}\right)}{\sqrt{2}} = \frac{\left(\ket{111} \pm \ket{000}\right)}{\sqrt{2}} = \pm \frac{ \left(\ket{000} \pm \ket{111}\right)}{\sqrt{2}}
+    \end{align}
+    Recall that we don't want to determine the phase in the detection protocol, but rather decide whether the phases between two neighboring blocks of three are the \emph{same or different}. As before, to accomplish this, we can multiply two of these repeated $X$ operators together. This gives a string of six single-qubit $X$ operations. If we compare the phases of blocks 1 and 2, we get
+    \begin{align}
+        (X_1 X_2 X_3) (X_4 X_5 X_6)
+    \end{align}
+    which is what we wanted to show. On the other hand, comparing blocks 2 and 3 gives the remaining syndrome measurement: $(X_4 X_5 X_6) (X_7 X_8 X_9)$.
+
+\section*{Exercise 10.6}
+    Show that recovery from a phase flip on any of the first three qubits may be accomplished by the operator $Z_1 Z_2 Z_3$.
+    
+    \textbf{Solution:} The operator $Z_1 Z_2 Z_3$ acts as an effective $Z$ operator on the block of three qubits. By this we simply mean that $Z_1 Z_2 Z_3$ acts as the $Z$ operator for a repetition code.
+    \begin{align}
+    \begin{aligned}
+        Z^{\otimes{3}} \ket{000} &= \ket{000} \\
+        Z^{\otimes{3}} \ket{111} &= - \ket{111}
+    \end{aligned}
+    \end{align}
+    Because of this parallel behavior, we know that $Z_1 Z_2 Z_3$ will flip between effective $\ket{+}$ and $\ket{-}$ states. That is, $Z_1 Z_2 Z_3$ will flip the phase of the first block if applied.
+
+    As you can imagine, this argument generalizes straightforwardly in the case where the phase error actually occurs in the second block (qubits 4, 5, 6) or the third block (7, 8, 9). 
+
+\section*{Exercise 10.7}
+    Consider the three qubit bit flip code of Section 10.1.1, with corresponding projector $P = \ket{000}\bra{000} + \ket{111}\bra{111}$. The noise process this code protects against has the operation elements \linebreak
+    $\{\sqrt{(1-p)^3}I, \sqrt{p(1-p)^2} X_1, \sqrt{p(1-p)^2} X_2, \sqrt{p(1-p)^2} X_3\}$, where $p$ is the probability that a bit flips. Note that this quantum operation is not trace-preserving, since we have omitted operation elements corresponding to bit flips on two and three qubits. Verify the quantum error-correction conditions for this code and noise process.
+
+    \textbf{Solution:} We can ignore the coefficients in front of each of the operations, such as $\sqrt{p(1-p)^2}$, since these don't affect whether the error correction conditions of Theorem 10.1 are satisfied. Another nice feature is that all of these operations are Hermitian, e.g., $X_2^\dagger = X_2$, so we can ignore the Hermitian adjoint in the conditions. We also notice that all the operation elements commute (why?), so we can happily ignore orderings of the $E_i$.
+
+    To reduce the number of required calculations even further, we will try to make use of the symmetry amongst all three qubits under permutations. For example, checking $E_i^\dagger E_j = X_1^\dagger X_2 = X_1 X_2$ should also give $X_2 X_3$ and $X_3 X_1$. Having made these considerations, there are only a three cases that need to be checked: $I\times I = I, I\times X_1 = X_1$ and $X_1 X_2$. If you're unconvinced by the preceding arguments, feel free to compute other combinations of the operation elements yourself. 
+    
+    Let's go through each one by one. The identity is the most obvious one: $P I P = P^2 = P$. So far so good. Next we have
+    \begin{align}
+        P X_1 P = 0
+    \end{align}
+    because $X_1$ sends states in the code space, spanned by $\ket{000}$ and $\ket{111}$, to orthogonal states. Thus, $P (X_1 P)$ will equal zero. More explicitly,
+    \begin{align} \label{eq:10.8}
+        P X_1 P = (\ket{000}\bra{000} + \ket{111}\bra{111})(\ket{100} \bra{100}+ \ket{011}\bra{011}) = 0.
+    \end{align}
+    Finally, $X_1 X_2$ takes the code space to yet another orthogonal subspace, so the result is zero: $P X_1 X_2 P = 0$. You can check with a direct calculation along similar linear to equation \eqref{eq:10.8}.
+
+    Since $X_i^2 = I$, we are essentially done. Again ignoring the square root coefficients, we can express our result as a $4\times4$ matrix $\alpha$.
+    \begin{align}
+        \alpha = \diag (1, 1, 1, 1) = I
+    \end{align}
+    That is, $\alpha$ is a diagonal matrix with real entries, hence it is Hermitian. What would the $\alpha$ matrix be if we included the square root factors?
+
+\section*{Exercise 10.8}
+    Verify that the three qubit phase flip code $\ket{0_L} = \ket{+++}$, $\ket{1_L} = \ket{---}$ satisfies the quantum error-correction conditions for the set of error operators $\{I, Z_1, Z_2, Z_3\}$.
+
+    \textbf{Solution:} We will not do the calculation for this problem. Instead, we will point out the fact that the mathematics for this problem is identical to the previous one (Exercise 10.7). Phase flips for superposition states are equivalent to NOT gates for computational states $0, 1$.
+
+    To be more precise, under Hadamard transformation for each qubit,
+    \begin{align}
+        \ket{+} \mapsto \ket{0} \qquad \ket{-} \mapsto \ket{1} \qquad Z_i \mapsto H Z_i H = X_i,
+    \end{align}
+    all aspects of the problem transform into the corresponding bit-flip problem. For example, just as $X\ket{0} = \ket{1}$, $Z \ket{+} = \ket{-}$. Therefore, we will arrive at the same conclusion: the phase flip code is correctable.
+
+\section*{Exercise 10.9}
+    Again, consider the three qubit phase flip code. Let $P_i$ and $Q_i$ be the projectors on to the $\ket{0}$ and $\ket{1}$ states, respectively, of the $i$th qubit. Prove that $\{I, P_1, Q_1. P_2, Q_2, P_3, Q_3\}$.
+
+    \textbf{Solution:} We can make use of Theorem 10.2 We should recognize that the projectos $P$ and $Q$ into the computational (Z) basis are in the span of $Z$ itself and the identity $I$. More precisely,
+    \begin{align}
+        P = \frac{I + Z}{2} \qquad
+        Q = \frac{I - Z}{2}.
+    \end{align}
+    Theorem 10.2, applied to our case, says we can correct any errors that are in the span of $\{I, Z_1, Z_2, Z_3\}$. Thus we can correct each of these projectors $P, Q$ on each qubit $i$. 
+
+    We conclude that the phase flip code also protects against "spontaneous unwanted measurement" in the computational basis. 
+
+\section*{Exercise 10.10}
+    Explicitly verify the quantum error-correction conditions for the Shor code, for the error set containing $I$ and the error operators $X_j$, $Y_j$, $Z_j$ for $j = 1$ through 9. 
+
+    \textbf{Solution:} The error operators, including the identity, total $1 + (3\times 9) = 28$, one for each pauli (3) of each qubit (9). A brute force calculation of $P E_i^\dagger E_j P$, using all possible pairs of these 28, is clearly time consuming. 
+    
+    Thankfully, we can make a number of helpful simplifications. All of these operations either commute or anticommute, and all are Hermitian. Hence, we can ignore orderings up to a sign, and neglect daggers. Let's further consider the symmetries between the nine qubits. All qubits within a block of three are clearly "the same", i.e., invariant under permutation. Moreover, the blocks of three themselves are symmetric under interchange. This suggests we only need to calculate two cases which capture all possible combinations:
+    \begin{itemize}
+        \item Errors occuring \emph{within} the same block (say, qubits 1 and 2)
+        \item Errors occurring in two \emph{distinct blocks} (say, on qubits 1 and 4).
+    \end{itemize}
+
+    Putting this all together, there are only a handful of classes we need to consider for $E_i E_j$: 
+    \begin{itemize}
+        \item $E_i E_j = $ a pauli on qubit 1
+        \item $E_i E_j = $ a pauli on qubit 1, another on qubit 2
+        \item $E_i E_j = $ a pauli on qubit 1, another on qubit 4
+    \end{itemize}
+    We will go through these cases one at a time. 
+
+    Suppose $E_i E_j = \sigma_1$, where $\sigma_1$ is some pauli ($X$, $Y$, or $Z$) action on the first qubit. Since the Shor code projector $P$ is the tensor product of projectors on the three blocks, we only need to consider the first block. That is, we consider
+    \begin{align}
+        P_{123} = \frac{(\ket{000}+\ket{111})(\bra{000}+\bra{111})}{2}
+    \end{align}
+    which is the part of the projector $P$ on the first block. The thing to note is that, regardless of which pauli $\sigma_1$ is, it sends the state $(\ket{000} + \ket{111})/\sqrt{2}$ to a state which is orthogonal to $P_{123}$, and similarly for $(\ket{000} - \ket{111})/\sqrt{2}$. Hence, $P_{123} \sigma_1 P_{123} = 0$. We conclude that $P \sigma_1 P = 0$, so that in particular it is proportional to $P$. So far so good. 
+
+    Next we consider $\sigma_1 \sigma_2$. As before, we only focus on a single block. If either (or both) of the paulis are $X$ or $Y$, then there is a bit flip involved and we will get something orthogonal to the original code space. Hence, $P \sigma_1 \sigma_2 P$ will be zero. The only remaining possibility is $Z_1 Z_2$. Interestingly we see that this leaves the states $\ket{000} \pm \ket{111}$ invariant. Thus $P Z_1 Z_2 P = P P = P$. In all cases, we still find something real and proportional to $P$.
+
+    Finally, we consider $E_i E_j = \sigma_1 \sigma_4$, going across blocks. We can ignore the third block. If any bit flip occurs at all, $P$ gets sent to something orthogonal to $P$. It then remains to check $Z_1 Z_4$. But each of these sends its block to something orthogonal to the code space. In all cases here, $P \sigma_1 \sigma_4 P  = 0$.
+
+    Let's summarize our results. In all cases, $P E_i^\dagger E_j P$ is proportional to $P$ and we can capture the proportionality by a $28 \times 28$ matrix of coefficients $\alpha_{ij}$. How do we know it is Hermitian? The diagonals are all one, since each error operator squares to the identity. Our calculations above also show that nearly every single off-diagonal element is zero, except for $Z_1 Z_2$, or more generally, $Z_i Z_j$ where $i\neq j$ but $i, j$ are in the same block. In this case, $\alpha_{ij}= 1$ (note that the indices $ij$ means something different in $\alpha$ than for $Z_i Z_j$). Fortunately, in this case $Z_i$ and $Z_j$ commute. 
+    
+    Altogether, this implies, $\alpha$ is a real, symmetric matrix, hence Hermitian. We conclude that the Shor code can successfully correct arbitrary single qubit errors.
+
+\section*{Exercise 10.11}
+    Construct operation elements for a single qubit quantum operation $\mc{E}$ that upon input of any state $\rho$ replaces it with the completely randomized state $I/2$. It is amazing that even such noise models as this may be corrected by codes such as the Shor code!
+
+    \textbf{Solution:} Using the material of Chapter 8 of the text, we could go through an explicit construction of the quantum operation $\mc{E}$ such that $\mc{E}(\rho) = I/2$. We will instead appeal to prior knowledge and intuition.
+
+    Suppose you know that the depolarizing channel $\mc{E}_p$ sends $\rho$ to the maximally mixed state $I/d$ with probability $p$, otherwise leaving it alone. That is, $\mc{E}_p (\rho) = (1-p)\rho + p I /d$. Suppose you also know that $\mc{E}_p$ can be constructed for a single qubit as a sum over Pauli sandwiches
+    \begin{align}
+        \mc{E}_p (\rho) = (1-p)\rho + p \frac{1}{3} (X\rho X + Y \rho Y + Z\rho Z).
+    \end{align}
+    This equation is displayed on page 440, right before this problem. The intuition is, by applying a pauli with uniform randomness, we lose all information about our state.
+
+    Setting $p = 1$ gives us the desired \emph{completely depolarizing channel} $\mc{E}$ on a single qubit.
+    \begin{align}
+        \mc{E}(\rho) = \frac{1}{3} (X \rho X + Y \rho Y + Z\rho Z).
+    \end{align}
+    How do we know the Shor code corrects this? Assuming this error occured on a single qubit (and only one qubit), the operator elements match those we know to be correctable by the Shor code. 
+
+\section*{Exercise 10.12}
+    Show that the fidelity between the state $\ket{0}$ and $\mc{\ket{0}\bra{0}}$ is $\sqrt{1-2p/3}$, and use this to argue that the minimum fidelity for the depolarizing channel is $\sqrt{1-2p/3}$.
+
+    \textbf{Solution:}
+
+\section*{Exercise 10.13}
+    Show that the minimum fidelity $F(\ket{\psi}, \mc{\ket{\psi}\bra{\psi}}$ when $\mc{E}$ is the amplitude damping channel with parameter $\gamma$ is $\sqrt{1-\gamma}$.
+
+    \textbf{Solution:}
+
+\section*{Exercise 10.14}
+    Write an expression for a generator matrix encoding $k$ bits using $r$ repetitions for each bit. This is an $[rk, k]$ linear code, and should have an $rk\times k$ generator matrix.
+    \textbf{Solution:}
+
+\section*{Exercise 10.15}
+    Show that adding one column of $G$ to another results in a generator matrix generating the same code.
+
+    \textbf{Solution:}
+
+\section*{Exercise 10.16}
+    Show that adding one row of the parity check matrix to another does not change the code. using Gaussian elimination and swapping of bits it is therefore possible to assume that the parity check matrix has the \emph{standard form} $[A\vert I_{n-k}]$ where $A$ is an $(n-k)\times k$ matrix.
+
+    \textbf{Solution:}
+
+\section*{Exercise 10.17}
+    Find a parity check matrix for the $[6,2]$ repetition code defined by the generator matrix in (10.54). 
+
+    \textbf{Solution:}
+
+\section*{Exercise 10.18}
+    Show that the parity check matrix $H$ and generator matrix $G$ for the same linear code satisfy $HG = 0$. 
+
+    \textbf{Solution:}
+
+\section*{Exercise 10.19}
+    Suppose an $[n,k]$ linear code $C$ has a parity check matrix of the form $H = [A\vert I_{n-k}]$, for some $(n-k)\times k$ matrix $A$. Show that the corresponding generator matrix is
+    \begin{align}
+        G = ??
+    \end{align}
+
+    \textbf{Solution:}
+
+\section*{Exercise 10.20}
+    Let $H$ be a parity check matrix such that any $d - 1$ columns are linearly independent, but there exists a set of $d$ linearly dependent columns. Show that the code defined by $H$ has distance $d$. 
+
+    \textbf{Solution:}
+
+\section*{Exercise 10.21 (Singleton bound)}
+    Show that an $[n, k, d]$ code must satisfy $n-k \geq d-1$. 
+
+    \textbf{Solution:}
+
+\section*{Exercise 10.22}
+    Show that all Hamming codes have distance 3, and thus can correct an error on a single bit. The Hamming codes are therefore $[2^r - 1, 2^r - r - 1, 3]$ codes. 
+    
+    \textbf{Solution:}
+
+\section*{Exercise 10.23}
+    Prove the Gilbert-Varshamov bound. 
+
+    \textbf{Solution:}
+
+\section*{Exercise 10.24}
+    Show that a code with generator matrix $G$ is weakly self-dual if and only if $G^T G = 0$. 
+
+    \textbf{Solution:}
+
+\section*{Exercise 10.25}
+    Let $C$ be a linear code. Show that if $x \in C^\perp$ then $\sum_{y\in C} (-1)^{x\cdot y} = \abs{C}$, while if $x \notin C^\perp$ then $\sum_{y\in C} (-1)^{x\cdot y} = 0$.
+
+    \textbf{Solution:}
+
+\section*{Exercise 10.26}
+    Suppose $H$ is a parity check matrix. Explain how to compute the transformation $\ket{x}\ket{0} \to \ket{x}\ket{Hx}$ using a circuit composed entirely of controlled-NOTs. 
+
+    \textbf{Solution:}
+
+\section*{Exercise 10.27}
+    Show that the codes defined by
+    \begin{align}
+        \ket{x+C_2} \equiv \frac{1}{\sqrt{\abs{C_2}}} \sum_{y\in C_2} (-1)^{u\cdot y} \ket{x+y+v}
+    \end{align}
+    and parameterized by $u$ and $v$ are equivalent to CSS$(C_1, C_2)$ in the sense that they have the same error-correcting properties. These codes, which we'll refer to ass CSS$_{u,v}(C_1, C_2)$, will be useful later in our study of quantum key distribution in Section 12.6.5.
+
+    \textbf{Solution:}
+
+\section*{Exercise 10.28}
+    Verify that the transpose of the matrix in (10.77) is the generator of the $[7,4,3]$ Hamming code. 
+
     \textbf{Solution:}
     
 \section*{Exercise 10.29}
@@ -3304,7 +3546,7 @@ This progress was last updated May 19th, 2022.
     \end{align}
     
 \section*{Exercise 10.37}
-    What is $U Y_1 U^dagger$?
+    What is $U Y_1 U^{\dagger}$?
     
     \textbf{Solution:} We can make use of the previous exercise by noting that $Y_1 = -i Z_1 X_1$, and the conjugation by $U$ respects multiplication. More specifically,
     \begin{align}
@@ -3384,6 +3626,8 @@ This progress was last updated May 19th, 2022.
     \end{center}
     
 \section*{Exercise 10.41}
+    
+
     \textbf{Solution:}
     
 \chapter{Entropy and information}
