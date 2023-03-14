@@ -21,7 +21,7 @@
 
 \title{Guided solutions to Nielsen and Chuang: Quantum Computation and Quantum Information}
 \author{Jacob Watkins}
-\date{May 2022}
+\date{Last updated: Jan 2023}
 
 \begin{document}
 
@@ -46,21 +46,21 @@ This progress was last updated May 19th, 2022.
 
 \begin{itemize}
     \item Chapter 1: All in-text exercises done. Two open ended problems left alone.
-    \item Chapter 2: Exercises 2.1-2.56 complete. Many exercises remain.
-    \item Chapter 3: Untouched.
-    \item Chapter 4: Untouched.
-    \item Chapter 5: Exercises 5.1-5.14 complete. Exercises 5.15-5.29 remain, along with 6 practice problems.
-    \item Chapter 6: 6.1-6.8 complete.
-    \item Chapter 7: Only first exercise complete.
-    \item Chapter 8: 8.1-8.6 complete.
-    \item Chapter 9: 9.1-9.16 complete.
-    \item Chapter 10: 10.1-10.4, 10.29-10.40.
+    \item Chapter 2: Exercises 1-75 complete. Many exercises remain.
+    \item Chapter 3: 1 "complete".
+    \item Chapter 4: 1-9 complete.
+    \item Chapter 5: 1-14 complete, 15-29 remain, along with 6 practice problems.
+    \item Chapter 6: 1-8 complete.
+    \item Chapter 7: 1 exercise complete.
+    \item Chapter 8: 1-6 complete.
+    \item Chapter 9: All exercises complete (end-of-chapter problems remain).
+    \item Chapter 10: 1-11 and 29-40 complete.
     \item Chapter 11: Only first exercise.
-    \item Chapter 12: 12.1-12.4.
+    \item Chapter 12: 1-4.
     \item Appendix 1: All exercises complete!
     \item Appendix 2: Some.
     \item Appendix 3: Only the first.
-    \item Appendix 4: All exercises complete except A4.17 and part 2 of problem 1.
+    \item Appendix 4: All exercises complete except 17 and part 2 of problem 1.
     \item Appendix 5: Almost done. Problem 1 needs to be cleaned up. 
     \item Appendix 6: All exercises complete!
 \end{itemize}
@@ -1676,7 +1676,365 @@ This progress was last updated May 19th, 2022.
     Thus, any two pure states $\ket{\phi}_{AB}$ and $\ket{\psi}_{AB}$ which are related by a local unitary on $B$ ($\ket{\phi}_{AB} = U_B \ket{\psi}_{AB}$ will give the same density matrix on $A$.
 
     Now comes the interesting part: all of the Bell states are related by a local unitary transformation on system $B$. Given one of the Bell states, we can obtain the others by applyin $Z$, $X$, or both to one of the qubits. Since these are local operations, the density operator will remain unchanged. 
+
+\section*{Exercise 2.76}
+    Extend the proof of the Schmidt decomposition to the case where $A$ and $B$ may have state spaces of different dimensionality. 
+
+    \textbf{Solution:} It's important to note that the singular value decomposition, which is a crucial aspect of the proof, does not depend on the matrix of coefficients $a_{jk}$ being square. More generally, if $a$ is $n \times m$, we have $a = udv$ where $u$ and $v$ are unitary of dimensions $n$ and $m$, respectively. Here, $d$ is an $n \times m$ ``diagonal" matrix, in which the only possible nonzero entries are $d_{ii}$, which are nonnegative. Hence, just as before
+    \begin{align}
+        \ket{\psi} = \sum_{ijk} u_{ji} d_{ii} v_{ik} \ket{j}\ket{k}
+    \end{align}
+    where it is understood that the indices $j$ and $k$ run from $n$ and $m$, respectively. The index $i$ runs from the smaller of $n$ and $m$. With these changes, the proof carries through exactly as before. See if you can trace the steps yourself!
+
+\section*{Exercise 2.77}
+    Suppose $ABC$ is a three component quantum system. Show by example that there are quantum states $\ket{\psi}$ of such systems which can not be written in the form
+    \begin{align} \label{eq:2.77_threeSchmidt}
+        \ket{\psi} = \sum_{i} \lambda_i \ket{i_A} \ket{i_B}\ket{i_C},
+    \end{align}
+    where $\lambda_i$ are real numbers, and $\ket{i_A}$, $\ket{i_B}$, $\ket{i_C}$ are orthonormal bases of the respective systems.
+
+    \textbf{Solution:} The simplest counterexample we could expect to find is one in which all three systems are qubits, spanned by the orthonormal basis $\ket{0}, \ket{1}$. What could we use as inspiration for finding such an example? Notice that in equation~\eqref{eq:2.77_threeSchmidt}, not only are the vectors $\ket{i_A} \ket{i_B}\ket{i_C}$ orthonormal, but every subsystem also has orthonormal vectors. Me might try to break this by having orthogonal vectors in which not all ``sub vectors" are orthonormal. Here's an example.
+    \begin{align} \label{eq:2.77counterexample}
+        \ket{\psi} = \frac{1}{\sqrt{2}} \left(\ket{000} + \ket{011}\right)
+    \end{align}
+    Notice that system $A$ only has vector $\ket{0}$ showing, while the other two systems "follow the rule". Let's see if this will work as our counterexample. 
+
+    Suppose that, somehow, we could write
+    \begin{align}
+        \frac{1}{\sqrt{2}} \left(\ket{000} + \ket{011}\right) = \sqrt{p} \ket{u_A u_B u_C} + \sqrt{1-p} \ket{v_A v_B v_C}.
+    \end{align}
+    where $\{u_i, v_i\}$ form orthonormal bases for qubits $A, B, C$. Here, $p \in [0,1]$. Notice that the coefficients are completely general, for the states are normalized, and if the coefficient is negative, we can absorb it into our definition of one of the basis vectors. In fact, we can say that $p$ is \emph{strictly} between $0$ and $1$ because by Exercise 2.68, the state on the left is entangled, while for $p = 0,1$ the state on the right is separable (unentangled). 
+
+    Let's take the inner product of both sides with $\ket{1_A}$. Since the left side is zero, we get
+    \begin{align}
+        0 = \sqrt{p} \bra{1}\ket{u_A} \ket{u_B u_C} + \sqrt{1-p} \bra{1}\ket{v_A} \ket{v_B v_C}
+    \end{align}
+    The vectors remaining on the right side are orthogonal, hence linearly independent. We conclude that the coefficients are exactly zero. But $p$ is neither 0 or 1. This means
+    \begin{align}
+        \bra{1}\ket{u_A} = \bra{1}\ket{v_A} = 0.
+    \end{align}
+    This space is two-dimensional, so this implies both $\ket{u_A}$ and $\ket{v_A}$ are proportional to $\ket{0}$. They are certainly not orthogonal, then, contradicting our original assumption.
+
+    We conclude that the state $\ket{\psi}$ in equation~\eqref{eq:2.77counterexample} cannot be expressed in this way. This argument can be generalized to higher dimensional spaces as well, if desired.
+
+\section*{Exercise 2.78}
+    Prove that a state $\ket{\psi}$ of a composite system $AB$ is a product state if and only if it has Schmidt number 1. Prove that $\ket{\psi}$ is a product state if and only if $\rho^A$ (and thus $\rho^B$) are pure states.
+
+    \textbf{Solution:} Let $r > 0$ be the Schmidt number of $\ket{\psi}$. If $\ket{\psi}$ is a product state, such that $\ket{\psi} = \ket{\phi}\otimes \ket{\chi}$ for states $\ket{\phi}, \ket{\chi}$, then $\ket{\psi}$ is already expressed in a Schmidt decomposition, so $r = 1$. This shows product states have Schmidt number 1. Conversely, if $r = 1$, then $\ket{\psi} = \lambda_1 \ket{1_A}\ket{1_B}$, and by normalization $\lambda_1 = 1$. Hence, $\ket{\psi}$ is a product state. This proves the first statement of the problem.
+
+    Now we consider the second statement. Let $\rho^{AB} = \ket{\psi}\bra{\psi}$ be the density matrix representing the pure state on the composite system. Now suppose $\ket{\psi}$ is a product state, such that $\ket{\psi} = \ket{\phi}\ket{\chi}$ for states $\ket{\phi}$ and $\ket{\chi}$ on $A$ and $B$ respectively. Then
+    \begin{align}
+        \rho^{AB} = \ket{\phi}\bra{\phi} \otimes \ket{\chi}\bra{\chi}
+    \end{align}
+    and therefore
+    \begin{align}
+        \rho^A = \tr_B \rho^{AB} = \ket{\phi}\bra{\phi} \tr(\ket{\chi}\bra{\chi}) = \ket{\phi}\bra{\phi}.
+    \end{align}
+    Thus, we see that $\rho^A$ is a pure state. A similar, symmetrical calculation would also show that $\rho^B = \ket{\chi}\bra{\chi}$ is also pure. Conversely, suppose $\rho^A$ and $\rho^B$ are both pure states. Let's express the joint state $\ket{\psi}$ as a Schmidt decomposition.
+    \begin{align} \label{eq:2.78_schmidt}
+        \ket{\psi} = \sum_{j=1}^r \sqrt{p_j} \ket{\phi_j}\ket{\chi_j}
+    \end{align}
+    Here, $p_j$ satisfy $p_j \in (0,1]$ and $\sum_j p_j = 1$. The vectors $\{\ket{\phi_j}\}$ and $\{\ket{\chi_j}\}$ are orthonormal on $A$ and $B$ respectively. We can compute $\rho^A$ (and $\rho^B$) directly from this decomposition. When we do (try it yourself!) we find that
+    \begin{align}
+        \rho^A = \tr_B \ket{\psi}\bra{\psi} = \sum_{j=1}^r p_j \ket{\phi_j}\bra{\phi_j}.
+    \end{align}
+    For this state to be pure, as we are assuming, only one of these terms can be nonzero. Thus, there is some $k$ such that $p_k = 1$, and all other $p_j$ are zero. But if we return to~\eqref{eq:2.78_schmidt}, this means $\ket{\psi}$ is actually a product state. This is what we sought to prove.
+
+\section*{Exercise 2.79}
+    Consider a composite system consisting of two qubits. Find the Schmidt decompositions of the states
+    \begin{align}
+        \frac{\ket{00} + \ket{11}}{\sqrt{2}}; \qquad \frac{\ket{00} + \ket{01} + \ket{10} + \ket{11}}{2}; \quad \text{and} \quad \frac{\ket{00} + \ket{01} + \ket{10}}{\sqrt{3}}.
+    \end{align}
+
+    \textbf{Solution:} We will solve the first two of these without doing an ``algorithmic" Schmidt decomposition. Hopefully, this will provide some intuition that you can use going forward as well. The last of these we will do directly: via a singular value decomposition of the coefficients. 
     
+    Upon inspection, the first of these states, a Bell state, is already in Schmidt form! To make this more obvious, we could distribute the factor of $1/\sqrt{2}$, and observe that $\ket{0}$ and $\ket{1}$ are orthonormal. 
+
+    Next, we observe that the second state is in a uniform superposition of all qubit computational basis states. A useful fact to know is, this can be produced by applying Hadamard gates to the all zero state $\ket{0}^{\otimes n}$. The Hadamard acting on $\ket{0}$ produces $(\ket{0} + \ket{1})/\sqrt{2}$. Hence we have that 
+    \begin{align}
+        \frac{\ket{00} + \ket{01} + \ket{10} + \ket{11}}{2} = \left(\frac{\ket{0}+\ket{1}}{\sqrt{2}}\right)\otimes \left(\frac{\ket{0}+\ket{1}}{\sqrt{2}}\right).
+    \end{align}
+    This is the Schmidt decomposition, with Schmidt number 1. Each state is normalized. If you aren't sure, go backwards and make sure this decomposition works. Take heart: standard methods can be used to arrive at this answer, which we will illustrate in for the final example. 
+
+    Let's look at the final example, and for the moment let's ignore the normalization factor $1/\sqrt{3}$. Let's recognize the ``Schmidt decomposition" is just the ``singular value decomposition", with the identification
+    \begin{align}
+        \ket{i}\ket{j} \Leftrightarrow \ket{i}\bra{j}.
+    \end{align}
+    The math carries through exactly the same. As a matrix, this looks like
+    \begin{align}
+        a = \begin{pmatrix}
+            1 & 1 \\
+            1 & 0
+        \end{pmatrix}.
+    \end{align}
+    We can compute the singular value decomposition by diagonalizing $a^\dagger a$ and $a a^\dagger$. But our problem here is even easier than the general case, since $a$ is diagonalizable. So let's just diagonalize it (try this yourself first; this is an essential skill!). Here is the result.
+    \begin{align}
+        a = \frac{1 + \sqrt{5}}{2} \ket{v_1}\bra{v_1} + \frac{1-\sqrt{5}}{2} \ket{v_2}\bra{v_2}
+    \end{align}
+    Here, $\ket{v_1}$ and $\ket{v_2}$ are the orthonormal eigenvectors of $a$ given by
+    \begin{align}
+    \begin{aligned}
+        \ket{v_1} &= \frac{1 + \sqrt{5}}{\sqrt{2\left(5 + \sqrt{5}\right)}} \ket{0} + \sqrt{\frac{2}{5 + \sqrt{5}}} \ket{1} \\
+        \ket{v_2} &= \frac{1-\sqrt{5}}{\sqrt{2\left(5-\sqrt{5}\right)}} \ket{0} + \sqrt{\frac{5 + \sqrt{5}}{10}} \ket{1}.
+    \end{aligned}
+    \end{align}
+    Going back to the problem at hand, we then have
+    \begin{align}
+        \ket{00} + \ket{01} + \ket{10} = \frac{1 + \sqrt{5}}{2} \ket{v_1}\ket{v_1} + \frac{1-\sqrt{5}}{2} \ket{v_2}\ket{v_2}.
+    \end{align}
+    Reinserting the normalization factor, we have
+    \begin{align}
+        \frac{\ket{00} + \ket{01} + \ket{10}}{\sqrt{3}} = \frac{1 + \sqrt{5}}{2\sqrt{3}} \ket{v_1}\ket{v_1} + \frac{1-\sqrt{5}}{2\sqrt{3}} \ket{v_2}\ket{v_2}.
+    \end{align}
+
+    We're not done yet. For a Schmidt decomposition, we need all the coefficients to be positive. But the second coefficient is actually negative. This is related to the fact that we diagonalized $a$ instead of taking the singular value decomposition. There is a very simple fix: group a minus sign with one of the $\ket{v_2}$.
+    \begin{align}
+        \frac{\ket{00} + \ket{01} + \ket{10}}{\sqrt{3}} = \frac{1 + \sqrt{5}}{2\sqrt{3}} \ket{v_1}\ket{v_1} + \frac{\sqrt{5}-1}{2\sqrt{3}} \ket{v_2}\otimes(-\ket{v_2}).
+    \end{align}
+
+    This is in the appropriate form. This correction will work in general, assuming we've diagonalized a Hermitian matrix. 
+
+\section*{Exercise 2.80}
+    Suppose $\ket{\psi}$ and $\ket{\varphi}$ are two pure states of a composite quantum system with components $A$ and $B$, with identical Schmidt coefficients. Show that there are unitary transformations $U$ on system $A$ and $V$ on system $B$ such taht $\ket{\psi} = U \otimes V \ket{\varphi}$.
+
+    \textbf{Solution:} Let $\{\lambda_i\}$ be the shared, nonzero Schmidt coefficients of states $\ket{\psi}$ and $\ket{\varphi}$, where the index $i$ runs from 1 to the Schmidt number $r$. We can express the Schmidt decomposition of each state as follows.
+    \begin{align}
+        \ket{\varphi} = \sum_{i=1}^r \lambda_i \ket{u_i}\otimes \ket{u_i'} \qquad \ket{\psi} = \sum_{i=1}^r \lambda_i \ket{v_i}\otimes \ket{v_i'}
+    \end{align}
+    We stress that each of the collections $\{\ket{u_i}\}$, $\{\ket{u_i'}\}$, $\{\ket{v_i}\}$, and $\{\ket{v_i'}\}$ are orthonormal (, either on $A$ or $B$. Let $U$ and $V$ be unitary operations on $A$ and $B$ respectively, such that 
+    \begin{align}
+         U \ket{u_i} = \ket{v_i}, \qquad V \ket{u_i'} = \ket{v_i'}.
+    \end{align}
+    If $r$ is less than the dimension of $A$ and/or $B$, then $U$ and/or $V$ is not uniquely defined. However, the point is they exist, because $U$ and $V$ map orthonormal vectors to other orthonormal vectors. With these definitions, one can check that $U \otimes V \ket{\varphi} = \ket{\psi}$.
+
+\section*{Exercise 2.81 (Freedom in purifications)}
+    Let $\ket{A R_1}$ and $\ket{A R_2}$ be two purifications of a state $\rho^A$ to a composite system $AR$. Prove that there exists a unitary transformation $U_R$ acting on system $R$ such that $\ket{A R_1} = (I_A \otimes U_R) \ket{A R_2}$.
+
+    \textbf{Solution:} Let
+    \begin{align}
+    \begin{aligned}
+        \ket{A R_1} &= \sum_i \sqrt{p_i} \ket{u_i}\otimes \ket{u_i'} \\
+        \ket{A R_2} &= \sum_i \sqrt{q_i} \ket{v_i}\otimes \ket{v_i'}
+    \end{aligned}
+    \end{align}
+    be Schmidt decompositions of the two purifications, with $p_i, q_i > 0$. The square roots are for later convenience. The partial traces over $R_1$ and $R_2$ must give the same result $\rho^A$. This implies
+    \begin{align}
+        \sum_i p_i \ket{u_i}\bra{u_i} = \sum_i q_i \ket{v_i}\bra{v_i}.
+    \end{align}
+    These are both diagonalizations of the same operator $\rho^A$. Thus, the set of eigenvalues and corresponding eigenspaces must be the same. Also, the rank $r$ of each of these operators is the same, which in turn means the Schmidt rank $r$ of $\ket{AR_1}$ and $\ket{AR_2}$ are the same.
+    
+    This is all valuable information, but we will need to do some prep work to reap the full benefits. The difficulty stems from the possiblility of \emph{degeneracy}, in which an eigenvalue has multiple independent eigenvectors. To account for this, let $\{\lambda\}$ denote the set of distinct eigenvalues of $\rho^A$. Then each $p_j$ equals some $\lambda$ (and similar for $q_i$). Let $d_{\lambda}$ be the degeneracy of $\lambda$, meaning the dimension of the eigenspace for $\lambda$. Equivalently, $d_\lambda$ is the rank of the projector $P_\lambda$ onto the $\lambda$ eigenspace. We also have that $d_\lambda$ is the number of indices $i$ such that $p_i = \lambda$ (and similar for $q_i$).
+
+    Having laid this notational groundwork, we can rewrite our two purifications in a more unified manner. First, we can write the reduced state $\rho^A$, through reindexing, as follows,
+    \begin{align}
+        \rho^A = \sum_{\lambda} \lambda P_\lambda = \sum_{\lambda} \lambda \left(\sum_{i=1}^{d_\lambda} \ket{u_{i,\lambda}}\bra{u_{i,\lambda}}\right) = \sum_{\lambda} \lambda \left(\sum_{i=1}^{d_\lambda} \ket{v_{i,\lambda}}\bra{v_{i,\lambda}}\right).
+    \end{align}
+    Here, the notation $\ket{u_{i,\lambda}}$ is a reindexing of the original $\ket{u_i}$, grouping them in terms of their eigenvalue $\lambda$. For each $\lambda$, let $U_\lambda$ be a unitary on system $A$ such that $U_\lambda \ket{u_{i,\lambda}} = \ket{v_{i,\lambda}}$, and acting as the identity on any orthogonal vector. Then, we have the following 
+    \begin{align} \label{eq:2.81_local_U}
+    \begin{aligned}
+        \ket{A R_1} &= \sum_\lambda \sqrt{\lambda} \sum_{i=1}^{d_\lambda} \ket{u_{i,\lambda }}\otimes \ket{u_{i,\lambda}'} \\
+        \ket{A R_2} &= \sum_\lambda \sqrt{\lambda} \sum_{i=1}^{d_\lambda}\ket{v_{i,\lambda}}\otimes \ket{v_{i,\lambda}'} \\
+        &= \sum_\lambda \sqrt{\lambda} \, U_\lambda \sum_{i=1}^{d_\lambda}\ket{u_{i,\lambda}}\otimes \ket{v_{i,\lambda}'}
+    \end{aligned}
+    \end{align}
+    In essence, each $U_\lambda$ in the previous line is acting on a maximally entangled state. We need to show that such states have a spacial ``ricochet property", in that acting on system $A$ is effectively like acting on system $R$ instead.
+
+    \emph{Lemma}: Let $\ket{\psi} = \sum_i \ket{i}\ket{i'}$, where $\{\ket{i}\}$ and $\{\ket{i'}\}$ are orthonormal sets. For a unitary $U$, we have
+    \begin{align}
+        U \otimes I \ket{\psi} = I \otimes U^T \ket{\psi}
+    \end{align}
+    where $U^T$ is the transpose of $U$, with the transpose taken with respect to the orthonormal states defined by $\ket{i}$ and $\ket{i'}$. 
+
+    \emph{Proof}: 
+    \begin{align}
+    \begin{aligned}
+        (U \otimes I) \ket{\psi} &= \sum_i U \ket{i}\ket{i'} \\
+        &= \sum_{i}\sum_j U_{ji} \ket{j}\ket{i'} \\
+        &= \sum_j \ket{j} \otimes \sum_i U_{ji} \ket{i'} \\
+        &= \sum_j \ket{j} \otimes \sum_i (U^T)_{ij} \ket{i'} \\
+        &= \sum_j \ket{j} \otimes U^T \ket{j'} \\
+        &= I \otimes U^T \ket{\psi}.
+    \end{aligned}
+    \end{align}
+    This is what we sought to show.
+
+    Now let's apply this result to our present case. From the last line of equation~\eqref{eq:2.81_local_U}, using the lemma, we have
+    \begin{align}
+    \begin{aligned}
+        \ket{A R_2} = \sum_\lambda \sqrt{\lambda} \,  \sum_{i=1}^{d_\lambda}\ket{u_{i,\lambda}}\otimes U_\lambda^T \ket{v_{i,\lambda}'}.
+    \end{aligned}
+    \end{align}
+    Define $U$ as the direct sum of all of the $U_\lambda$. Then we can write simply
+    \begin{align}
+        \ket{A R_2} = I \otimes U^T \sum_\lambda \sqrt{\lambda} \,  \sum_{i=1}^{d_\lambda}\ket{u_{i,\lambda}}\otimes \ket{v_{i,\lambda}'}.
+    \end{align}
+    Finally, let $V$ be a unitary such that $V \ket{u_{i,\lambda}'} = \ket{v_{i,\lambda}'}$. We then have simply
+    \begin{align}
+        I \otimes (U^T V) \ket{A R_1} = \ket{A R_2}.
+    \end{align}
+
+    Thus, the two purifications $\ket{A R_1}$ and $\ket{A R_2}$ are connected by a unitary on the environment.
+    
+\section*{Exercise 2.82}
+    Suppose $\{p_i, \ket{\psi_i}\}$ is an ensemble of states generating a density matrix $\rho = \sum_i p_i \ket{\psi_i}\bra{\psi_i}$ for a quantum system $A$. Introduce a system $R$ with orthonormal basis $\ket{i}$.
+
+    \begin{enumerate}
+        \item Show that $\sum_i \sqrt{p_i} \ket{\psi_i}\ket{i}$ is a purification of $\rho$.
+        \item Suppose we measure $R$ in the basis $\ket{i}$, obtaining outcome $i$. With what probability do we obtain the result $i$, and what is the corresponding state of system $A$?
+        \item Let $\ket{AR}$ be \emph{any} purification of $\rho$ to the sytem $AR$. Show that there exists an orthonormal basis $\ket{i}$ in which $R$ can be measured such that the corresponding post-measurement state for system $A$ is $\ket{\psi_i}$ with probability $p_i$.
+    \end{enumerate}
+
+    \textbf{Solution:} (1) All we need to do is compute the partial trace and verify we obtain $\rho$. The density matrix representation of the purification $\ket{\Psi}$ is given by
+    \begin{align}
+        \rho^{AR} = \ket{\Psi}\bra{\Psi} = \sum_i \sum_j \sqrt{p_i p_j} \ket{\psi_i}\bra{\psi_j} \otimes \ket{i}\bra{j},
+    \end{align}
+    so that 
+    \begin{align}
+        \tr_R \rho^{AR} = \sum_i \sum_j \sqrt{p_i p_j} \ket{\psi_i}\bra{\psi_j} \tr \ket{i}\bra{j}.
+    \end{align}
+    Since $\tr \ket{i}\bra{j} = \bra{j}\ket{i} = \delta_{ij}$, we have
+    \begin{align}
+        \tr_R \rho^{AR} = \sum_i p_i \ket{\psi_i}\bra{\psi_i} = \rho.
+    \end{align}
+    Hence, $\ket{\Psi}$ is indeed a purification of $\rho$.
+
+    (2) The probability is equal to $\norm{\bra{i} \ket{\Psi}}^2 = \tr (\rho^{AR} \ket{i}\bra{i})$, which in turn is given by
+    \begin{align}
+        \norm{\sqrt{p_i} \ket{\psi_i}}^2 = p_i.
+    \end{align}
+
+    (3) Let $\ket{AR}$ be a purification of $\ket{\Psi}$ by the results of exercise 2.81, there exists a unitary $U_R$ such that $I \otimes \ket{\Psi} = \ket{AR}$. This means measuring $R$ in the basis defined by $\ket{i'} = U_R \ket{i}$ will yield the same probability $p_i$ as measuring in the $\ket{i}$ basis for state $\ket{\Psi}$.
+
+\section*{Problem 2.1 (Functions of the Pauli matrices)}
+    Let $f(\cdot)$ be any function from complex numbers to complex numbers. Let $\vec{n}$ be a normalized vector in three dimensions, and let $\theta$ be real. Show that
+    \begin{align}
+        f(\theta \vec{n} \cdot \vec{\sigma}) = \frac{f(\theta) + f(-\theta)}{2} I + \frac{f(\theta)- f(-\theta)}{2} \vec{n} \cdot \vec{\sigma}.
+    \end{align}
+
+    \textbf{Solution:} Recall from the text that we can define such functions $f$ on normal matrices via a spectral decomposition. In our case, since $\theta \vec{n}$ is a real vector, the matrix $\theta \vec{n} \cdot \vec{\sigma}$ is Hermitian, hence diagonalizable via the spectral theorem. Moreover, since $\theta \vec{n} \cdot \vec{\sigma}$ is traceless, and $(\vec{n} \cdot \vec{\sigma})^2 = I$, the two eigenvalues are $+\theta$ and $-\theta$. Let $\ket{v_+}$ and $\ket{v_-}$ be the corresponding (orthonormal) eigenvectors. Then
+    \begin{align} \label{eq:prob2.1_vsig}
+        \vec{n} \cdot \vec{\sigma} = \ket{v_+}\bra{v_+} - \ket{v_-}\bra{v_-}
+    \end{align}
+    so that
+    \begin{align} \label{eq:prob2.1_sigfunc}
+        f(\theta \vec{n} \cdot \vec{\sigma}) = f(\theta) \ket{v_+}\bra{v_+} + f(-\theta) \ket{v_-}\bra{v_-}.
+    \end{align}
+    This answer is true, but not in the form we need and not terribly illuminating. We need to understand how the projectors $\ket{v_+}\bra{v_+}$ and $\ket{v_-}\bra{v_-}$ relate to the pauli's themselves. Thankfully, we can use the fact that
+    \begin{align} \label{eq:prob2.1_identity}
+        I = \ket{v_+}\bra{v_+} + \ket{v_-}\bra{v_-}.
+    \end{align}
+    Using~\eqref{eq:prob2.1_vsig} in conjunction with~\eqref{eq:prob2.1_identity}, we can solve for the projectors and find that
+    \begin{align}
+        \ket{v_+}\bra{v_+} = \frac{I + \vec{n} \cdot \vec{\sigma}}{2}, \qquad \ket{v_-}\bra{v_-} = \frac{I - \vec{n} \cdot \vec{\sigma}}{2}.
+    \end{align}
+    Plugging these into~\eqref{eq:prob2.1_sigfunc} and rearranging, we get
+    \begin{align}
+        f(\theta \vec{n} \cdot \vec{\sigma}) = f(\theta) \frac{I + \vec{n} \cdot \vec{\sigma}}{2} + f(-\theta) \frac{I - \vec{n} \cdot \vec{\sigma}}{2},
+    \end{align}
+    or, after grouping in terms of $I$ and $\vec{n} \cdot \vec{\sigma}$,
+    \begin{align}
+        f(\theta \vec{n} \cdot \vec{\sigma}) = \frac{f(\theta) + f(-\theta)}{2} I + \frac{f(\theta)- f(-\theta)}{2} \vec{n} \cdot \vec{\sigma}.
+    \end{align}
+    This is exactly what we had set out to show.
+
+\section*{Problem 2.2 (Properties of the Schmidt number)}
+    Suppose $\ket{\psi}$ is a pure state of a composite system with components $A$ and $B$. 
+    \begin{enumerate}
+        \item Prove that the Schmidt number of $\ket{\psi}$ is equal to the rank of the reduced density matrix $\rho_A \equiv \tr_B(\ket{\psi}\bra{\psi})$. (Note that the rank of a Hermitian operator is equal to the dimension of its support.)
+        \item Suppose $\ket{\psi} = \sum_j \ket{\alpha_j}\ket{\beta_j}$ is a representation for $\ket{\psi}$, where $\ket{\alpha_j}$ and $\ket{\beta_j}$ are (un-normalized) states for systems $A$ and $B$, respectively. Prove that the number of terms in such a decomposition is greater than or equal to the Schmidt number of $\ket{\psi}$, $\text{Sch}(\psi)$.
+        \item Suppose $\ket{\psi} = \alpha \ket{\varphi} + \beta \ket{\gamma}$. Prove that
+        \begin{align}
+            \text{Sch}(\psi) \geq \abs{\text{Sch}(\varphi)+\text{Sch}(\gamma)}.
+        \end{align}
+    \end{enumerate}
+
+    \textbf{Solution:} 1. Let $\ket{\psi} = \sum_{i=1}^r \sqrt{p_i} \ket{i}\ket{i'}$ be a Schmidt decomposition of $\ket{\psi}$, with all $p_i > 0$ in the sum. The reduced density matrix $\rho$ is given by 
+    \begin{align}
+        \rho = \sum_{i=1}^r p_i \ket{i}\bra{i}
+    \end{align}
+    which has rank $r$ since the rank is the span of all $\ket{i}$. Thus, $\text{rank}(\rho) = \text{Sch}(\psi) = r$.
+
+    (2) Let $r = \Sch{\psi}$ and and consider the state $\sum_{j=1}^n \ket{\alpha_j}\ket{\beta_j}$ for $n < r$. This is a bipartite quantum state on $A$ and $B$ whose reduced density matrix is given by
+    \begin{align}
+        \rho_A = \sum_{j=1, k=1}^n \bra{\beta_k}\ket{\beta_j} \ket{\alpha_j}\bra{\alpha_k}.
+    \end{align}
+    From this expression, it is clear that the range of $\rho_A$ is contained in the span of the $\ket{alpha_j}$, so $\text{rank}(\rho_A) \leq n < r$. However, we just proved that any representation of $\ket{\psi}$ must give rise to a density matrix whose rank is $r$. We conclude that no such sum of $n < r$ terms can be a valid representation of $\ket{\psi}$. That is, any representation of $\ket{\psi}$ in this way must have at least $r$ terms. 
+
+    (3) It's important to recognize that this statement is not necessarily true if $\alpha$ or $\beta$ is zero. The trouble is, there is a discontinuous jump in the Schmidt number of $\alpha \ket{\varphi}$ from $\alpha \neq 0$ to $\alpha = 0$. To avoid this annoyance, we will reformulate the problem by writing $\ket{\psi} = \ket{\varphi} + \ket{\gamma}$, where $\ket{\varphi}$ and $\ket{\gamma}$ are nonzero vectors. 
+
+    We will first show a triangle inequality for the Schmidt number, namely that 
+    \begin{align}
+        \text{Sch}(\varphi + \gamma) \leq \text{Sch}(\varphi) + \text{Sch}(\gamma).
+    \end{align}
+    This follows directly from part (2). In particular, taking the Schmidt decomposition of both $\ket{\varphi}$ and $\ket{\gamma}$ gives us a representation of $\ket{\psi}$ that has $\text{Sch}(\varphi) + \text{Sch}(\gamma)$ terms. We already claimed this must be greater than the Schmidt number of $\ket{\psi}$. This proves our preliminary result. 
+
+    We use this result twice. First, we note that $\ket{\varphi} = \ket{\psi} - \ket{\gamma}$. Applying the result, we have $\text{Sch}(\varphi) \leq \text{Sch}(\psi) + \text{Sch}(\gamma)$. By a mirror argument, interchanging $\varphi$ and $\gamma$, gives $\text{Sch}(\gamma) \leq \text{Sch}(\psi) + \text{Sch}(\varphi)$.
+    Together, these results imply
+    \begin{align}
+    \begin{aligned}
+        \text{Sch}(\varphi) - \text{Sch}(\gamma) &\leq \text{Sch}(\psi) \\
+        \text{Sch}(\gamma) - \text{Sch}(\varphi) &\leq \text{Sch}(\psi).
+    \end{aligned}
+    \end{align}
+    That is,
+    \begin{align}
+        \text{Sch}(\psi) \geq  \abs{\text{Sch}(\varphi) - \text{Sch}(\gamma)}.
+    \end{align}
+    This completes the proof.
+
+\section*{Problem 2.3 (Tsirelson's inequality)}
+    Suppose $Q = \vec{q} \cdot \vec{\sigma}, R = \vec{r} \cdot \vec{\sigma}, S = \vec{s} \cdot \vec{\sigma}, T = \vec{t} \cdot \vec{\sigma}$, where $\vec{q}, \vec{r}, \vec{s}$ and $\vec{t}$ are real unit vectors in three dimensions. Show that 
+    \begin{align}
+        (Q\otimes S  + R\otimes S + R\otimes T  - Q\otimes T)^2 = 4I + [Q, R] \otimes [S, T].
+    \end{align}
+    Use this result to prove that 
+    \begin{align}
+        \langle Q \otimes S\rangle + \langle R \otimes S\rangle + \langle R \otimes T\rangle - \langle Q \otimes T\rangle \leq 2 \sqrt{2},
+    \end{align}
+    so the violation of the Bell inequiality found in Equation (2.230) is the maximum possible in quantum mechanics.
+
+    \textbf{Solution:} There are 16 terms when the product is expanded out. The four matching terms square to the identity, which is what we see in the answer. Let's group the other terms in an $ab + ba$ format. The result $4I$ plus the following
+    \begin{align}
+    \begin{aligned}
+        (Q\otimes S) (R\otimes S) &+ (R\otimes S) (Q\otimes S) + (Q\otimes S)(R\otimes T) + (R\otimes T)(Q\otimes S) \\
+        & -(Q\otimes S)(Q\otimes T) - (Q\otimes T)(Q\otimes S) + (R\otimes S)(R\otimes T) + (R\otimes T)(R\otimes S) \\
+        & -(R\otimes S)(Q\otimes T) - (Q\otimes T)(R\otimes S) - (R\otimes T)(Q\otimes T) - (Q\otimes T)(R\otimes T).
+    \end{aligned}
+    \end{align}
+    After simplifying, and noting that all the operators, $Q, R, S, T$ square to $I$,
+    \begin{align}
+    \begin{aligned}
+        QR \otimes I &+ RQ \otimes I + QR \otimes ST + RQ \otimes TS \\
+        &-I \otimes ST - I \otimes TS + I \otimes ST + I \otimes TS \\
+        &-RQ \otimes ST - QR \otimes TS - RQ \otimes I - QR \otimes I.
+    \end{aligned}
+    \end{align}
+    Many of these terms cancel, leaving
+    \begin{align}
+    \begin{aligned}
+        QR \otimes ST + RQ \otimes TS - RQ \otimes ST - QR \otimes TS &= QR \otimes (ST - TS) + RQ \otimes (TS - ST)\\
+        &= (QR - RQ) \otimes (ST - TS) \\
+        &= [Q,R] \otimes [S,T].
+    \end{aligned}
+    \end{align}
+    Combined with the four terms which squared to $I$, this gives our result.
+
+    To obtain Tsirelson's inequality, we can just bound the largest (absolute value) eigenvalue of $X \equiv \langle Q \otimes S\rangle + \langle R \otimes S\rangle + \langle R \otimes T\rangle - \langle Q \otimes T\rangle$. This is given by the spectral norm $\norm{X}$. First, we have
+    \begin{align}
+        \norm{X}^2 = \norm{X^2} = \norm{4I + [Q,R] \otimes [S,T]} \leq 4 \norm{I} + \norm{[Q,R] \otimes [S,T]}.
+    \end{align}
+    The spectral norm of $I$ is just 1, while we can bound the other term as follows.
+    \begin{align}
+        \norm{[Q,R] \otimes [S,T]} = \norm{[Q,R]} \norm{[S,T]} \leq 2 \times 2 = 4.
+    \end{align}
+    Hence,
+    \begin{align}
+        \norm{X}^2 \leq 4 + 4 = 8
+    \end{align}
+    so that $\norm{X} \leq \sqrt{8} = 2 \sqrt{2}$.
+
+    On the other hand, the expectation value $\langle X \rangle$ is certainly less than the magnitude of the largest eigenvalue. This completes the proof of the inequality.
+
 \chapter{Introduction to computer science}
 
 \section*{Exercise 3.1 (Non-computable processes in Nature)}
@@ -2364,7 +2722,7 @@ This progress was last updated May 19th, 2022.
     
     \textbf{Solution:}
     
-\section*{Exercise 5.21 (Period finding a phase estimation}
+\section*{Exercise 5.21 (Period finding and phase estimation)}
     Suppose you are given a unitary operator $U_y$ which performs the transformation $U_y\ket{f(x)} = \ket{f(x+y)}$, for the periodic function described above.
     \begin{enumerate}
         \item Show that the eigenvectors of $U_y$ are $\ket{\hat{f}(l)}$, and calculate their eigenvalues.
@@ -2706,6 +3064,7 @@ This progress was last updated May 19th, 2022.
     In the last step, we identified the Hamiltonian of the harmonic oscillator. This completes the derivation.
     
 \section*{Exercise 7.2}
+    
 
 \chapter{Quantum noise and quantum operations}
 
@@ -2807,7 +3166,7 @@ This progress was last updated May 19th, 2022.
     \end{align}
     where the subscript emphasizes the space the identity is acting on. 
     
-\section*{Exercise 8.4: (Measurement)}
+\section*{Exercise 8.4 (Measurement)}
     Suppose we have a single qubit principal system, interacting with a single qubit environment through the transform
     \begin{align}
         U = P_0\otimes I + P_1 \otimes X
@@ -2831,7 +3190,7 @@ This progress was last updated May 19th, 2022.
     \end{align}
     Note that this is equivalent to a measurement in the computational basis. It is straightforward to show that these operators satisfy the completeness relation. 
 
-\section*{Exercise 8.5: (Spin flips)}
+\section*{Exercise 8.5 (Spin flips)}
     Just as in the previous exercise, but now let 
     \begin{align}
         U = \frac{X}{\sqrt{2}}\otimes I + \frac{Y}{\sqrt{2}}\otimes X.
@@ -2845,7 +3204,7 @@ This progress was last updated May 19th, 2022.
     \end{align}
     Note that the $E_0$ corresponds to a spin flip, while $E_1$ corresponds to a spin flip followed by phase flip. We can interpret each event occurring with probability $\frac{1}{2}$.
     
-\section*{Exercise 8.6: (Composition of quantum operations)}
+\section*{Exercise 8.6 (Composition of quantum operations)}
     Suppose $\mc{E}$ and $\mc{F}$ are quantum operations on the same quantum system. Show that the composition $\mc{F}\circ \mc{E}$ is a quantum operation, in the sense that it has an operator-sum representation. State and prove an extension of this result to the case where $\mc{E}$ and $\mc{F}$ do not necessarily have the same input and output spaces. 
     
     \textbf{Solution:} Let $\{E_i\}$ and $\{F_j\}$ be the operation elements for the channels $\mc{E}$ and $\mc{F}$ respectively. Considering the action of the composition $\mc{F} \circ \mc{E}$ on an arbitrary input state $\rho$.
@@ -3076,7 +3435,7 @@ This progress was last updated May 19th, 2022.
     \end{align}
     Hence, any state which commutes with pauli $X$ is unchanged by the channel. This makes sense intuitively, since these states are eigenstates of the pauli $X$ operator. These states can be understood as the set of all Bloch vectors lying along the x-axis. Clearly there are many (in fact, infinite) such states. Therefore, $\mc{E}$ is not strictly contractive.
     
-\section*{Exercise 9.14: (Invariance of fidelity under unitary transformations)}
+\section*{Exercise 9.14 (Invariance of fidelity under unitary transformations)}
     Prove (9.61) by using the fact that for any positive operator $A$, $\sqrt{UAU^\dagger} = U\sqrt{A}U^\dagger$.
     
     \textbf{Solution:} Let $\rho' = U \rho U^\dagger$ and similarly for $\sigma$. Making use of the square root property given in the problem, we have
@@ -3094,7 +3453,7 @@ This progress was last updated May 19th, 2022.
     \end{align}
     Along the way, we again used the square root property for positive operators, as well as the cyclic property of the trace. This completes the proof.
     
-\section*{Exercise 9.15:}
+\section*{Exercise 9.15}
     Show that
     \begin{align}
         F(\rho, \sigma) = \max_{\ket{\varphi}} \abs{\bra{\psi}\ket{\varphi}}
@@ -3131,6 +3490,176 @@ This progress was last updated May 19th, 2022.
     \end{aligned}
     \end{align}
     where $A_{ij} \equiv \bra{i_R}A\ket{j_R}$ are the matrix elements with respect to the basis, as are $B_{ij}$. 
+
+    This is quite an interesting result, because we can view $\vert m \rangle$ as a maximally entangled ("Bell") state. Apparently, the expectation value of $A \otimes B$ with respect to this entangled state computes the inner  product between $A$ and $B$. 
+
+\section*{Exercise 9.17}
+    Show that $0 \leq A(\rho, \sigma) \leq \pi/2$, with equality in the first inequality if and only if $\rho = \sigma$.
+
+    \textbf{Solution:} To define the inverse of $\cos$, which is $\arccos$, we must choose a particular interval of angles $\theta$ on which $\cos(\theta)$ is invertible. A reasonable (and standard) choice is to take angles $\theta \in [0,\pi]$. With this choice, the $\arccos$ function has a domain $[-1,1]$ (corresponding to the range of cosine) and a range from $[0,\pi]$.
+
+    In our present case, we are looking at $\arccos F(\rho, \sigma)$, with $F(\rho, \sigma) \in [0,1]$. The question is, for $x$ between 0 and 1, what is $\arccos(x)$? To determine this, we note that, for the angles $\theta \in [0,\pi]$ that we are interested in, $\cos \theta$ is nonnegative only in the first quadrant (including the axes themselves). These angles are precisely the interval $[0,\pi/2]$. This implies that the image of the interval $\arccos ([0,1])$ of the unit inverval under $arccos$ is  $[0,\pi/2]$. Hence $A(\rho, \sigma) \in [0,\pi/2]$. 
+
+    When does $A(\rho, \sigma) = 0$? Exactly when $\arccos(x) = 0$, where $x = F(\rho, \sigma)$. This occurs when $x = \cos\theta = 1$, meaning $F(\rho, \sigma) = 1$. We've already seen that this is equivalent to $\rho = \sigma$. Hence, $A(\rho, \sigma) = 0$ exactly when $\rho = \sigma$.
+
+\section*{Exercise 9.18 (Contractivity of the angle)}
+    Let $\mc{E}$ be a trace-preserving quantum operation. Show that
+    \begin{align}
+        A(\mc{E}(\rho), \mc{E}(\sigma)) \leq A(\rho, \sigma).
+    \end{align}
+
+    \textbf{Solution:} This follows directly from the fact that $F$ is monotonic, while $\arccos$ is monotonically decreasing on $[0,1]$ (with range $[0,\pi/2]$). In more detail we have that $\arccos(y) \leq \arccos(x)$ whenever $y \geq x$. In our case we have
+    \begin{align}
+        F(\mc{E}(\rho), \mc{E}(\sigma)) \geq F(\rho, \sigma).
+    \end{align}
+    Hence,
+    \begin{align}
+        \arccos F(\mc{E}(\rho), \mc{E}(\sigma)) \leq \arccos F(\rho, \sigma).
+    \end{align}
+    which implies the result by definition of $A$.
+
+\section*{Exercise 9.19 (Joint concavity of fidelity)}
+    Prove that the fidelity is \emph{jointly concave},
+    \begin{align}
+        F\left(\sum_i p_i \rho_i, \sum_i, p_i \sigma_i \right) \geq \sum_i p_i F(\rho_i, \sigma_i).
+    \end{align}
+
+    \textbf{Solution:} This follows directly from strong concavity, as given in Theorem 9.7 of the text. In particular, let's set $q_i = p_i$ for all $i$ in the index set. By the theorem, we have
+    \begin{align}
+        F\left(\sum_i p_i \rho_i, \sum_i, p_i \sigma_i \right) \geq \sum_i \sqrt{p_i p_i} F(\rho_i, \sigma_i) = \sum_i p_i F(\rho_i, \sigma_i).
+    \end{align}
+
+\section*{Exercise 9.20 (Concavity of fidelity)}
+    Prove that the fidelity is concave in the first entry,
+    \begin{align}
+        F\left(\sum_i p_i \rho_i, \sigma\right) \geq \sum_i p_i F(\rho_i, \sigma).
+    \end{align}
+    By symmetry the fidelity is also concavein the second entry.
+
+    \textbf{Solution:} This follows from joint concavity of the previous exercise (which in turn followed from strong concavity). In particular, set $\sigma_i = \sigma$ for all $i$ in the index set. Then, 
+    \begin{align} \label{eq:9.20_sigma}
+        F\left(\sum_i p_i \rho_i, \sum_i p_i \sigma\right) = F\left(\sum_i p_i \rho_i, \sigma \sum_i p_i \right) = F\left(\sum_i p_i \rho_i, \sigma\right).
+    \end{align}
+    On the other hand, joint concavity says
+    \begin{align}\label{eq:9.20_jointconcavity}
+        F\left(\sum_i p_i \rho_i, \sum_i p_i \sigma_i\right)  \geq \sum_i p_i F(\rho_i, \sigma_i) = \sum_i p_i F(\rho_i, \sigma).
+    \end{align}
+    Comparing lines~\eqref{eq:9.20_sigma} and~\eqref{eq:9.20_jointconcavity}, we obtain our desired inequality. 
+
+\section*{Exercise 9.21}
+    When comparing pure states and mixed states it is possible to make a stronger statement than (9.110) about the relationship between trace distance and fidelity. Prove that
+    \begin{align}
+        1 - F(\ket{\psi}, \sigma)^2 \leq D(\ket{\psi},\sigma)
+    \end{align}
+
+    \textbf{Solution:} Recall that the fidelity takes a simpler form when comparing pure and mixed states. In particular,
+    \begin{align}
+        F(\ket{\psi},\sigma) = \sqrt{\bra{\psi}\sigma\ket{\psi}}.
+    \end{align}
+    Hence, $F^2$ is the expectation value of $\sigma$ with respect to $\ket{\psi}$. To prove our result, it remains to show that
+    \begin{align}
+        D(\ket{\psi}, \sigma) \geq 1 - \bra{\psi}\sigma \ket{\psi}.
+    \end{align}
+    To do this, recall that $D$ can be expressed as a maximization over expectations with projectors $P$.
+    \begin{align}
+        D(\ket{\psi},\sigma) = \max_P \tr(P (\ket{\psi}\bra{\psi}-\sigma))
+    \end{align}
+    One particular projector is $P = \ket{\psi}\bra{\psi}$. Since the maximum is greater, we have
+    \begin{align}
+    \begin{aligned}
+        D(\ket{\psi}, \sigma) &\geq \tr(\ket{\psi}\bra{\psi}(\ket{\psi}\bra{\psi}-\sigma)) \\
+        &= \tr(\ket{\psi}\bra{\psi} - \ket{\psi}\bra{\psi} \sigma) \\
+        &= \tr(\ket{\psi}\bra{\psi}) - \tr(\ket{\psi}\bra{\psi} \sigma)\\
+        &= 1 - \bra{\psi}\sigma \ket{\psi}.
+    \end{aligned}
+    \end{align}
+    This proves our result.
+
+\section*{Exercise 9.22 (Chaining property for fidelity measures)}
+    Suppose $U$, and $V$ are unitary operators, and $\mc{E}$ and $\mc{F}$ are trace-preserving quantum operations meant to approximate $U$ and $V$. Letting $d(\cdot,\cdot)$ be any metric on the space of density matrices satisfying $d(U\rho U^\dagger, U\sigma U^\dagger) = d(\rho, \sigma)$ for all density matrices $\rho$ and $\sigma$ and unitary $U$ (such as the angle $\arccos(F(\rho,\sigma))$), define the corresponding \emph{error} $E(U, \mc{E})$ by 
+    \begin{align}
+        E(U, \mc{E}) \equiv \max_\rho d(U\rho U^\dagger, \mc{E}(\rho)),
+    \end{align}
+    and show that $E(VU, \mc{F}\circ \mc{E} \leq E(U, \mc{E}) + E(V, \mc{F})$. Thus, to perform a quantum computation with high fidelity it suffices to complete each step of the computation with high fidelity.
+
+    \textbf{Solution:} We will make use of the fact that any metric satisfies the \emph{triangle inequality}. For any points $\rho, \sigma$, $d(\rho, \sigma)$ satisfies
+    \begin{align}
+        d(\rho, \sigma) \leq d(\rho, \eta) + d(\eta, \sigma)
+    \end{align}
+    for any other point $\eta$. In our case, the ``points" are density matrices. The way we will use this property is to break up the error $E(VU, \mc{F}\circ\mc{E})$ into two pieces: the error due to $V$ and the error due to $\mc{E}$ \emph{followed by a perfect implementation of $V$}. Let's see how this works.
+
+    By the triangle inequality, we have
+    \begin{align}
+        d(VU \rho (VU)^\dagger, \mc{F}\circ\mc{E}(\rho)) \leq d(VU \rho (VU)^\dagger, V \mc{E}(\rho) V^\dagger) + d(V \mc{E}(\rho) V^\dagger, \mc{F}\circ\mc{E}(\rho)).
+    \end{align}
+
+    By the ``twirling" property of $d$ with respect to unitaries as described in the problem, the first term on the right hand side above can be simplified, giving
+    \begin{align} \label{eq:9.22_triangle}
+        d(VU \rho (VU)^\dagger, \mc{F}\circ\mc{E}(\rho)) \leq d(U \rho U^\dagger, \mc{E}(\rho)) + d(V \mc{E}(\rho) V^\dagger, \mc{F}\circ\mc{E}(\rho)).
+    \end{align}
+    Let's now take the maximum of both sides of~\eqref{eq:9.22_triangle} with respect to $\rho$. After doing so, we can simplify the right hand side by noting that, schematically,
+    \begin{align}
+        \max (A + B) \leq \max A + \max B.
+    \end{align}
+    Hence,
+    \begin{align} \label{eq:9.22_maximize}
+        \max_\rho d(VU \rho (VU)^\dagger, \mc{F}\circ\mc{E}(\rho))  \equiv E(VU, \mc{F}\circ\mc{E}) \leq E(U, \mc{E}) + \max_\rho d(V \mc{E}(\rho) V^\dagger, \mc{F}\circ\mc{E}(\rho)).
+    \end{align}
+    
+    We are almost there. Let's turn our attention to the last term in the inequality above.
+    \begin{align}
+        \max_\rho d(V \mc{E}(\rho) V^\dagger, \mc{F}\circ\mc{E}(\rho))
+    \end{align}
+    What we want to observe is that we are maximizing over $\rho$, but everything is in terms of $\mc{E}(\rho)$. The set of all $\mc{E}(\rho)$ for some input density matrix $\rho$ is a subset of all inputs $\sigma$ to the quantum operation $\mc{F}$. If we maximize over a set, the result is larger than maximizing over a subset. This implies
+    \begin{align} \label{eq:9.22_largermax}
+        \max_\rho d(V \mc{E}(\rho) V^\dagger, \mc{F}\circ\mc{E}(\rho)) \leq \max_\sigma d(V \sigma V^\dagger, \mc{F}(\sigma) \equiv E(V, \mc{F}).
+    \end{align}
+    Combining inequality~\eqref{eq:9.22_largermax} with~\eqref{eq:9.22_maximize}, we arrive at the desired result.
+    \begin{align}
+        E(VU, \mc{F}\circ\mc{E}) \leq E(U, \mc{E}) + E(V, \mc{F})
+    \end{align}
+
+\section*{Exercise 9.23}
+    Show that $\Bar{F} = 1$ if and only if $\mc{E}(\rho_j) = \rho_j$ for all $j$ such that $p_j > 0$.
+
+    \textbf{Solution:} If $\mc{E}(\rho_j) = \rho_j$ for all $\rho_j$ (that actually ``show up", meaning $p_j > 0$). Then the fidelity between these states is 1. Hence, it is unsurprising that the \emph{average} (squared) fidelity is also one, as this calculation demonstrates.
+    \begin{align}
+        \bar{F} = \sum_j p_j F(\rho_j, \mc{E}(\rho_j))^2 = \sum_j p_j = 1
+    \end{align}
+
+    Conversely, suppose there exists \emph{at least one} $j'$ such that $\rho_j' \neq \mc{E}(\rho_j')$. The the fidelity is strictly less than one for at least one state. Since the (squared) fidelity is bounded by one, the average must be strictly less than one. Making this concrete,
+    \begin{align}
+    \begin{aligned}
+        \bar{F} = \sum_j p_j F(\rho_j, \mc{E}(\rho_j))^2 &\leq p_{j'} F(\rho_{j'}, \mc{E}(\rho_{j'})) + \sum_{j\neq j'} p_j  \times 1 \\
+        &= p_{j'} F(\rho_{j'}, \mc{E}(\rho_{j'})) + (1-p_{j'}) \\
+        &= 1 - p_{j'}(1 - F(\rho_{j'}, \mc{E}(\rho_{j'}))).
+    \end{aligned}
+    \end{align}
+    Since $1 - F(\rho_{j'}, \mc{E}(\rho_{j'}))$ is strictly less than 1, so is $\bar{F}$. To summarize, if the fidelity is less than one for some state $\rho_j$ (with $p_j > 0$), then $\bar{F} < 1$.
+
+    To summarize, $\bar{F} = 1$ exactly when all of the states $\rho_j$ are perfectly preserved under the quantum channel $\mc{E}$. This is what we sought to show.
+
+\section*{Problem 9.1 (Alternate characterization of the fidelity)}
+    Show that 
+    \begin{align}
+        F(\rho, \sigma) = \inf_P \tr(\rho P) \tr(\sigma P^{-1})
+    \end{align}
+    where the infimum is taken over all invertible positive matrices $P$.
+
+    \textbf{Solution:}
+
+\section*{Problem 9.2}
+    Let $\mc{E}$ be a trace-preserving quantum operation. Show that for each $\rho$ there is a set of operation elements $\{E_i\}$ for $\mc{E}$ such that
+    \begin{align}
+        F(\rho, \mc{E}) = \abs{\tr(\rho E_1)}^2
+    \end{align}
+
+    \textbf{Solution:} 
+
+\section*{Problem 9.3}
+    Prove fact (5) on this page.
+
+    \textbf{Solution:}
 
 \chapter{Theory of quantum error correction}
 
