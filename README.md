@@ -21,6 +21,6 @@ Appendix 5: Almost done. Problem 1 needs to be cleaned up. \
 Appendix 6: All exercises complete! \
 
 
-Other partial solutions:
-Chapters 2-5, well-explained: https://rainij.github.io/solutions-qcqi-nielsen-chuang/
+Other partial solutions: \
+Chapters 2-5, well-explained: https://rainij.github.io/solutions-qcqi-nielsen-chuang/ \
 Ch 3-4: https://github.com/rehaanahmad2013/NielsenChuang-QuantumComputingSolutions
