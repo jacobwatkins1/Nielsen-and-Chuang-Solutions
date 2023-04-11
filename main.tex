@@ -2541,6 +2541,153 @@ This progress was last updated May 19th, 2022.
 \section*{Exercise 4.16 (Matrix representation of multi-qubit gates)}
     What is the $4 \times 4$ unitary matrix for the circuit
 
+\section*{Exercise 4.40}
+    For arbitrary $\alpha$ and $\beta$ show that 
+    \begin{align}
+        E(R_{\hat{n}}(\alpha), R_{\hat{n}}(\alpha + \beta)) = \abs{1 - \exp(i\beta/2)},
+    \end{align}
+    and use this to justify (4.76).
+
+    \textbf{Solution:} Let's observe that these two rotations commute, and so the difference $R_{\hat{n}}(\alpha)- R_{\hat{n}}(\alpha + \beta)$, is completely diagonalizable. The eigenvectors are the same for the individual rotations, and the eigenvalues are 
+    \begin{align}
+        e^{-i\alpha/2} - e^{-i(\alpha + \beta)/2}
+    \end{align}
+    and its complex conjugate. Thus, the error is just the absolute value of one of these eigenvalues. We have
+    \begin{align}
+    \begin{aligned}
+        E &= \abs{e^{-i\alpha/2} - e^{-i(\alpha + \beta)/2}} \\
+        &= \abs{1 - e^{-i\beta/2}} \\
+        &= \abs{1 - e^{i\beta/2}}.
+    \end{aligned}
+    \end{align}
+
+    What does this say about equation (4.76) of the text? The discussion in the text preceding this exercise says that the $n \theta$ are dense in the interval $[0,2\pi)$ (note that $n \theta$ is with multiplication mod $2\pi$). This means for any $\delta > 0$ we think of (however small), there is a $n$ such that $\abs{\alpha - n \theta} < \delta$. We also have
+    \begin{align}
+    \begin{aligned}
+        E(R_{\hat{n}}(\alpha), R_{\hat{n}}(n\theta)) &= \abs{1 - e^{i(\alpha - n \theta)/2}} \\
+        &= 2 - 2 \cos\left(\frac{\alpha - n\theta}{2}\right) \\
+        &= 4 \sin^2 \left(\frac{\alpha - n\theta}{4}\right).
+    \end{aligned}
+    \end{align}
+    We can choose $\delta$ small enough such that $\sin^2 x \leq x^2$. Hence, 
+    \begin{align}
+         E(R_{\hat{n}}(\alpha), R_{\hat{n}}(n\theta)) \leq \frac{1}{4} (\alpha - n\theta)^2 \leq \left(\frac{\delta}{2}\right)^2.
+    \end{align}
+    It follows that we can ensure the desired error by setting $\epsilon/3 = \delta^2/4$, and ensuring that the angle $n \theta$ is within $\delta$ of the desired angle $\alpha$. Such an angle can always be found since $\theta$ is an irrational multiple of $2\pi$.
+
+\section*{Exercise 4.41}
+    This and the next two exercises develop a construction showing that the Hadamard, phase, controlled-NOT and Toffoli gates are universal. Show that the circuit in Figure 4.17 applies the operation $R_z(\theta)$ to the third (target) qubit if the measurement outcomes are both 0, where $\cos\theta = 3/5$, and otherwise applies $Z$ to the target qubit. Show that the probability of both measurement outcomes being 0 is $5/8$, and explain how repeated use of this circuit and $Z = S^2$ gates may be used to apply a $R_z(\theta)$ gate with probability approaching 1.
+
+    \textbf{Solution:} Starting with the Hadamard gates, out state becomes
+    \begin{align}
+    \begin{aligned}
+        H^{\otimes 2}\ket{00}\ket{\psi} &=\frac{1}{2} \sum_{j=0}^3 \ket{j} \ket{\psi} \\
+        &=\frac{1}{2}\ket{11}\ket{\psi} + \frac{1}{2}\sum_{j=0}^2 \ket{j}\ket{\psi}.
+    \end{aligned}
+    \end{align}
+    Here, $j$ is given in binary to represent the two upper qubits. We've isolated the $\ket{11}$ term since it will be treated differently in what follows. The phase gate $S$ sandwiched between Toffolis changes the state to
+    \begin{align} \label{eq:4.41_toffs}
+    \begin{aligned}
+        \frac{1}{2}\ket{11}XSX\ket{\psi} + \frac{1}{2}\sum_{j=0}^2 \ket{j}S\ket{\psi}.
+    \end{aligned}
+    \end{align}
+    We can check that $XSX = i S^\dagger$. Careful here: when I did this problem the first time, I made the mistake of neglecting the phase factor $i$. This becomes a relative phase due to the controls, so it does matter.
+
+    Moving along, we want to apply another set of Hadamards. To avoid a mess, it will make sense to reexpress the second term in \eqref{eq:4.41_toffs} using
+    \begin{align}
+        \frac{1}{2}\sum_{j=0}^2 \ket{j} = H^{\otimes 2} \ket{00} - \frac{1}{2}\ket{11}.
+    \end{align}
+    Plugging this in above and rearranging gives the state following the Toffolis.
+    \begin{align}
+        \frac{1}{2}\ket{11}(i S^\dagger - S) \ket{\psi} + H^{\otimes 2} \ket{00} S\ket{\psi}.
+    \end{align}
+    Applying the last set of Hadamards is now more straightforward, and gives
+    \begin{align}
+        \frac{1}{2}H^{\otimes 2}\ket{11}(i S^\dagger - S) \ket{\psi} + \ket{00}S\ket{\psi}.
+    \end{align}
+    Suppose, upon measurement, the state $00$ is obtained. We project the state above along $\ket{00}$, obtaining the state $\ket{\psi_{00}}$ on the target qubit.
+    \begin{align}
+    \begin{aligned}
+        \ket{\psi_{00}} &= \bra{00}\left(\frac{1}{2}H^{\otimes 2}\ket{11}(i S^\dagger - S) \ket{\psi} + \ket{00}S\ket{\psi}\right) \\
+        &= \frac{1}{4} (i S^\dagger - S) \ket{\psi} + S \ket{\psi} \\
+        &= \frac{i}{4} S^\dagger \ket{\psi} + \frac{3}{4}S\ket{\psi}.
+    \end{aligned}
+    \end{align}
+    The probability of measuring $00$ in the first place is the norm squared of this state, and this is
+    \begin{align}
+        \bra{\psi_{00}}\ket{\psi_{00}} = \frac{1}{16} + \frac{9}{16} - \frac{3}{16} i \bra{\psi}S^2 \ket{\psi} + \frac{3}{16}i\bra{\psi}(S^\dagger)^2 \ket{\psi}.
+    \end{align}
+    Because $S^2 = (S^\dagger)^2 = Z$, the left two terms cancel. And the probability becomes $5/8$. We can also use this to normalize our projected state, obtaining the outcome state after measurement.
+    \begin{align}
+    \begin{aligned}
+        \ket{\psi_{00}'} &= \sqrt{\frac{8}{5}}\left(\frac{i}{4}S^\dagger \ket{\psi} + \frac{3}{4}S\ket{\psi}\right) \\
+        &= \frac{1}{\sqrt{10}}(3 S + i S^\dagger)\ket{\psi}.
+    \end{aligned}
+    \end{align}
+    We see that the net effect on the target, after measuring $00$, is to apply the operation $(3 S + i S^\dagger)/\sqrt{10}$ to the original operation. But what is this operation? Since it always preserves the norm of any state, it must be a unitary. It is also a sum of $z$ rotations, and therefore must itself be a $z$ rotation (given it's a rotation at all). Let's perform the algebra to find out what this angle is.
+    \begin{align}
+        \frac{1}{\sqrt{10}}(3 S + i S^\dagger) = \begin{pmatrix}
+            \frac{3 + i}{\sqrt{10}} & 0 \\
+            0 & \frac{1 + 3i}{\sqrt{10}}
+        \end{pmatrix}.
+    \end{align}
+    We can extract the rotation angle, and ignore the overall phase, by taking the ratio of the two diagonal entries as so.
+    \begin{align}
+        e^{i\theta} = \frac{1 + 3i}{3 + i} = \frac{3 + 4i}{5}.
+    \end{align}
+    From Euler's identity we see that $\cos\theta = 3/5$. This demonstrates all we wished to show for the $00$ outcome.
+
+    What happens if any other outcomes is observed? Going through a similar analysis, the probabilities for each remaining outcome will be the same, and equal to $1/8$ (a third of the remaining $3/8$ probability). The final state will be proportional to 
+    \begin{align}
+        (i S^\dagger - S) \ket{\psi} \propto Z \ket{\psi}.
+    \end{align}
+    Thus, upon normalizing, we will get a state that is $Z \ket{\psi}$ up to a global phase. This is what we sought to show.
+
+    Having characterized the performance of this circuit, we now turn to the task of implementing $R_{z}(\theta)$ with probability near $1$. To do this, we repeat the circuit until an outcome of $00$ is measured, in which case we are done. If any other outcome is measured, we apply a $Z = S^2$ to the target qubit, resetting the state back to $\ket{\psi}$. This is a ``classically controlled" $S^2$ gate that we consider an allowed operation.
+
+    How many times will we need to repeat to succeed with probability $1-\epsilon$, for $\epsilon \in (0,1)$? For $n$ repetitions, the odds that all of them are failures is $(3/8)^n$. Thus, the odds that at least one of these would succeed beforehand is $1 - (3/8)^n$. Hence, we just need to choose $n$ such that
+    \begin{align}
+    \begin{aligned}
+        \left(\frac{3}{8}\right)^n &< \epsilon \\
+        n &< \frac{\log \epsilon}{\log 3/8} = c \log 1/\epsilon
+    \end{aligned}
+    \end{align}
+    where $c = \log 8/3$ is a positive constant on the order of 1. Thus, as expected, repetition of the circuit will bring us exponentially closer to the desired success outcome.
+
+\section*{Exercise 4.42 (Irrationality of $\theta$)}
+    Suppose $\cos \theta = 3/5$. We give a proof by contradiction that $\theta$ is an irrational multiple of $2\pi$.
+    \begin{enumerate}
+        \item Using the fact that $e^{i\theta} = (3 + 4i)/5$, show that if $\theta$ is rational, then there must exist a positive integer $m$ such that $(3 + 4i)^m = 5^m$.
+        \item Show that $(3 + 4i)^m = 3 + 4i \mod{5}$ for all $m>0$, and conclude that no $m$ such that $(3 + 4i)^m = 5^m$ can exist.
+    \end{enumerate}
+
+    \textbf{Solution:} Suppose $\theta$ is a rational multiple of $2\pi$, so that it may be written as $2\pi p/q$, with integers $p, q$ that are coprime (meaning there are no common factors, so the fraction is in reduced form). Then $e^{i\theta} = e^{i2\pi p/q}$ is a $q$th root of unity.
+    \begin{align} \label{eq:4.42_root}
+        (e^{i\theta})^q = e^{i2\pi p} = 1
+    \end{align}
+    Thus, all such rational angles eventually return to angle zero after repeated application. Since $\cos\theta = 3/5$, and $\sin \theta = 4/5$, by the Euler identity $e^{i\theta} = 3/5 + 4i/5$. Hence, using equation~\eqref{eq:4.42_root},
+    \begin{align}
+        \left(\frac{3 + 4i}{5}\right)^q = 1 \\
+        (3 + 4i)^q = 5^q.
+    \end{align}
+    This is what we sought to show for part (1), noting that $q = m$ in our solution. 
+
+    Now on to part (2). Which we prove by induction on $m$. The statement is clearly true for $m = 1$, since $3 + 4i = 3 + 4i \mod{5}$. Now suppose the statement holds for $m - 1$, and consider $(3 + 4i)^m$. Doing everything in arithmetic $\mod{5}$, we have
+    \begin{align}
+        (3 + 4i)^m = (3 + 4i)^{m-1}(3+4i) = (3 + 4i)^2
+    \end{align}
+    where in the last step, we invoked the inductive hypothesis for the $m-1$ power. We can readily calculate the square to be
+    \begin{align}
+        (3 + 4i)^2 = -7 + 24i = 3 + 4i \mod{5}.
+    \end{align}
+    Thus, the statement is true for $m$ as well as $m -1$. By induction, we conclude the statement holds for all $m$.
+
+    The contradiction between parts (1) and (2) comes when we observe that $5^m = 0 \mod{5}$. So we have, simultaneously,
+    \begin{align}
+         (3 + 4i)^m = 0\qquad \text{and} \qquad (3 + 4i)^m = 3 + 4i
+    \end{align}
+    modulo $5$. We conclude that the premise of $\theta/(2\pi)$ being rational is false. Hence, it is irrational.
+
 \chapter{The quantum Fourier transform and its applications}
 
 
@@ -2775,17 +2922,21 @@ This progress was last updated May 19th, 2022.
         \ket{\psi} =\sum_{j=0}^{2^t-1}\ket{j}U^j\ket{1} =\sum_{j=0}^{2^t-1}\ket{j}\ket{x^j\bmod N}
     \end{align}
     if we initialize the second register as $\ket{1}$. Show that the same state is obtained if we replace $U^j$ with a \emph{different} unitary transform $V$, which computes
-    \begin{align}
+    \begin{align} \label{eq:5.14_Vdef}
         V\ket{j}\ket{k} = \ket{j}\ket{k+x^j\bmod N},
     \end{align}
     and start the second register in the state $\ket{0}$. Also show how to construct $V$ using $O(L^3)$ gates.
 
-    \textbf{Solution:} It is obvious that, by setting $k=0$, we obtain the same output using $V$ as we would if $k=1$ and we had acted with $U$. To construct $V$ we can simply use the $U^j$ as before and store the result in an ancillary register whose initial value was one, then \emph{add} that result to the register initialized to 0. The addition step can be carried out bitwise, and only takes $O(L^2)$ gates naively. Hence, the algorithm remains $O(L^3)$ after this addition step.
+    \textbf{Solution:} First, notice that, setting $k=0$ in equation~\eqref{eq:5.14_Vdef}, we obtain the same output using $V$ as we would if $k=1$ and we had acted with $U^j$. 
+    
+    How can we construct $V$? 
+    
+    Rather than starting from scratch, we will use $U$ to build $V$. Specifically, we can simply use the $U^j$ as before and store the result in an ancillary register whose initial value was one, then \emph{add} that result to the register initialized to 0. The addition step can be carried out bitwise, and only takes $O(L^2)$ gates naively. Hence, the algorithm remains $O(L^3)$ after this addition step.
 
 \section*{Exercise 5.15}
     Show that the least common multiple of positive integers $x$ and $y$ is $xy/\gcd(x,y)$, and thus may be computed in $O(L^2)$ operations if $x$ and $y$ are $L$ bit numbers.
     
-    \textbf{Solution:} Let $d = \gcd(x,y)$. Since $d|x$ and $d|y$, it divides the product, so $xy = dn$ for some integer $n >0$. Our goal is to prove that $n=\text{lcm}(x,y)$.
+    \textbf{Solution:} Let $d = \gcd(x,y)$. Since $d|x$, it divides the product $xy$, so $xy = dn$ for some integer $n >0$. Our goal is to prove that $n=\text{lcm}(x,y)$.
     
     By Bézout's lemma, there exists integers $a,b$ such that $d = ax + by$. Let $m$ be a common multiple of $x$ and $y$. Then there exists integers $s$ and $t$ such that $m=sx=ty$. Consider the product $md$. Using the lemma,
     \begin{align}
@@ -2840,7 +2991,15 @@ This progress was last updated May 19th, 2022.
     \end{enumerate}
 
     \textbf{Solution:}
-    (1) Note that this statement does not actually hold in the special case $N =1$, since $b \geq 2$ by assumption and $L = \log_2 1 = 0$. Now to the more interesting case of $N\geq 2$. Then it must be that $a \geq 2$. Assuming that $b$ exists, it may be obtained by computing $\log_a N$. Meanwhile,  $L = \lceil\log_2 N\rceil = \lceil b \log_2 a \rceil$. Since $\log_2 a \geq 1$, $L \geq b$. 
+    (1) Before we dive in, we point out an annoying edge case: this statement does not actually hold for $N =1$. In this case $N = 1^{100}$ and yet $L = 1$. 
+    
+    Moving on to more interesting cases, suppose $N \geq 2$. Then, if $N = a^b$ for integers $a, b$, it must be that $a \geq 2$. Also, if $b$ exists, it must be computable via $b = \log_a N$. Meanwhile,  $L = \lceil\log_2 N\rceil = \lceil b \log_2 a \rceil$. Since $\log_2 a \geq 1$,
+    \begin{align}
+        b \leq b \log_2 a \leq \lceil b \log_2 a \rceil = L.
+    \end{align}
+    Thus, $b \leq L$. 
+    
+    The key point in this argument is that $L$ represents the $\log_2$ of $N$, whereas $b$ is $\log_a$. Since $a$ is larger than $2$, the associated power will necessarily grow slower. 
     
     (2)
     
@@ -3353,7 +3512,426 @@ This progress was last updated May 19th, 2022.
     \begin{align}
         a \ket{\alpha} = \alpha \ket{\alpha}
     \end{align}
-    and the eigenvalue $\lambda$ turns out to be equal to $\alpha$ itself. 
+    and the eigenvalue $\lambda$ turns out to be equal to $\alpha$ itself.
+
+\section*{Exercise 7.7}
+    Show that the circuit below transforms a dual-rail state by
+    \begin{align}
+        \ket{\psi_{out}} = \begin{bmatrix}
+            e^{i\pi} & 0 \\
+            0 & 1
+        \end{bmatrix} \ket{\psi_{in}}
+    \end{align}
+    if we take the top wire to represent the $\ket{01}$ mode, and $\ket{10}$ the bottom mode, and the boxed $\pi$ to represent a phase shift by $\pi$:
+    
+    \begin{center}
+    \begin{quantikz}[column sep=2cm, row sep =1cm]
+        \lstick[wires=2]{$\ket{\psi_{in}}$}\qw & \gate{\pi} & \qw \rstick[wires = 2]{$\ket{\psi_{out}}$}\\
+        \qw & \qw & \qw
+    \end{quantikz}
+    \end{center}
+
+    \textbf{Solution:} The convention we are following is that the topmost wire in the diagram corresponds to the \emph{rightmost} bit in the ket, so that $\ket{01}$ means a photon in the top wire and none in the bottom. We also take the convention that 
+    \begin{align}
+        \ket{01} = \begin{pmatrix}
+            1 \\
+            0
+        \end{pmatrix}, \qquad \ket{10} = \begin{pmatrix}
+            0 \\
+            1
+        \end{pmatrix}.
+    \end{align}
+    Consider the circuit diagram. It indicates that a phase shift is applied when the top wire is occupied by a photon, otherwise nothing happens. Let $P$ denote this operation. This means a state $\ket{\psi_{in}} = c_1 \ket{01} + c_2 \ket{10}$ transforms as
+    \begin{align}
+    \begin{aligned}
+        P \ket{\psi_{in}} &= c_1 P \ket{01} + c_2 P \ket{10}\\ 
+        &= c_1 e^{i\pi}\ket{01} + c_2 \ket{10}\\[0.7ex]
+        &= \begin{bmatrix}
+            e^{i\pi} & 0 \\
+            0 & 1
+        \end{bmatrix} \ket{\psi_{out}}.
+    \end{aligned}
+    \end{align}
+
+\section*{Exercise 7.8}
+    Show that $P\ket{\alpha} = \ket{\alpha e^{i\Delta}}$ where $\ket{\alpha}$ is a coherernt state (note that, in general $\alpha$ is a complex number!).
+
+    \textbf{Solution:} For a ``Fock" state (a.k.a number state) $\ket{n}$, the phase operation acts as 
+    \begin{align}
+        P\ket{n} = e^{i n \Delta} \ket{n}.
+    \end{align}
+    Hence, acting $P$ on a coherent state $\ket{\alpha}$, one obtains
+    \begin{align}
+    \begin{aligned}
+        P \ket{\alpha} &= e^{-\abs{\alpha}^2/2} \sum_{n=0}^\infty \frac{\alpha^n}{\sqrt{n!}} P\ket{n} \\
+        &= e^{-\abs{\alpha}^2/2} \sum_{n=0}^\infty \frac{\alpha^n}{\sqrt{n!}} e^{i n\Delta}\ket{n} \\
+        &= e^{-\abs{\alpha e^{i\Delta}}^2/2} \sum_{n=0}^\infty \frac{(\alpha e^{i\Delta})^n}{\sqrt{n!}} e^{i n\Delta}\ket{n}.
+    \end{aligned}
+    \end{align}
+    In the last step, we not only grouped the exponential term with $\alpha$ in the infinite series, but we also inserted a phase factor into the normalization out front (which is allowed since the absolute value doesn't change). This is purely for matching form to yet another coherent state. We recognize this last line as being, by definition, another coherent state with value $\alpha' = \alpha e^{i\Delta}$. Hence,
+    \begin{align}
+        P\ket{\alpha} = \ket{\alpha e^{i\Delta}}.
+    \end{align}
+
+\section*{Exercise 7.9 (Optical Hadamard gate)}
+    Show that the following circuit acts as a Hadamard gate on  dual-rail single photon states, that is, $\ket{01} \to (\ket{01} + \ket{10})/\sqrt{2}$ and $\ket{10}\to (\ket{01} - \ket{10})/\sqrt{2}$ up to an overall phase:
+
+    \textbf{Solution:} There is a small error in the text, specifically equation (7.35). The beamsplitting operation $B$ actually corresponds with $e^{-i\theta Y} = R_y (2\theta)$, so there is a sign error. This error seems to have propagated to the exercise. We either need to reverse the direction of the beamsplitter ($\theta = -\pi/4$) or place the phase shift before the beamsplitter rather than after.
+    
+    Let's see that flipping the orientation of the beamsplitter produces the correct results. Mathematically, this means taking $B^\dagger$ instead of $B$, and $B^\dagger = R_y(-\pi/2)$. The phase shift is just a $\pi$ rotation about the Bloch sphere, which is also just $Z$ up to a phase. Thus, the operation is given by (up to a phase)
+    \begin{align}
+        Z R_y(-\pi/2) = R_y(\pi/2) Z.
+    \end{align}
+    Comparing with the work we did in Exercise 4.12, we can see that this is just the $ZY$-decomposition of the Hadamard, up to a phase. 
+    
+    This shows what we wanted, though you may also find satisfaction in seeing the matrix multiplication. We have
+    \begin{align}
+    \begin{aligned}
+        P B^\dagger &= \begin{pmatrix}
+            -1 & 0 \\
+            0 & 1
+        \end{pmatrix} \frac{1}{\sqrt{2}} \begin{pmatrix}
+            1 & 1 \\
+            -1 & 1
+        \end{pmatrix} \\[1.5ex]
+        &= \frac{1}{\sqrt{2}} \begin{pmatrix}
+            -1 & -1 \\
+            -1 & 1
+        \end{pmatrix} \\
+        &= - H
+    \end{aligned}
+    \end{align}
+    Sine a minus sign is certainly a phase, we have our result.
+
+\section*{Exercise 7.10 (Mach-Zehder interferometer)}
+    Interferometers are optical tools used to measure small phase shifts, which are constructed from two beamsplitters. Their basic principle of operation can be understood by this simple exercise.
+    \begin{enumerate}
+        \item Note that this circuit performs the identity operation: (see text)
+        \item Compute the rotation operation (on dual-rail states) which this circuit performs, as a function of the phase shift $\varphi$: (see text)
+    \end{enumerate}
+    
+    \textbf{Solution:} (1) What we have are a sequence of unitary operations, $B$ and $B^\dagger$. A beamsplitter is a unitary operation, so dual-rail or otherwise, we have the identity operation: $BB^\dagger = I$.
+
+    (2) Now we have something potentially interesting. Recall that, in the dual-rail situation, the 50-50 beamsplitter acts as a $Y$ rotation of $\pi/4$. Moreover, the phase shifter is a $Z$ rotation of $\varphi$. Thus, we have the operation
+    \begin{align} \label{eq:7.10}
+        R_y(-\pi/4) R_z(\varphi) R_y(\pi/4).
+    \end{align}
+    What we have is the structure of a similarity transform of the $R_z$ rotation. The effect is to rotate the $z$-axis by an angle $-\pi/4$ about the $y$-axis, producing a new axis $\hat{n} = (-1,0,1)/\sqrt{2}$. Thus, the optical circuit performs the operation $R_{\hat{n}}(\varphi)$.
+
+    Of course, starting from \eqref{eq:7.10}, we could have simply performed the matrix multiplication. But hopefully this method had given you some insight as to what answer to expect. 
+
+\section*{Exercise 7.11}
+    What is $B\ket{2,0}$ for $\theta = \pi/4$?
+
+    \textbf{Solution:} In the convention of the text, the first entry corresponds to the $b$ mode of the beamsplitter. Hence
+    \begin{align}
+        \ket{2,0} = \frac{(b^\dagger)^2}{\sqrt{2}} \ket{0,0}.
+    \end{align}
+    Thus,
+    \begin{align}
+    \begin{aligned}
+        B\ket{2,0} &= \frac{B (b^\dagger)^2 B^
+        \dagger}{\sqrt{2}} (B \ket{0,0}) \\
+        &= \frac{(B b^\dagger B^\dagger)^2}{\sqrt{2}} \ket{0,0}.
+    \end{aligned}
+    \end{align}
+    According to the text, we have $B b^\dagger B^\dagger = \cos \theta b^\dagger - \sin\theta a^\dagger$. Hence,
+    \begin{align}
+    \begin{aligned}
+        \frac{(Bb^\dagger B^\dagger)^2}{\sqrt{2}} &= \frac{(\cos \theta b^\dagger - \sin\theta a^\dagger)^2}{\sqrt{2}} \\
+        &= \frac{\cos^2 \theta\, (b^\dagger)^2 + \sin^2 \theta\,(a^\dagger)^2 - 2 \sin\theta \cos\theta\, a^\dagger b^\dagger}{\sqrt{2}}.
+    \end{aligned}
+    \end{align}
+    We apply this to the vacuum state $\ket{0,0}$. This gives
+    \begin{align}
+        \cos^2 \theta \ket{2,0} + \sin^2 \theta \ket{0,2} - \sqrt{2} \sin\theta \cos\theta \ket{1,1}.
+    \end{align}
+    Now, plugging in $\theta = \pi/4$, we arrive at 
+    \begin{align}
+        \frac{1}{2}\ket{2,0} + \frac{1}{2} \ket{0,2} - \frac{1}{\sqrt{2}} \ket{1,1}.
+    \end{align}
+    
+    This is our final result. We have a state in which there is a $50\%$ chance of finding one photon in each beam, and a$25\%$ chance of finding two photons in either $a$ or $b$. This is an intuitive result, if the beamsplitter is thought of a changing directions of the beam, with probability 1/2. What isn't captured by the probabilistic description is the relative phase, a purely quantum characteristic.
+
+\section*{Exercise 7.12 (Quantum beamsplitter with classical inputs)}
+    What is $B\ket{\alpha}\ket{\beta}$ where $\ket{\alpha}$ and $\ket{\beta}$ are two coherent states as in Equation (7.16)? (\emph{Hint}: recall that $\ket{n} = \frac{(a^\dagger)^n}{\sqrt{n!}}\ket{0}$.)
+
+    \textbf{Solution:} Some of the conventions in this section are a bit confusing, such as the ordering of the photon modes. We will relabel the state as $\ket{\beta}\ket{\alpha}$, so that $\beta$ aligns with ``b" and $\alpha$ with ``a". This appears to align better with the conventions of the text. 
+
+    I started working on this problem by writing the coherent states as infinite series and trying to chug through the math. But sometimes it's good to pause and think about what answer you're supposed to get. Coherent states are very much like classical states of light, and when we think about what a beam splitter should do to a ``regular" beam of light, wouldn't it make sense that it stays classical? That is, what if the result was yet again a pair of coherent states?
+
+    Often, the quickest way to verify a coherent state is to check if it's an eigenstate of the lowering operators $a,b$. Let's see if that is the case. Applying the lowering operator $b$ to the state $B\ket{\beta}\ket{\alpha}$, we get
+    \begin{align}
+        b (B \ket{\beta}\ket{\alpha}) = B (B^\dagger b B) \ket{\beta}\ket{\alpha}.
+    \end{align}
+    The operator in parentheses is just the inverse of the beam splitter transformation.
+    \begin{align}
+        B^\dagger b B = (\cos\theta b - \sin\theta a)
+    \end{align}
+    Hence, 
+    \begin{align}
+    \begin{aligned}
+        b (B \ket{\beta}\ket{\alpha}) &= B (\cos\theta b - \sin\theta a) \ket{\beta}\ket{\alpha} \\
+        &= B(\beta \cos\theta - \alpha \sin\theta) \ket{\beta}\ket{\alpha} \\
+        &= (\beta \cos\theta - \alpha \sin\theta) B \ket{\beta}\ket{\alpha}.
+    \end{aligned}
+    \end{align}
+    Where we used the fact that the eigenvalues of $\ket{\beta}\ket{\alpha}$ are $\beta$ and $\alpha$ with respect to $b$ and $a$. Thus, we see that $B \ket{\beta}\ket{\alpha}$ is a coherent state of the $b$ with value $\beta \cos\theta - \alpha \sin\theta$. A perfectly analogous calculation would show that it is also a coherent state with respect to the $a$ mode, with eigenvalue $\alpha \cos\theta + \beta \sin\theta$. Thus, the resulting state must be a tensor product of coherent states, as follows.
+    \begin{align}
+        B \ket{\beta} \ket{\alpha} = \ket{\beta \cos\theta - \alpha \sin\theta} \ket{\alpha \cos\theta + \beta \sin\theta}
+    \end{align}
+
+    Let's think about the meaning of this result. Recall that $\cos\theta = R$ is the fraction of reflected light. Thus, the beams are mixed, but in a ``classical" manner. The total intensity is unchanged by the beamsplitter, as expected. However there is a possibility for interference effects whereby one mode obtains more of the light than the other. This is all perfectly consistent. 
+
+\section*{Exercise 7.13 (Optical Deutsch-Jozsa quantum circuit)}
+    In Section 1.4.4 (page 34), we described a quantum circuit for solving the one-bit Deutsch-Jozsa problem. Here is a version of that circuit for single photon states (in the dual-rail representation), using beamsplitters, phase shifters, and nonlinear Kerr media:
+
+    \begin{enumerate}
+        \item Construct circuits for the four possible classical functions $U_f$ using Fredkin gates and beamsplitters.
+        \item Why are no phase shifters necessary in this construction?
+        \item For each $U_f$ show explicitly how interference can be used to explain how the quantum algorithm works.
+        \item Does this implementation work if the single photon states are replaced by coherent states?
+    \end{enumerate}
+
+    \textbf{Solution:}
+
+\section*{Exercise 7.14 (Classical cross phase modulation)}
+    To see that the expected classical behavior of a Kerr medium is obtained from the definition of $K$, Equation (7.41), apply it to two modes, one with a coherent state and the other in state $\ket{n}$; that is, show that
+    \begin{align}
+        K\ket{\alpha}\ket{n} = \ket{\alpha e^{i\chi L n}} \ket{n}.
+    \end{align}
+    Use this to compute
+    \begin{align}
+        \rho_a &= \Tr_b \left[K\ket{\alpha}\ket{\beta}\bra{\beta}\bra{\alpha}K^\dagger\right] \\
+        &= e^{-\abs{\beta}^2} \sum_{m} \frac{\abs{\beta}^{2m}}{m!} \ket{\alpha e^{i\chi Lm}}\bra{\alpha e^{i\chi Lm}}
+    \end{align}
+    and show that the main contribution to the sum is for $m = \abs{\beta}^2$.
+
+    \textbf{Solution:} From equation (7.41) of the text, we see that 
+    \begin{align}
+        K = e^{i\chi L a^\dagger a b^\dagger b} = e^{i\chi L n_a n_b}
+    \end{align}
+    where $n_a$ and $n_b$ are the number operators for modes $a$ and $b$. Hence, the action of $K$ on a number (Fock) state $\ket{n}\ket{m}$ is simply
+    \begin{align}
+        K \ket{n}\ket{m} = e^{i\chi L n m} \ket{n}\ket{m}.
+    \end{align}
+    Applying $K$ to state $\ket{\alpha}\ket{n}$ gives
+    \begin{align}
+    \begin{aligned}
+        e^{i\chi L a^\dagger a b^\dagger b} \ket{\alpha}\ket{n} &= e^{i\chi L a^\dagger a n} \ket{\alpha}\ket{n} \\
+        &= 
+    \end{aligned}
+    \end{align}
+    because $\ket{n}$ is an eigenstate of $b^\dagger b$. Notice that the remaining operation just acts on $\ket{\alpha}$ alone, not $\ket{n}$, since it is only in terms of the $a$ operators. Moreover, we can see it is just a phase shift operation, with phase $\Delta = \chi L n$. From Exercise 7.8, we know how these phase shifters act: they simply multiply the value $\alpha$ of the coherent state by the phase. Thus, we get
+    \begin{align}
+        K \ket{\alpha}\ket{n} = (P(\chi L n) \ket{\alpha}) \ket{n} = \ket{\alpha e^{i\chi L n}} \ket{n}
+    \end{align}
+
+    This demonstrates the first part. Let's now consider the action on two coherent states $\ket{\alpha}\ket{\beta}$. Expanding $\ket{\beta}$ out in the number basis, we have
+    \begin{align}
+    \begin{aligned}
+        K \ket{\alpha}\ket{\beta} &= e^{-\abs{\beta}^2/2} \sum_{m=0}^\infty \frac{\beta^m}{\sqrt{m!}} K \ket{\alpha}\ket{m} \\
+        &= e^{-\abs{\beta}^2/2} \sum_{m=0}^\infty \frac{\beta^m}{\sqrt{m!}} \ket{\alpha e^{i \chi L m}}\ket{m}.
+    \end{aligned}
+    \end{align}
+    Taking the partial trace of the corresponding density matrix will leave only terms in which the bra and ket have the same $m$. The result will be 
+    \begin{align}
+        e^{-\abs{\beta}^2} \sum_{m=0}^\infty \frac{\abs{\beta}^{2m}}{m!} \ket{\alpha e^{i \chi L m}} \bra{\alpha e^{i \chi L m}}.
+    \end{align}
+    This is the result we sought. We see that $\rho_a$ can be interpreted as a probabilistic ensemble of coherent states, all phase shifted from $\alpha$. The probabilities $p_m$ of this distribution are given by the coefficients.
+    \begin{align}
+        p_m = e^{-\abs{\beta}^2} \frac{\abs{\beta}^{2m}}{m!}
+    \end{align}
+    In fact, this is the well-known \emph{Poisson distribution}, which appears in a variety of other contexts in statistics and probability. For our purposes, we can make use of the property (which you can find by googling) that the distribution is concentrated around the peak of $m = \abs{\beta}^2$ (rounded to the nearest integers). In fact, we have the following bound on values of $m$ far from $\abs{\beta}^2$. For any $x > 0$, \footnote{www.cs.columbia.edu/~ccanonne/files/misc/2017-poissonconcentration.pdf}
+    \begin{align}
+        \Pr\left[\abs{m - \abs{\beta}^2} \geq x \right] \leq 2 \exp\left\{-\frac{x^2}{2\left(\abs{\beta}^2 + x\right)}\right\}.
+    \end{align}
+    This is the meaning of the "main contribution" being $m = \abs{\beta}^2$. What we see is, the phase shift to the coherent state $\alpha$ is primarily concentrated around $\chi L \abs{\beta}^2 = \chi L I$, where $I$ is the intensity of the other beam. This can be matched with parameters $n_2, \omega,$ and $c_0$ in the classical description.
+
+\section*{Exercise 7.15}
+    Plot (7.55) as a function of field detuning $\varphi$, for $R_1 = R_2 = 0.9$.
+
+    \textbf{Solution:} Let $R$ stand for the common value of the two mirrors. We can simplify the expression in this special case as 
+    \begin{align} \label{eq:7.15}
+    \begin{aligned}
+        \frac{P_{\rm cav}}{P_{\rm in}} &= \frac{1-R}{\abs{1 + e^{i\varphi}R}^2} \\
+        &= \frac{1-R}{1 + R^2 + 2 R \cos \varphi}.
+    \end{aligned}
+    \end{align}
+    We plot this as a function of $\varphi$ for the relevant domain of $[0,2\pi]$.
+    \begin{center}
+        \includegraphics{Exercise7.15.png}
+    \end{center}
+    We see a sharp peak corresponding to a phase shift of $\pi$. It's clear from equation~\eqref{eq:7.15} that the height of this peak should be $(1-R)^{-1}$. This plot suggests, in order to get large field strengths in the cavity, we should set up our system so that the phase shift is $\pi$ and the reflectivity $R$ is as large as reasonable.
+
+\section{Exercise 7.16 (Electric dipole selection rules)}
+    Show that (7.60) is non-zero only when $m_2 - m_1 = \pm 1$ and $\Delta l = \pm 1$.
+
+    \textbf{Solution (Incomplete):} The formulas for the spherical harmonics $Y_{lm}$ appear complicated, but that is in large part due to the normalization factors. Since we are only interested in whether the expectation value is zero, we can ignore them. Even better, the integral $\int d\Omega = \int d\varphi \int \sin\theta d\theta$ factorizes into two parts because the $Y$ are products of functions $P_{lm}(\cos\theta)$ and $e^{im\varphi}$ of each of the variables alone. Thus, the thing we need to check under what circumstances the product
+    \begin{align}
+        \left(\int_0^\pi \sin \theta P_{1m}(\cos\theta) P_{l_1 m_1}(\cos\theta) P_{l_2 m_2}(\cos\theta)d\theta\right) \times \left(\int_0^{2\pi} e^{i(m + m_2 - m_1)}d\varphi\right)
+    \end{align}
+    is zero, where $m = \pm 1$. We can simplify the first integral with the variable substitution $x = \cos\theta$.
+    \begin{align}
+        \left(\int_{-1}^1  P_{1m}(x) P_{l_1 m_1}(x) P_{l_2 m_2}(x)dx\right) \times \left(\int_0^{2\pi} e^{i(m + m_2 - m_1)}d\varphi\right)
+    \end{align}
+    Of course, the product above is nonzero exactly when each term is nonzero. Let's start with the integral over $\varphi$ because it's simpler. If $m +m_2 - m_1 \neq 0 $, the integral will vanish because we are taking integrals of sine and cosine over its period of $2\pi$. Thus, the integral is nonzero exactly when
+    \begin{align}
+    \begin{aligned}
+        m + m_2 - m_1 &= 0 \\
+        m_2 - m_1 &= \pm 1.
+    \end{aligned}
+    \end{align}
+
+    This answers one part of the question. For the other, let's examine the integral over the associated Legendre polynomials. Writing out the definitions, this is zero exactly when
+    \begin{align}
+        \int_{-1}^1(1-x^2)^{(m_1 + m_2 + m)/2}\left(\frac{d^{m+1}}{dx^{m+1}}(x^2 - 1)\right)\left(\frac{d^{m_1+l_1}}{dx^{m_1+l_1}}(x^2 - 1)^{l_1}\right)\left(\frac{d^{m_2+l_2}}{dx^{m_2+l_2}}(x^2 - 1)^{l_2}\right) dx
+    \end{align}
+    is zero. First, let's observe that $m_1 + m_2 + m = 2 m_1$, from our result above, so this becomes
+    \begin{align}
+        \int_{-1}^1 (1-x^2)^{m_1} \left(\frac{d^{m+1}}{dx^{m+1}}(x^2 - 1)\right)\left(\frac{d^{m_1+l_1}}{dx^{m_1+l_1}}(x^2 - 1)^{l_1}\right)\left(\frac{d^{m_2+l_2}}{dx^{m_2+l_2}}(x^2 - 1)^{l_2}\right)
+    \end{align}
+    
+    One way that these integrals could be zero is that the order of the derivatives are higher than the degree of the polynomial. So we need $m_i + l_i \leq 2l_1$, or \textbf{Incomplete}
+
+
+\section*{Exercise 7.17 (Eigenstates of the Jaynes-Cummings Hamiltonian)}
+    Show that 
+    \begin{align}
+        \ket{\chi_n} = \frac{1}{\sqrt{2}}\left[\ket{n,1} + \ket{n+1,0}\right] \\
+        \ket{\overline{\chi}_n} = \frac{1}{\sqrt{2}}\left[\ket{n,1} - \ket{n+1,0}\right]
+    \end{align}
+    are eigenstates of the Jaynes-Cummings Hamiltonian (7.71) for $\omega = \delta = 0$, with the eigenvalues
+    \begin{align}
+        H \ket{\chi_n} &= g\sqrt{n+1} \ket{\chi_n} \\
+        H\ket{\overline{\chi}_n} &= -g\sqrt{n+1}\ket{\overline{\chi}_n},
+    \end{align}
+    where the labels in the ket are $\ket{\text{field}, \text{atom}}$.
+
+    \textbf{Solution:} \underline{Aside on confusing notation} As pointed out in the text, the observable $N$ corresponding to the ``number of excitations" (photons + qubit) commutes with the Hamiltonian. However, there is something we need to be careful about. Unintuitively, the state $\ket{0}$ corresponds to an \emph{excited} qubit, while the state $\ket{1}$ corresponds to a \emph{lack} of excitation. Thus, in some ways, the $\ket{0}$ computational state should really be labelled $\ket{1}$, meaning 1 excitation. To put it another way, the state $\ket{0}$ has $1$ energy quanta, while $\ket{1}$ has $0$ energy quanta. In the context of this problem, the qubit state lables should probably be swapped. 
+
+    To really hammer this point away, notice how the spin excitation operators $\sigma_\pm$ act on the computational basis.
+    \begin{align}
+        \sigma_+ \ket{0} = 0, \qquad \sigma_+ \ket{1} = \ket{0}.
+    \end{align}
+    Thus, it looks like $\sigma_+$ is really de-exciting. As a result of these ambiguities, it seems the authors Nielsen and Chuang have made a small error. We can see that $\ket{\chi_n}$ as written isn't really an eigenstate of the Jaynes-Cummings Hamiltonian, assuming they intend for $0,1$ to label computational states and not energy quanta. To see the problem, let's observe that $\ket{n,1}$ and $\ket{n+1, 0}$ are eigenstates of $N$ with \emph{different} eigenvalue.
+    \begin{align}
+    \begin{aligned}
+        N \ket{n,1} &= \left(n - \frac{1}{2}\right) \ket{n,1} \\
+        N \ket{n+1, 0} &= \left(n+\frac{3}{2}\right) \ket{n+1,0}
+    \end{aligned}
+    \end{align}
+    Thus, a linear combination of these couldn't produce an eigenstate of $H$, since $H$ and $N$ must share an eigenbasis. 
+
+    Thankfully, with a notational slight of hand, we can fix things. Instead of defining, for example, $\ket{n,0}$ to be $\ket{n}\otimes \ket{0}$, we will adopt the following conventions.
+    \begin{align}
+        \ket{n,0} \equiv \ket{n}\otimes \ket{1}, \qquad \ket{n,1} \equiv \ket{n}\otimes \ket{0}
+    \end{align}
+    With this choice, everything should work out correctly, and we will proceed from here as normal. \underline{End of aside.}
+
+    We first observe that that $N$ is a twofold-degenerate operator. For each eigenvalue (``number of excitations") there are two states that give rise to that eigenvalue: $\ket{n, 1}$ and $\ket{n + 1, 0}$. This makes sense: to have $n+1$ total excitations, we either place them all in the cavity, or place one in the qubit and $n$ in the cavity. The qubit can only store one excitation.
+
+    As a side note, a special edge case occurs when there are no excitations: $\ket{0,0}$. This is clearly an eigenstate of $H$ with eigenvalue $-\hbar \omega_0/2$, and we will now consider the case where there is at least one excitation.
+
+    Each eigenstate of $H$ must reside in an eigenspace of $N$. Thus, we can express $H$ as a $2\times 2$ matrix in the eigenbasis $\ket{n, 1}$ and $\ket{n + 1, 0}$. Using equation (7.71), and setting $\omega = \delta = 0$ as the problem asks, we have
+    \begin{align}
+    \begin{aligned}
+        H \ket{n+1,0} &= g \sqrt{n+1} \ket{n, 1} \\
+        H\ket{n,1} &= g \sqrt{n+1} \ket{n+1, 0}.
+    \end{aligned}
+    \end{align}
+    In this subspace, we see that $H$ acts essentially like an effective $X$ operation.
+    \begin{align}
+        H = g\sqrt{n+1}\begin{pmatrix}
+            0 & 1 \\
+            1 & 0
+        \end{pmatrix}
+    \end{align}
+    Because of this, we can immediately write the eigenstates. 
+    \begin{align}
+    \begin{aligned}
+        \ket{\chi_n} &= \frac{1}{\sqrt{2}}\left(\ket{n, 1} + \ket{n+1,0}\right) \\
+        \ket{\overline{\chi}_n} &= \frac{1}{\sqrt{2}}\left(\ket{n, 1} - \ket{n+1,0}\right).
+    \end{aligned}
+    \end{align}
+    This is exactly what we sought to show. The collection of eigenstates is expressible by the set $\{\ket{\chi_n}, \ket{\overline{\chi}_n}\}_n$ for integer $n > 0$, as well as the special case $\ket{\chi_0} = \ket{0,0}$.
+
+    
+
+\section*{Exercise 7.18 (Rabi oscillations)}
+    Show that (7.77) is correct by using
+    \begin{align}
+        e^{i \vec{n}\cdot \vec{\sigma}} = \cos\abs{n} + i \hat{n}\cdot\vec{\sigma} \sin\abs{n}
+    \end{align}
+    to exponentiate $H$. This is an unusually simple derivation of the Rabi oscillations and the Rabi frequency; ordinarily, one solves coupled differential equations to obtain $\Omega$, but here we obtain the essential dynamics just by focusing on the single-atom, single-photon subspace!
+
+    \textbf{Solution:} There is a small error in the text. Doing a careful analysis of the matrix elements of $H$ in the appropriate subspace, being mindful of the conventions established in Exercise 7.17, one finds that there is a sign error in places. The real $H$ is 
+    \begin{align}
+        H = \begin{bmatrix}
+            -\delta & 0 & 0 \\
+            0 & \delta & g \\
+            0 & g & -\delta
+        \end{bmatrix}.
+    \end{align}
+    We will therefore start our analysis of $U = e^{-i H t}$ here. 
+    
+    Given $H$ as above, the first thing we observe is that it is block diagonal. Therefore, to exponentiate $H$, we can exponentiate each block individually. We ignore the overall sign given in equation (7.76), since I believe that is an error.
+
+    Let's label the blocks as $H_1$ and $H_2$, where $H_1$ is the $1\times 1$ upper block and $H_2$ is the $2 \times 2$ lower block. The upper block is easy to exponentiate, and is given by $e^{i\delta t}$. For the lower block, we observe that
+    \begin{align}
+        H_2 = \delta Z + g X.
+    \end{align}
+    Hence,
+    \begin{align}
+        e^{-i H_2 t} = e^{-i \hat{n}\cdot \vec{\sigma} \Omega t}
+    \end{align}
+    where we've defined $\Omega = \sqrt{g^2 + \delta^2}$ and $\hat{n} = (g, 0 , \delta)/\Omega$. Using the identity given in the problem, we have
+    \begin{align}
+    \begin{aligned}
+        e^{-i \hat{n}\cdot \vec{\sigma}\Omega t} &= \cos{\Omega t} I - i \hat{n}\cdot\vec{\sigma} \sin{\Omega t} \\
+        &= \begin{pmatrix}
+            \cos\Omega t - i \frac{\delta}{\Omega} \sin\Omega t & -i \frac{g}{\Omega}\sin\Omega t \\
+            -i \frac{g}{\Omega}\sin\Omega t & \cos\Omega t + i \frac{\delta}{\Omega}\sin\Omega t.
+        \end{pmatrix}
+    \end{aligned}
+    \end{align}
+    
+    Having exponentiated each block individually, we can now combine the result.
+    \begin{align}
+        U = \begin{pmatrix}
+            e^{i\delta t} & 0 & 0 \\
+            0 & \cos\Omega t - i \frac{\delta}{\Omega} \sin\Omega t & -i \frac{g}{\Omega}\sin\Omega t \\
+            0 & -i \frac{g}{\Omega}\sin\Omega t & \cos\Omega t + i \frac{\delta}{\Omega}\sin\Omega t
+        \end{pmatrix}.
+    \end{align}
+
+    The final step is to convert this to Dirac notation. Noting the ordering of the basis, we have
+    \begin{align}
+    \begin{aligned}
+        U = e^{i\delta t} \ket{00}\bra{00} &+ \left(\cos \Omega t - i \frac{\delta}{\Omega} \sin \Omega t\right) \ket{01}\bra{01} \\
+        &+ \left(\cos \Omega t 
+        + i \frac{\delta}{\Omega} \sin \Omega t\right) \ket{10}\bra{10} \\
+        &-i \frac{g}{\Omega}\sin\Omega t \left(\ket{01}\bra{10} + \ket{10}\bra{01}\right).
+    \end{aligned}
+    \end{align}
+    Notice that the author's answer is slightly different from ours. I believe this is a result of sign errors, but hopefully you (the reader) have enough guidance to figure that out now.
+    
+
+\section*{Exercise 7.19 (Lorentzian absorption profile)}
+    Plot (7.79) for $t = 1$ and $g = 1.2$, as a function of the detuning $\delta$, and (if you know it) the corresponding classical result. What are the oscillations due to?
+
+    \textbf{Solution:} The plot below gives the plot for these parameters.
+    \begin{center}
+        \includegraphics{Exercise7.19.pdf}
+    \end{center}
+    I produced this directly in Mathematica using the Plot function. Use your favorite choice of plotting software.
+
+    The classical result is essentially the same, without the oscillating factor. The Lorentzian profile in the classical case can be seen to come from the assumption of an exponential decay of a large population of excited atoms. The oscillations are due to the fact that the exchange of excitations really goes both directions. When there is a dip in transition probability, a full cycle of transition occured, where the photon was absorbed and reemitted, perhaps multiple times. 
+
+\section*{Exercise (Single photon phase shift)}
+    Derive (7.80) from $U$, and plot it for $t = 1$ and $g = 1.2$, as a function of the detuning $\delta$. Compare with $\delta/\Omega^2$.
+
+    \textbf{Solution:}
     
 \chapter{Quantum noise and quantum operations}
 
@@ -4268,10 +4846,10 @@ This progress was last updated May 19th, 2022.
     \end{align}
     Hence, $A$ stabilizes $c_1\psi + c_2\chi$. Hence, $c_1\psi + c_2 \chi\in V_S$. We conclude $V_S$ is a subspace. 
     
-    Let $\cap_{s\in S} V_s$ be the intersection of all subspaces stabilized by a single element $s\in S$. We will show that this equals $V_S$ itself by showing they are subsets of each other. Let $\psi \in V_S$, so that $\psi$ is stabilized by $s$ for each $s\in S$. Then, $\psi\in V_s$ for every such $s$, and therefore is also in the intersection. Hence, $V_S \subset \cap_{s\in S} V_s$. Conversely, suppose $\psi \in \cap_{s\in S} V_s$, so that $\psi\in V_s$ for each $s\in S$. Then, $\psi$ is stabilized by every $s \in S$, and therefore is stabilized by $S$ itself. Thus, $\psi \in V_S$. This shows $\cap_{s\in S} V_s \subset V_S$, which completes the proof.
+    Let $\cap_{s\in S} V_s$ be the intersection of all subspaces $V_s$ stabilized by $s\in S$. We will show that this equals $V_S$ itself by showing they are subsets of each other. Let $\psi \in V_S$, so that $\psi$ is stabilized by $s$ for each $s\in S$. Then, $\psi\in V_s$ for every such $s$, and therefore is also in the intersection. Hence, $V_S \subset \cap_{s\in S} V_s$. Conversely, suppose $\psi \in \cap_{s\in S} V_s$, so that $\psi\in V_s$ for each $s\in S$. Then, $\psi$ is stabilized by every $s \in S$, and therefore is stabilized by $S$ itself. Thus, $\psi \in V_S$. This shows $\cap_{s\in S} V_s \subset V_S$, which completes the proof.
     
 \section*{Exercise 10.30}
-    Show that $-I \notin S$ imples $\pm i I \notin S$.
+    Show that $-I \notin S$ implies $\pm i I \notin S$.
     
     \textbf{Solution:} To show this, we prove the (equivalent) contrapositive: $\pm i I \in S$ implies $-I \in S$. Phrased in this way, the reasoning follows simply from $S$ being a group, and therefore closed under multiplication. In particular, if $\pm i I \in S$, so is the square
     \begin{align}
@@ -4300,7 +4878,63 @@ This progress was last updated May 19th, 2022.
     This completes the demonstration for $g_1$. We could check the remaining stabilizers in an overall similar way.
     
 \section*{Exercise 10.33}
-    \textbf{Solution:}
+    Show that $g$ and $g'$ commute if and only if $r(g) \Lambda r(g')^T = 0$. (In the check matrix representation, arithmetic is done modulo two.)
+    
+    \textbf{Solution:} Since $g$ and $g'$ are tensor products of Pauli matrices (including the identity), they either commute or anticommute, and we can determine which by checking term-by-term in the tensor product. Specifically, for $n$-qubit paulis, the paulis commute if and only if
+    \begin{align}
+        p = \sum_{i=1}^n p_i.
+    \end{align}
+    is zero, otherwise they anticommute. Here, $p$ is the total parity, either 0 or 1, and the $p_i$ are the parities for the $i$th term in the tensor product. The addition is performed modulo 2.
+
+    How does one compute the $p_i$? The relevant information is the $2\times 2$ pauli matrices that are being compared. We know there are $4$ such matrices, which can conveniently be captured with two bits of information. One bit indicates the presence of $X$, another indicating $Z$. The case $11$ indicates both, i.e. $Y$ up to an irrelevant phase (irrelevant for the purposes of determining commutation). 
+    
+    The condition for anticommutation becomes, in words "either Z and X, or X and Z, but not both". This either/or is captured by XOR, which is just boolean addition mod 2. The "and" clauses can be computed by multiplication. Let $x, z, x', z'$ be the Boolean variables which indicate the absence/presence of each of these paulis, where the primes refer to element $g'$. The parity calculation becomes
+    \begin{align}
+    \begin{aligned}
+        p_i &= x z' + z x' \\[1.5ex]
+        &= \begin{bmatrix}
+            x' & z' \\
+        \end{bmatrix} \begin{bmatrix}
+            0 & 1 \\
+            1 & 0
+        \end{bmatrix} \begin{bmatrix}
+            x \\
+            z
+        \end{bmatrix}.
+    \end{aligned}
+    \end{align}
+    
+    For calculating the total parity $p$, we must add all of these together, adding subscripts $i$ to keep track of different terms in the tensor product, we have
+    \begin{align}
+    \begin{aligned}
+        p &= \sum_{i=1}^n \begin{pmatrix}
+            x_i' & z_i' \\
+        \end{pmatrix} \begin{pmatrix}
+            0 & 1 \\
+            1 & 0
+        \end{pmatrix} \begin{pmatrix}
+            x_i \\
+            z_i
+        \end{pmatrix} \\[1.5ex]
+        &= \begin{bmatrix}
+            x_1' & x_2' & \dots & x_n' & \vert & z_1' & \dots z_n'
+        \end{bmatrix} \begin{bmatrix}
+            0 & I \\
+            I & 0
+        \end{bmatrix} \begin{bmatrix}
+            x_1 \\
+            x_2 \\
+            \vdots \\
+            x_n \\
+            z_1 \\
+            z_2 \\
+            \vdots \\
+            z_n
+        \end{bmatrix} \\
+        &\equiv r(g') \Lambda r(g)^T. 
+    \end{aligned}
+    \end{align}
+    Here, the matrix effectively swaps the x's and z's of the right vector, so the appropriate multiplications are performed and summed over. Since all the steps in the above derivation are reversible, we've shown that the last line is equivalent to calculating the commutation of the pauli strings $g, g'$.
     
 \section*{Exercise 10.34}
     Let $S = \langle g_1,\dots,g_l\rangle$. Show that $-I$ is not an element of $S$ if and only if $g_j^2 =I$ for all $j$, and $g_j \neq -I$ for all $j$.
@@ -4966,7 +5600,7 @@ This progress was last updated May 19th, 2022.
 \section*{Exercise A4.3} 
     Suppose $a$ and $b$ are positive integers. Show that if $a|b$ then $a\leq b$. Conclude that if $a|b$ and $b|a$ then $a=b$.
     
-    \textbf{Solution:} Suppose that $a|b$. Then there exists some $k\in \mathbb{Z}$ such that $b = ak$. By the hypothesis that $a$ and $b$ are positive, it must be that $k>0$. Hence, $k-1\geq0$. This, of course, implies
+    \textbf{Solution:} Suppose that $a|b$. Then there exists some $k\in \mathbb{Z}$ such that $b = ak$. By the hypothesis that $a$ and $b$ are positive, it must be that $k>0$. Hence, $k-1\geq0$. This implies
     \begin{align}
         b(k-1) \geq 0
     \end{align}
