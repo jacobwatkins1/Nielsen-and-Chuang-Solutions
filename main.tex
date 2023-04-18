@@ -50,10 +50,10 @@ This progress was last updated May 19th, 2022.
     \item Chapter 1: All in-text exercises done. Two open ended problems left alone.
     \item Chapter 2: All complete! Eventual need for editorial review.
     \item Chapter 3: 1 "complete".
-    \item Chapter 4: 1-15 complete.
+    \item Chapter 4: 1-15, 40-42 complete.
     \item Chapter 5: 1-14 complete, 15-29 remain, along with 6 practice problems.
     \item Chapter 6: 1-8 complete.
-    \item Chapter 7: 1 exercise complete.
+    \item Chapter 7: 1-19 complete, except 16.
     \item Chapter 8: 1-6 complete.
     \item Chapter 9: All exercises complete (end-of-chapter problems remain).
     \item Chapter 10: 1-11 and 29-40 complete.
@@ -2385,7 +2385,7 @@ This progress was last updated May 19th, 2022.
     \end{align}
     Hence, we have $HUH = e^{i\alpha} R_x(\beta) R_y(-\gamma) R_x(\delta)$.
 
-    Going back to our original problem, how can we do the decomposition of a general $U$? We could do the following: compute U' = HUH, do a $ZY$ decomposition of $U'$ to get
+    Going back to our original problem, how can we do the decomposition of a general $U$? We could do the following: compute $U' = HUH$, do a $ZY$ decomposition of $U'$ to get
     \begin{align}
         U' = e^{i\alpha'}  R_z(\beta') R_y(\gamma') R_z(\delta') 
     \end{align}
@@ -2540,7 +2540,353 @@ This progress was last updated May 19th, 2022.
 
 \section*{Exercise 4.16 (Matrix representation of multi-qubit gates)}
     What is the $4 \times 4$ unitary matrix for the circuit
+    \begin{center}
+    \begin{quantikz}
+        \lstick{$x_2$} & \gate{H} & \qw \\
+        \lstick{$x_1$} & \qw & \qw
+    \end{quantikz}
+    \end{center}
 
+    in the computational basis? What is the unitary matrix for the circuit
+    \begin{center}
+    \begin{quantikz}
+        \lstick{$x_2$} & \qw & \qw \\
+        \lstick{$x_1$} & \gate{H} & \qw
+    \end{quantikz} 
+    \end{center}
+    in the computational basis?
+
+    \textbf{Solution:} When solving problems such as this, part of the challenge is understanding some of the ordering conventions that go into the matrix representation. When choosing an ordering of the tensor product states, one typically goes with an \emph{alphabetical} ordering. But one also needs to check the convention for ordering qubits in a circuit. Let's see how this looks in our specific case.
+
+    Looking at the example of the $\mathtt{CNOT}$ gate in the text (equation (4.23)), the authors choose a binary ordering of the qubit states: $\ket{00}, \ket{01}, \ket{10}, \ket{11}$. The authors also choose the convention where top-to-bottom in the circuit is left-to-right in the state representation. Thus, in our circuits above, $x_2$ is the "most significant bit", being furthest to the left, in analogy with standard decimal numbers. Thus, the operation we are dealing with is $H \otimes I$.
+
+    The tensor product, specialized to matrix representations, is denoted the \emph{Kronecker product}, and corresponds to inserting one of the matrices into each entry of the other. Which matrix gets inserted depends on ordering conventions; in general, the less-significant entry gets inserted into the more significant one. Thus, in our case, the right matrix will get inserted into the left.
+
+    Let's see what this looks like for $H \otimes I$.
+    \begin{align}
+    \begin{aligned}
+        H \otimes I &= \frac{1}{\sqrt{2}} \begin{bmatrix}
+            1 & 1 \\
+            1 & -1
+        \end{bmatrix} \otimes \begin{bmatrix}
+            1 & 0 \\
+            0 & 1
+        \end{bmatrix} \\
+        &= \frac{1}{\sqrt{2}} \begin{bmatrix}
+            1 \begin{bmatrix}
+                1 & 0 \\
+                0 & 1
+            \end{bmatrix} & 1 \begin{bmatrix}
+                1 & 0 \\ 
+                0 & 1
+            \end{bmatrix} \\[4ex]
+            1 \begin{bmatrix}
+                1 & 0 \\
+                0 & 1
+            \end{bmatrix} & -1 \begin{bmatrix}
+                1 & 0 \\
+                0 & 1
+            \end{bmatrix}
+        \end{bmatrix} \\
+        &= \frac{1}{\sqrt{2}} \begin{bmatrix}
+            1 & 0 & 1 & 0 \\
+            0 & 1 & 0 & 1 \\
+            1 & 0 & -1 & 0 \\
+            0 & 1 & 0 & -1
+        \end{bmatrix}.
+    \end{aligned}
+    \end{align}
+    It's always good to check with some examples. Acting on the state $\ket{00}$ gives us $\frac{1}{\sqrt{2}}(\ket{00} + \ket{10})$ as expected. Since there are only two ways one can insert the matrices, doing these checks may even be simpler than trying to rationalize the choice. 
+
+    We can proceed more confidently now that we know the ordering conventions, and check $I \otimes H$.
+
+    \begin{align}
+    \begin{aligned}
+        I \otimes H &= \begin{bmatrix}
+            1 & 0 \\
+            0 & 1
+        \end{bmatrix} \otimes \frac{1}{\sqrt{2}}\begin{bmatrix}
+            1 & 1 \\
+            1 & -1
+        \end{bmatrix} \\
+        &= \frac{1}{\sqrt{2}} \begin{bmatrix}
+            1 \begin{bmatrix}
+                1 & 1 \\
+                1 & -1
+            \end{bmatrix} & 0 \begin{bmatrix}
+                1 & 1 \\ 
+                1 & -1
+            \end{bmatrix} \\[4ex]
+            0 \begin{bmatrix}
+                1 & 1 \\
+                1 & -1
+            \end{bmatrix} & 1 \begin{bmatrix}
+                1 & 1 \\
+                1 & -1
+            \end{bmatrix}
+        \end{bmatrix} \\
+        &= \frac{1}{\sqrt{2}} \begin{bmatrix}
+            1 & 1 & 0 & 0 \\
+            1 & -1 & 0 & 0 \\
+            0 & 0 & 1 & 1 \\
+            0 & 0 & 1 & -1
+        \end{bmatrix}.
+    \end{aligned}
+    \end{align}
+    Checking a few cases in the simpler Dirac notation will convince us that this is correct. 
+
+\section*{Exercise 4.17 (Building $\mathtt{CNOT}$ from controlled-$Z$ gates)}
+    Construct a $\mathtt{CNOT}$ gate from one controlled-$Z$ gate, that is, the gate whose action on the computational basis is specified by the unitary matrix
+    \begin{align}
+        \begin{bmatrix}
+            1 & 0 & 0 & 0 \\
+            0 & 1 & 0 & 0 \\
+            0 & 0 & 1 & 0 \\
+            0 & 0 & 0 & -1
+        \end{bmatrix}
+    \end{align}
+    and two Hadamard gates, specifying the control and target qubits.
+
+    \textbf{Solution:} As is often the case, it is easiest to work abstractly, with circuits and gate algebra, rather than the concrete matrix representations. We observe that the NOT gate (really an $X$ gate), can be constructed with $Z$ and two Hadamards (see Exercise 4.13).
+    \begin{align}
+        X = HZH
+    \end{align}
+    This suggests that, in order to create a $\mathtt{CNOT}$, we can just control each of these elements.
+    \begin{center}
+    \begin{quantikz}
+        \qw & \ctrl{1} & \qw \\
+        \qw & \targ{} & \qw
+    \end{quantikz} = \begin{quantikz}
+        \qw & \ctrl{1} & \ctrl{1} & \ctrl{1} & \qw \\
+        \qw & \gate{H} & \gate{Z} & \gate{H} & \qw
+    \end{quantikz}
+    \end{center}
+    This is certainly true, and actually we can do even better. There is no need to control the Hadamard gates, because if the top qubit is zero, the $Z$ gate is not activated, and we have $H^2 = I$. In this case, nothing happens. Thus, this circuit is equivalent to the following simpler circuit.
+    \begin{center}
+    \begin{quantikz}
+        \qw & \qw & \ctrl{1} & \qw & \qw \\
+        \qw &\gate{H} & \gate{Z} & \gate{H} & \qw
+    \end{quantikz}
+    \end{center}
+    With this, we've succeeded in constructing $\mathtt{CNOT}$ from a controlled-$Z$ and two Hadamards.
+
+    As a challenge to yourself, see if you can verify this equivalence through matrix multiplication.
+
+\section*{Exercise 4.18}
+    Show that
+    \begin{center}
+    \begin{quantikz}
+        \qw & \ctrl{1} & \qw \\
+        \qw & \gate{Z} & \qw
+    \end{quantikz} = \begin{quantikz}
+        \qw & \gate{Z} & \qw \\
+        \qw & \ctrl{-1} & \qw
+    \end{quantikz}
+    \end{center}
+
+    \textbf{Solution:} We can check equivalence by looking at the action on computational basis states. It is easy to check that, for both orientations of the controlled-$Z$, the only time that anything happens at all is when both qubits are in the $1$ state. This is because, even when the control qubit is activated, the $Z$ gate only does something if it acts on the $1$ state. So the only remaining case to check is $\ket{11}$. And indeed, we simply have a minus sign being applied to the state. It does not matter which qubit $Z$ acts on in this case, since phases can be moved around the tensor product freely.
+    \begin{align}
+        (Z\ket{1}) \otimes \ket{1} = (-\ket{1}) \otimes \ket{1} = \ket{1} \otimes (-\ket{1}) = \ket{1} \otimes (Z\ket{1})
+    \end{align}
+    This gets to the heart of why the two orientations of controlled-$Z$ are equivalent. 
+
+    Another way to see this is from symmetry. Regardless of orientation, controlled-$Z$ acts on $\ket{01}$ the same way as it acts on $\ket{10}$. There is a swap symmetry in which controlled-$Z$ is not affected by interchanging the qubits. In the circuit diagram, this corresponds to flipping the orientation.
+
+\section*{Exercise 4.19 ($\mathtt{CNOT}$ acting on density matrices)}
+    The $\mathtt{CNOT}$ gate is a simple permutation whose action on a density matrix $\rho$ is to rearrange the elements in the matrix. Write out this action explicitly in the computational basis. 
+
+    \textbf{Solution:} Of course, we could write $\rho$ as a $4 \times 4$ matrix and compute $\mathtt{CNOT} \rho \mathtt{CNOT}$ (noting that $\mathtt{CNOT}^\dagger = \mathtt{CNOT}$). I feel this is of relatively little utility for me to show you; I encourage you to try this yourself. Instead, I will simply show that $\mathtt{CNOT}$ permutes the matrix elements of $\rho$ in the computational basis. 
+
+    The first step is to note that $\mathtt{CNOT}$ is a permutation on the computational basis. There are many ways to see this, one way being that $\mathtt{CNOT}$ is a unitary (hence reversible) map sending computational basis states to other such states. This implies that $\mathtt{CNOT}\ket{i}\bra{j}\mathtt{CNOT} = \ket{i'}\bra{j'}$ for some computational basis states $\ket{i'}, \ket{j'}$. Moreover, $\ket{i'}\bra{j'}$ can only come from $\ket{i}\bra{j}$, since $\ket{i'} = \mathtt{CNOT} \ket{i}$ and no other state maps to $\ket{i'}$ under $\mathtt{CNOT}$.
+
+    Finally, to see that $\mathtt{CNOT}$ permutes $\rho$ in the computational basis, we just observe that, by linearity,
+    \begin{align}
+        \mathtt{CNOT}\rho \mathtt{CNOT} &= \sum_{ij} \rho_{ij} \mathtt{CNOT}\ket{i}\bra{j}\mathtt{CNOT} \\
+        &= \sum_{ij} \rho_{ij} \ket{i'}\bra{j'}
+    \end{align}
+    so that each entry $\rho_{ij}$ is shuffled to a different, unique index $(i'j')$.
+
+\section{Exercise 4.20 ($\mathtt{CNOT}$ basis transformation)}
+    Unlike ideal classical gates, ideal quantum gates do not have (as electrical engineers say) 'high-impedance' inputs. In fact, the role of 'control' and 'target' are arbitrary - they depend on what basis you think of a device as operating in. We have described how the $\mathtt{CNOT}$ behaves with respect to the computational basis, and in this description the state of the control qubit is not changed. However, if we work in a different basis then the control qubit \emph{does} change: we will show that its phase is flipped depending on the state of the 'target' qubit! Show that
+    \begin{center}
+    \begin{quantikz}[row sep=1cm]
+        \qw & \gate{H} & \ctrl{1} & \gate{H} & \qw \\
+        \qw & \gate{H} & \targ{} & \gate{H} & \qw
+    \end{quantikz} =
+    \begin{quantikz}[row sep =1cm]
+        \qw & \targ{} & \qw \\
+        \qw & \ctrl{-1} & \qw
+    \end{quantikz}
+    \end{center}
+    Introducing basis state $\ket{\pm} = (\ket{0} \pm \ket{1})/\sqrt{2}$, use this circuit identity to show that the effect of a \texttt{CNOT} with the first qubit as control and the second qubit as target is as follows:
+    \begin{align}
+    \begin{aligned}
+        \ket{+}\ket{+} &\rightarrow \ket{+}\ket{+} \\
+        \ket{-}\ket{+} &\rightarrow \ket{-}\ket{+} \\
+        \ket{+}\ket{-} &\rightarrow \ket{-}\ket{-} \\
+        \ket{-}\ket{-} &\rightarrow \ket{+}\ket{-}.
+    \end{aligned}
+    \end{align}
+    Thus, with respect to this new basis, the state of the target qubit is not changed, while the state of the control qubit is flipped if the target starts as $\ket{-}$, otherwise it is left alone. That is, in this basis, the target and control have essentially interchanged roles!
+
+    \textbf{Solution:} The circuit identity can be shown using the results of Exercises 4.17 and 4.18. We have
+    \begin{center}
+    \begin{quantikz}[row sep=1cm]
+        \qw & \gate{H} & \ctrl{1} & \gate{H} & \qw \\
+        \qw & \gate{H} & \targ{} & \gate{H} & \qw
+    \end{quantikz} = 
+    \begin{quantikz}[row sep=1cm]
+        \qw & \gate{H} & \ctrl{1} & \gate{H} & \qw \\
+        \qw & \qw & \gate{Z} & \qw & \qw
+    \end{quantikz} \\[3ex]
+    = \begin{quantikz}[row sep=1cm]
+        \qw & \gate{H} & \gate{Z} & \gate{H} & \qw \\
+        \qw & \qw & \ctrl{-1} & \qw & \qw
+    \end{quantikz} =
+    \begin{quantikz}[row sep=1cm]
+        \qw  & \targ{} &  \qw \\
+        \qw & \ctrl{-1} & \qw
+    \end{quantikz} 
+    \end{center}
+    Already, we see the main point: the control and target qubits have switched roles from a local change of basis. In this case, the Hadamard performs the change of basis. 
+
+    Now on to the four calculations. In the $\ket{\pm}$ basis, the \texttt{CNOT} still acts as a \texttt{CNOT}, just with reversed orientation. This is the content of our circuit identity. Thus, using the dictionary $\ket{+} \xleftrightarrow{H} \ket{0}$ and $\ket{-} \xleftrightarrow{H} \ket{1}$, we can do all the operations using the properties of \texttt{CNOT} (and remembering that the 2nd qubit is now the control. For example,
+    \begin{align}
+        \ket{+}\ket{-} \xrightarrow{\mathtt{CNOT}} \ket{-}\ket{-}
+    \end{align}
+    because $\ket{01} \xrightarrow{\mathtt{CNOT}} \ket{11}$ with the reversed orientation.
+
+\section*{Exercise 4.21}
+    Verify that Figure 4.8 implements the $C^2(U)$ operation.
+
+    \textbf{Solution:} I have to say, I find this construction fascinating and somewhat mysterious. But we are not asked to understand the construction (yet?), we are simply asked to verify that it works. Let's go through at least part of that process.
+
+    As usual, we can exploit linearity and check that everything works on a spanning set of states. So let's see how the circuit acts on a product state of the form $\ket{b}\ket{\psi}$, where $b$ is a two-qubit computational basis state of the control register and $\ket{\psi}$ is an arbitrary single-qubit state. At the end of the circuit, we will need that $\ket{b}$ is left unchanged, and $U = V^2$ is applied to $\ket{\psi}$ exactly when $b = 11$.
+
+    To start, we can quickly see that $b$ will never change at the end of the circuit, because either no gates are applied to the control (when the top qubit is 0) or $\mathtt{CNOT}^2 = I$ is applied (when the top qubit is 1). So now we just need to go through all four cases and check that $U$ is applied in the appropriate cases. We will go through only two of these cases: 10 and 11.
+
+    First suppose $b = 10$. Then the first controlled-$V$ is not applied, but the controlled-$V^\dagger$ is  since the $\mathtt{CNOT}$ flips the 2nd control bit momentarily. The final controlled-$V$ gate is applied, resulting in $V V^\dagger = I$. Nothing is done to the target, as required.
+
+    Consider now $b = 11$. We can check that both controlled-$V$'s are applied, but not the controlled-$V^\dagger$. The total result on the target is $V^2 = U$, as required. 
+
+    I leave you to check the remaining cases. It is interesting that we sometimes have to go ``backwards" with a $V^\dagger$ to make everything work out. Recall that was necessary to undo some of the controlled-$V$ when we didn't want it applied in the end.
+
+\section*{Exercise 4.22}
+    Prove that a $C^2(U)$ gate (for any single qubit unitary $U$) can be contructed using at most eight one-qubit gates, and six controlled-\texttt{NOT}s.
+
+    \textbf{Solution:} Let's examine the construction of Figure 4.8. We see that the $C^2(U)$ can be done with two \texttt{CNOT}s and three single-qubit controlled unitaries. Each of these three can be done with at most two \texttt{CNOT}s, via the ABC decomposition, for a total of $3 \times 2 + 2 = 8$ \texttt{CNOT}s. This is only an upper bound, however, since we haven't taken advantage of simplifications we can make. The full circuit, with the ABC decomposition of $C(V)$, is
+    \begin{center}
+    \begin{quantikz}[column sep = .2cm]
+        \qw & \qw      & \qw      & \qw      & \qw      & \qw\slice{}         & \ctrl{1}         & \qw      & \qw               & \qw     
+                 & \ctrl{1}\slice{} & \qw      & \ctrl{2} & \qw      & \ctrl{2} & \gate{P(\alpha)} & \qw\\
+        \qw & \qw      & \ctrl{1} & \qw      & \ctrl{1} & \gate{P(\alpha)} & \targ{}          & \ctrl{1} & \gate{P(-\alpha)} & \ctrl{1} & \targ{}          & \qw      & \qw      & \qw      & \qw      & \qw              & \qw \\
+        \qw & \gate{C} & \targ{}  & \gate{B} & \targ{}  & \gate{A}         & \gate{A^\dagger} & \targ{}  & \gate{B^\dagger}  & \targ{}          & \gate{C^\dagger} & \gate{C} & \targ{}  & \gate{B} & \targ{}  & \gate{A}         & \qw
+    \end{quantikz}
+    \end{center}
+    Here, the $P(\alpha)$ is the relative phase rotation by angle $\alpha$. The red dashed vertical lines are to help you see the various controlled-$V$ or $V^\dagger$ gates. We can already see some helpful simplifications: we can cancel the $A$ and $A^\dagger$, and similar for the $C$'s. We can also move the phase gates across the "control" parts of the controlled gates. After these simplifications, and cosmetic rearrangements, we arrive at the following.
+    \begin{center}
+    \begin{quantikz}
+        \qw & \qw      & \qw      & \qw              & \qw      & \ctrl{1} & \qw      & \qw               & \qw      & \ctrl{1} & \ctrl{2} & \qw      & \ctrl{2} & \gate{P(\alpha)} & \qw \\
+        \qw & \qw      & \ctrl{1} & \gate{P(\alpha)} & \ctrl{1} & \targ{}  & \ctrl{1} & \gate{P(-\alpha)} & \ctrl{1} & \targ{}  & \qw 
+                 & \qw      & \qw      & \qw              & \qw \\
+        \qw &\gate{C} & \targ{}  & \gate{B}         & \targ{}  & \qw      & \targ{}  & \gate{B^\dagger}   & \targ{}  & \qw      & \targ{}  & \gate{B} & \targ{}  & \gate{A}         & \qw
+    \end{quantikz}
+    \end{center}
+    This circuit has eight single-qubit gates and eight \texttt{CNOT}s. It seems there is no way to reduce, in general, the number of single-qubit gates, so we have a total of eight. You might wonder whether we can reduce the number of \texttt{CNOT}s (especially because the problem says we can get six!). Since we'll need to avoid the single-qubit gates in the middle, we'll focus on the two clusters of \texttt{CNOT}s that take the form
+    \begin{center} \label{circ:4.22_CNOTs}
+    \begin{quantikz}
+        \qw & \qw      & \ctrl{1} & \qw      & \qw \\
+        \qw & \ctrl{1} & \targ{}  & \ctrl{1} & \qw \\
+        \qw & \targ{}  & \qw      & \targ{}  & \qw 
+    \end{quantikz} \qquad \text{and} \qquad
+    \begin{quantikz}
+        \qw & \qw      & \ctrl{1} & \ctrl{2} & \qw \\
+        \qw & \ctrl{1} & \targ{}  & \qw      & \qw \\
+        \qw & \targ{}  & \qw      & \targ{}  & \qw 
+    \end{quantikz}.
+    \end{center}
+    We can always make guesses and try to see if they're correct, but perhaps the best way is to see what each \texttt{CNOT}-piece computes through arithmetic. Let $abc$ represent a bitstring of length three. The left circuit of \ref{circ:4.22_CNOTs} goes as
+    \begin{align}
+        abc \rightarrow ab(b+c) \rightarrow a(a+b)(b+c) \rightarrow a(a+b)(a+c).
+    \end{align}
+    Here, $+$ represents arithmetic mod 2. The last step comes from the fact that $(a+b) + (b+c) = a+c$. Looking at the result gives us an idea of how to compute the circuit with one less \texttt{CNOT}.
+    \begin{center}
+    \begin{quantikz}
+        \qw & \qw      & \ctrl{1} & \qw      & \qw \\
+        \qw & \ctrl{1} & \targ{}  & \ctrl{1} & \qw \\
+        \qw & \targ{}  & \qw      & \targ{}  & \qw 
+    \end{quantikz} = 
+    \begin{quantikz}
+        \qw & \ctrl{1} & \ctrl{2} & \qw \\
+        \qw & \targ{}  & \qw      & \qw \\
+        \qw & \qw      & \targ{}  & \qw 
+    \end{quantikz}
+    \end{center}
+    We can play the same game with the right circuit of \ref{circ:4.22_CNOTs}. We would then find that the following construction would suffice. 
+    \begin{center}
+        \begin{quantikz}
+        \qw & \qw      & \ctrl{1} & \ctrl{2} & \qw \\
+        \qw & \ctrl{1} & \targ{}  & \qw      & \qw \\
+        \qw & \targ{}  & \qw      & \targ{}  & \qw 
+    \end{quantikz} = 
+    \begin{quantikz}
+        \qw & \ctrl{1} & \qw      & \qw \\
+        \qw & \targ{}  & \ctrl{1} & \qw \\
+        \qw & \qw      & \targ{}  & \qw 
+    \end{quantikz}
+    \end{center}
+
+    Having made these reductions, we can see that our circuit is in the form (ignoring labels of the single-qubit gates)
+    \begin{center}
+    \begin{quantikz}
+        \qw & \qw     & \qw      & \qw     & \ctrl{1} & \ctrl{2} & \qw     & \ctrl{1} & \qw      & \qw     & \ctrl{2} & \gate{} & \qw \\
+        \qw & \qw     & \ctrl{1} & \gate{} & \targ{}  & \qw      & \gate{} & \targ{}  & \ctrl{1} & \qw     & \qw      & \qw     & \qw \\
+        \qw & \gate{} & \targ{}  & \gate{} & \qw      & \targ{}  & \gate{} & \qw      & \targ{}  & \gate{} & \targ{}  & \gate{} & \qw
+    \end{quantikz}.
+    \end{center}
+    This circuit has six \texttt{CNOT}s and eight single-qubit gates, as can be counted. It's hard to imagine that this circuit could be simplified any further, but in any case we have our answer.
+
+\section*{Exercise 4.23}
+    Contruct a $C^1(U)$ gate for $U = R_x(\theta)$ and $U = R)y(\theta)$, using only \texttt{CNOT} and single qubit gates. Can you reduce the number of single qubit gates needed in the construction from three to two?
+
+    \textbf{Solution:} We note that in both of these cases, the overall phase $\alpha = 0$, so we focus on the angles $\beta, \gamma, \delta$ needed in the $ZY$-decomposition (which then feeds into the $ABC$ decomposition). The $R_y(\theta)$ is already in the proper form, with $\beta = \delta = 0$ and $\gamma = \theta$. Meanwhile, $R_x(\theta) = R_z(-\pi/2) R_y(\theta) R_z(\pi/2)$, so we have $\beta = -\delta = -\pi/2$ and $\gamma = \theta$. 
+    
+    Now let's do the $ABC$ decomposition, starting with the $R_y$ gate since this is easier. Following the textbook, we have
+    \begin{align}
+        A = R_y(\theta/2), \qquad B = R_y(-\theta/2), \qquad C = I.
+    \end{align}
+    Thus, our circuit for $CR_y$ becomes
+    \begin{center}
+    \begin{quantikz}
+        \qw & \ctrl{1}           & \qw \\ 
+        \qw & \gate{R_y(\theta)} & \qw 
+    \end{quantikz} = 
+    \begin{quantikz}
+        \qw & \ctrl{1} & \qw                   & \ctrl{1} & \qw     
+                            & \qw \\
+        \qw & \targ{}  & \gate{R_y(-\theta/2)} & \targ{}  & \gate{R_y(\theta/2)} & \qw
+    \end{quantikz}
+    \end{center}
+    Notice that this construction already has only two single-qubit gates. 
+
+    To construct as similar circuit for $R_x(\theta)$, we don't have to do much more work. We can simply sandwich the circuit with the appropriate $R_z$ gates.
+    \begin{center}
+    \begin{quantikz}
+        \qw & \ctrl{1}           & \qw \\ 
+        \qw & \gate{R_x(\theta)} & \qw 
+    \end{quantikz} = 
+    \begin{quantikz}
+        \qw & \qw                & \ctrl{1} & \qw                   & \ctrl{1} & \qw                  & \qw               & \qw \\
+        \qw & \gate{R_z(-\pi/2)} & \targ{}  & \gate{R_y(-\theta/2)} & \targ{}  & \gate{R_y(\theta/2)} & \gate{R_z(\pi/2)} & \qw
+    \end{quantikz}
+    \end{center}
+    While four single-qubit gates are shown, we can combine the last two into a single rotation and reduce the count to three. I am not sure if this can be reduced any further, but my guess is not. 
+
+\section*{Exercise 4.24}
+    Verify that Figure 4.9 implements the Toffoli gate. 
+
+    \textbf{Solution:} 
+    
 \section*{Exercise 4.40}
     For arbitrary $\alpha$ and $\beta$ show that 
     \begin{align}
@@ -2688,6 +3034,24 @@ This progress was last updated May 19th, 2022.
     \end{align}
     modulo $5$. We conclude that the premise of $\theta/(2\pi)$ being rational is false. Hence, it is irrational.
 
+\section*{Exercise 4.43}
+    Use the results of the previous two exercises to show that the Hadamard, phase, controlled-NOT and Toffoli gates are universal for quantum computation.
+
+    \textbf{Solution:} What we've found thus far, after Exercises 4.41 and 4.42, is that this combination of gates can produce an irrational rotation $R_z(\theta)$. From this gate, we can construct any $z$ rotation to arbitrary accuracy. On the other hand, using the rotation $R_x(\theta) = H R_z(\theta) H$, we can a similar approximation to any $x$ rotation. Via the $XZ$-decomposition of single qubit gates, this allows for any single-qubit quantum gate. Paired with the $\mathtt{CNOT}$, we have universal quantum computation.
+
+\section*{Exercise 4.44}
+    Show that the three qubit gate $G$ defined by the circuit:
+    \begin{center}
+    \begin{quantikz}
+        \qw & \ctrl{2}& \qw \\
+        \qw & \ctrl{1}& \qw \\
+        \qw & \gate{i R_x(\pi \alpha)} & \qw
+    \end{quantikz}    
+    \end{center}
+    is universal for quantum computation whenever $\alpha$ is irrational.
+
+    \textbf{Solution:}
+
 \chapter{The quantum Fourier transform and its applications}
 
 
@@ -2739,7 +3103,7 @@ This progress was last updated May 19th, 2022.
     where $\ket{j}$ is our input state. This involves a multiplication of $n$ terms, hence there are $n\times 2^n$ total multiplications. This is a lower bound for the number of operations. 
 
 \section*{Exercise 5.4}
-    Give a decomposition of the controlled-$R_k$ gate into single qubit and \text{CNOT} gates.
+    Give a decomposition of the controlled-$R_k$ gate into single qubit and $\mathtt{CNOT}$ gates.
     
     \textbf{Solution:} We use the $ABC$ construction of Corollary 4.2 to make our controlled $R_k$ according to Figure 4.6. First, note that
     \begin{align}
@@ -3250,7 +3614,7 @@ This progress was last updated May 19th, 2022.
     \section*{Exercise 6.6} 
         Verify that the gates in the dotted box in the second figure of Box 6.1 perform the conditional phase shift operation $2\ket{00}\bra{00}-I$, up to an unimportant global phase factor.
         
-        \textbf{Solution:} Because $HXH = Z$, the CNOT gate sandwiched between $H$ gates is equivalent to a CZ gate. Moreover, $XZX = -Z$. Thus, the gates in the dotted box enact a controlled minus $Z$ gate, where the control is taken to be the zero state. In braket form, if $R$ is this set of gates,
+        \textbf{Solution:} Because $HXH = Z$, the $\mathtt{CNOT}$ gate sandwiched between $H$ gates is equivalent to a CZ gate. Moreover, $XZX = -Z$. Thus, the gates in the dotted box enact a controlled minus $Z$ gate, where the control is taken to be the zero state. In braket form, if $R$ is this set of gates,
         \begin{align}
             R = \ket{0}\bra{0} \otimes (-Z) + \ket{1}\bra{1}\otimes I.
         \end{align}
@@ -4963,14 +5327,14 @@ This progress was last updated May 19th, 2022.
 \section*{Exercise 10.36}
     Explicitly verify that $U X_1 U^\dagger= X_1 X_2$, $U X_2 U^\dagger = X_2$, $U Z_1 U^\dagger = Z_1$, and $U Z_2 U^\dagger = Z_1 Z_2$. These and other useful conjugation relations for the Hadamard, phase, and Pauli gates are summarized in Figure 10.7.
     
-    \textbf{Solution:} We will show each of these relationships in sequence, but rather than using the matrix representations of the operators we will use the standard operator form of the CNOT operator.
+    \textbf{Solution:} We will show each of these relationships in sequence, but rather than using the matrix representations of the operators we will use the standard operator form of the $\mathtt{CNOT}$ operator.
     \begin{align}
-        \text{CNOT} = \ket{0}\bra{0}I + \ket{1}\bra{1}X.
+        \mathtt{CNOT} = \ket{0}\bra{0}I + \ket{1}\bra{1}X.
     \end{align} 
     (We've left off the tensor product $\otimes$ for simplicity).  First, we have
     \begin{align}
     \begin{aligned}
-        \text{CNOT}X_1 \text{CNOT} &= \left(\ket{0}\bra{1}I  + \ket{1}\bra{0}X\right)\left(\ket{0}\bra{0}I + \ket{1}\bra{1} X\right) \\
+        \mathtt{CNOT}X_1 \mathtt{CNOT} &= \left(\ket{0}\bra{1}I  + \ket{1}\bra{0}X\right)\left(\ket{0}\bra{0}I + \ket{1}\bra{1} X\right) \\
         &=\ket{1}\bra{0} X + \ket{0}\bra{1}X \\
         &=\left(\ket{1}\bra{0}+\ket{0}\bra{1}\right) X \\
         &= X_1 X_2
@@ -4978,18 +5342,18 @@ This progress was last updated May 19th, 2022.
     \end{align}
     Next, we have
     \begin{align}
-        \text{CNOT} X_2 \text{CNOT} = X_2
+        \mathtt{CNOT} X_2 \mathtt{CNOT} = X_2
     \end{align}
-    by the simple fact that $X_2$ commutes with $\text{CNOT}$. This can be checked by computation, but it is also easy to see because $X$ commutes with both the identity and $X$, which are, roughly speaking, the two possible operations depending on the control qubit.
+    by the simple fact that $X_2$ commutes with $\mathtt{CNOT}$. This can be checked by computation, but it is also easy to see because $X$ commutes with both the identity and $X$, which are, roughly speaking, the two possible operations depending on the control qubit.
     
-    Similarly, since $Z_1$ commutes with $\text{CNOT}$, it is invariant under conjugation.
+    Similarly, since $Z_1$ commutes with $\mathtt{CNOT}$, it is invariant under conjugation.
     \begin{align}
-        \text{CNOT} Z_1 \text{CNOT} = Z_1.
+        \mathtt{CNOT} Z_1 \mathtt{CNOT} = Z_1.
     \end{align}
     Intuitively, a $Z$ gate does not ``change" the computational basis which is being controlled on. More precisely, $Z$ commutes with the projection operators onto the computational basis. Finally, we can compute the action on $Z_2$ similar to how we did $X_1$.
     \begin{align}
     \begin{aligned}
-        \text{CNOT} Z_2 \text{CNOT} &= \left(\ket{0}\bra{0}Z + \ket{1}\bra{1}(XZ)\right)\left(\ket{0}\bra{0}I + \ket{1}\bra{1}X\right) \\
+        \mathtt{CNOT} Z_2 \mathtt{CNOT} &= \left(\ket{0}\bra{0}Z + \ket{1}\bra{1}(XZ)\right)\left(\ket{0}\bra{0}I + \ket{1}\bra{1}X\right) \\
         &= \ket{0}\bra{0}Z + \ket{1}\bra{1}(XZX) \\
         &= \ket{0}\bra{0}Z -\ket{1}\bra{1}Z \\
         &= \left(\ket{0}\bra{0}-\ket{1}\bra{1}\right) Z \\
@@ -5003,7 +5367,7 @@ This progress was last updated May 19th, 2022.
     \textbf{Solution:} We can make use of the previous exercise by noting that $Y_1 = -i Z_1 X_1$, and the conjugation by $U$ respects multiplication. More specifically,
     \begin{align}
     \begin{aligned}
-        \text{CNOT}Y_1 \text{CNOT} &= -i \text{CNOT}Z_1\text{CNOT} \text{CNOT} X_1 \text{CNOT} \\
+        \mathtt{CNOT}Y_1 \mathtt{CNOT} &= -i \mathtt{CNOT}Z_1 \mathtt{CNOT} \mathtt{CNOT} X_1 \mathtt{CNOT} \\
         &=-i Z_1 X_1 X_2 \\
         &=Y_1 X_2.
     \end{aligned}
@@ -5114,9 +5478,9 @@ This progress was last updated May 19th, 2022.
     \begin{align}
         \ket{\psi} = U \ket{0} \quad \ket{\varphi} = U \ket{1}
     \end{align}
-    Depending on which state the data qubit is in, we want to apply $U$ or $U X$ to the initial state $\ket{0}$ of the target qubit. This suggests we use a CNOT gate. We will first use the inverse gate $U^\dagger$ to rotate the data qubit to the computational basis, perform the controls, then apply $U$ to the data to bring it to the original value. Figure~\ref{fig:orthogonal_copy} depicts the full circuit.
+    Depending on which state the data qubit is in, we want to apply $U$ or $U X$ to the initial state $\ket{0}$ of the target qubit. This suggests we use a $\mathtt{CNOT}$ gate. We will first use the inverse gate $U^\dagger$ to rotate the data qubit to the computational basis, perform the controls, then apply $U$ to the data to bring it to the original value. Figure~\ref{fig:orthogonal_copy} depicts the full circuit.
     
-    This circuit can be readily generalized to copy any $n$-qubit state from a given orthonormal basis. In this context, the $U^\dagger$ will be an $n$-qubit unitary mapping the chosen basis to the computational basis, and the CNOT gate will become a string of $n$ CNOTs from the $i$th qubit of the data register to the $i$th qubit of the target. These CNOTs are essentially the copy circuit for the computational basis.
+    This circuit can be readily generalized to copy any $n$-qubit state from a given orthonormal basis. In this context, the $U^\dagger$ will be an $n$-qubit unitary mapping the chosen basis to the computational basis, and the $\mathtt{CNOT}$ gate will become a string of $n$ $\mathtt{CNOT}$s from the $i$th qubit of the data register to the $i$th qubit of the target. These $\mathtt{CNOT}$s are essentially the copy circuit for the computational basis.
     \begin{figure}
         \centering
         \begin{quantikz}
