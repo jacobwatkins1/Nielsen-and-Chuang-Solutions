@@ -19,7 +19,7 @@ Appendix 2: Some. \
 Appendix 3: Only the first. \
 Appendix 4: All exercises complete except 17 and part 2 of problem 1. \
 Appendix 5: Almost done. Problem 1 needs to be cleaned up. \
-Appendix 6: All exercises complete! \
+Appendix 6: All exercises complete!
 
 
 Other partial solutions: \
