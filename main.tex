@@ -4111,7 +4111,7 @@ This progress was last updated May 26th, 2023.
     
     \textbf{Solution}: Let's now consider a computation based on the factored form of the QFT, Equation (5.4). As before, this involves a computation of $2^n$ amplitudes, one for each bitstring $k = k_1k_2...k_n$. Using (5.4) the amplitude $a_{k}$ corresponding to the state $\ket{k}$ is given by
     \begin{align}
-        \bra{k}QFT\ket{j} = \frac{1}{2^{n/2}}\big(\delta_{k_1 0}+e^{2\pi i0.j_n}\delta_{k_1 2}\big)\big(\delta_{k_2 0}+e^{2\pi i0.j_{n-1}j_n}\delta_{k_2 2}\big)...\big(\delta_{k_n 0}+e^{2\pi i0.j_1...j_n}\delta_{k_n 2}\big).
+        \bra{k}QFT\ket{j} = \frac{1}{2^{n/2}}\big(\delta_{k_1 0}+e^{2\pi i0.j_n}\delta_{k_1 1}\big)\big(\delta_{k_2 0}+e^{2\pi i0.j_{n-1}j_n}\delta_{k_2 1}\big)...\big(\delta_{k_n 0}+e^{2\pi i0.j_1...j_n}\delta_{k_n 1}\big).
     \end{align}
     where $\ket{j}$ is our input state. This involves a multiplication of $n$ terms, hence there are $n\times 2^n$ total multiplications. This is a lower bound for the number of operations. 
 
