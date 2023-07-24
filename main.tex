@@ -3171,11 +3171,11 @@ This progress was last updated May 26th, 2023.
 
     \textbf{Solution}: Let's first consider the output state $\rho_0$ of an observer who measures the second qubit to be zero. The probability $p_0$ of this outcome is given by the Born rule
     \begin{align}
-        p_0 = \Tr(P_0 \rho)
+        p_0 = \tr(P_0 \rho)
     \end{align}
     and the final state is given by
     \begin{align} \label{eq:4.32_postmeas}
-        \rho_0 = \frac{P_0 \rho P_0}{\Tr(P_0 \rho P_0)} = \frac{P_0 \rho P_0}{p_0}.
+        \rho_0 = \frac{P_0 \rho P_0}{\tr(P_0 \rho P_0)} = \frac{P_0 \rho P_0}{p_0}.
     \end{align}
     An entirely parallel result holds for a measurement of 1, with final state $\rho_1$ and probability $p_1$. For an observer who has not seen the result, the outcome is a probabilistic mixture of the two outcome states, weighted by their respective probabilities. Such mixtures are handled in the density operator formalism by weighted averages.
     \begin{align}
@@ -3861,7 +3861,7 @@ This progress was last updated May 26th, 2023.
 
     A few comments on this result. What we've found is that this \emph{symmetric Trotter formula,} accurate to second order, is a better approximation than the regular, ``first order" Trotter formula encountered in the text. Other Trotter formulas exist that achieve higher accuracy, but they aren't usually as practical as these choices presented.
 
-    (b) Using equation 4.69 from Box 4.1 of the text, which is essentially a triangle inequality for unitary operations,
+    2. Using equation 4.69 from Box 4.1 of the text, which is essentially a triangle inequality for unitary operations,
     \begin{align} \label{eq:4.50_triangle}
         E(U_{\Delta t}^m, e^{-2miH\Delta t}) \leq m E(U_{\Delta t}, e^{-i H \Delta t}).
     \end{align}
@@ -3993,7 +3993,7 @@ This progress was last updated May 26th, 2023.
     \begin{enumerate}
         \item $H$ is Hermitian, with eigenvalues in the range $0$ to $2\pi$.
         \item $H$ can be written
-        \begin{align}
+        \begin{align} \label{eq:pauli_sum}
             H = \sum_g h_g g,
         \end{align}
         where $h_g$ are real numbers and the sum is over all $n$-fold tensor products $g$ of the Pauli matrices $\{I, X, Y, Z\}$.
@@ -4005,7 +4005,7 @@ This progress was last updated May 26th, 2023.
         where the product is taken with respect to any fixed ordering of the $n$-fold tensor products of Pauli matrices, $g$.
         \item Show that
         \begin{align}
-            U = \left[\prod_g \exp()-i h_g g \Delta)\right]^k + O(4^n \Delta).
+            U = \left[\prod_g \exp(-i h_g g \Delta)\right]^k + O(4^n \Delta).
         \end{align}
         \item Explain how to approximte $U$ to within a distance $\epsilon >0$ using $O(n16^n/\epsilon)$ one and two qubit unitary operations.
     \end{enumerate}
@@ -4038,29 +4038,116 @@ This progress was last updated May 26th, 2023.
 
     There is another way to proceed, which is illuminating in other respects. We can in fact show that the $n$ qubit paulis form an \emph{orthogonal basis} with respect to the Hilbert Schmidt inner product defined by
     \begin{align}
-        \langle A, B \rangle := \Tr{A^\dagger B}.
+        \langle A, B \rangle := \tr{A^\dagger B}.
     \end{align}
     To see this, let $g, g'$ be paulis such that $g\neq g'.$ Then there exists at least one index $i$ such that $\sigma_i \neq \sigma_i'$, where $\sigma_i$ and $\sigma_i'$ are the $i$th single qubit pauli operator for $g$ and $g'$ respectively. Since the trace factors over tensor products,
     \begin{align}
-        \Tr{A\otimes B} = \Tr{A}\Tr{B},
+        \tr{A\otimes B} = \tr{A}\tr{B},
     \end{align}
     we know that
     \begin{align}
-        \langle g, g' \rangle = \Tr{\sigma_i \sigma_i'} \times c
+        \langle g, g' \rangle = \tr{\sigma_i \sigma_i'} \times c
     \end{align}
-    where $c$ is the trace of the other pieces. Observe that, if $\Tr{\sigma_i \sigma_i'} = 2 \delta_{i i'}$, and in particular is zero if $i \neq i'.$ 
+    where $c$ is the trace of the other pieces. Observe that, if $\tr{\sigma_i \sigma_i'} = 2 \delta_{i i'}$, and in particular is zero if $i \neq i'.$ Hence, $g$ and $g'$ are orthogonal for all $g \neq g'$, hence they are linearly independent. 
     
-    Hence, $g$ and $g'$ are orthogonal for all $g \neq g'$, hence they are linearly independent. Moreover, one can check that there are $4^n$ distinct $n$ qubit paulis. What is the dimension of the vector space of $n$ qubit operators? It's the number of matrix elements, or $4^n$. Hence, we have $4^n$ linearly independent vectors in a $4^n$ dimensional space. This implies these vectors span the space.
-
-    Thus, the $n$ qubit paulis form an orthogonal basis. This means that any operator $H$ can be written as 
+    Moreover, one can check that there are $4^n$ distinct $n$ qubit paulis. What is the dimension of the vector space of $n$ qubit operators? It's the number of matrix elements, or $4^n$. Hence, we have $4^n$ linearly independent vectors in a $4^n$ dimensional space. This implies these vectors span the space. Thus, the $n$ qubit paulis form an orthogonal basis. 
+    
+    This means that any operator $H$ can be written as 
     \begin{align}
         H = \sum_g h_g g
     \end{align}
     for complex coefficients $h_g$. If, in particular, $H$ is Hermitian, then since $g^\dagger = g$, $h_g^*$ must equal $h_g$. Hence $h_g$ is real.
 
-    3. We have already seem how to do this from the text. First, for all of those qubits in which $g$ has $I$ on that qubit, we can ignore it. We are left with a tensor product $g = g_1 \otimes g_2 \otimes \dots \otimes g_k$, for some subset of $k\leq n$ qubits, where $g_k \in \{X,Y,Z\}$. Now everything is as before from the text: we diagonalize $g$ using Hadamards and phase gates in a circuit $U$, so that $g = U Z^{\otimes k} U^\dagger$. Then we implement $U e^{-i h_g Z^{\otimes k} \Delta}U^\dagger$.
+    3. We have already seem how to do this from the text. First, for all of those qubits in which $g$ has $I$ on that qubit, we can ignore it. We are left with a tensor product $g = g_1 \otimes g_2 \otimes \dots \otimes g_k$, for some subset of $k\leq n$ qubits, where $g_k \in \{X,Y,Z\}$. Now everything is as before from the text: we diagonalize $g$ using Hadamards and phase gates in a circuit $U$, so that $g = U Z^{\otimes k} U^\dagger$. Then we implement
+    \begin{align}
+        U \exp\left(-i h_g Z^{\otimes k} \Delta\right)U^\dagger
+    \end{align}
+    to perform the unitary operation.
 
-    4.
+    How many gates are required? The unitaries $U$ are each constructed out of $O(n)$ single qubit gates. Moreover, the circuit from Figure 4.19 illustrates how one can construct $\exp{-i Z^{\otimes k} t}$ using $O(k)$ CNOT gates, plus one single qubit rotation and one ancilla qubit. Since $O(k) \subset O(n)$, adding all of the scalings still keeps us in $O(n)$ gates (heuristically, $O(n) + O(n) = O(n)$). 
+
+    4. From the discussion of the main text surrounding Trotter formulas, we already expected to get a $t^2$ scaling. But what about the $4^n$ factor? There are some reasonable but unstated assumptions that go in to this, and in order to unpack this we will need to understand the scaling of the Trotter error with respect to the ``size'' of the Hamiltonian.
+
+    Before doing some math, let's make a few remarks. Note that simulating $H' := 2H$ for time $t$ is equivalent to simulating $H$ for time $2t$. 
+    \begin{align}
+        e^{-iH't} = e^{-iH(2t)}
+    \end{align}
+    What this suggests is that the cost scaling should really grow as $h t$, where $h$ is a quantity which captures the ``size" of H. Operator norms such as the spectral norm can be helpful for these purposes. How does $h$ scale with the number of qubits? For our generic $H,$ the number of terms grows as $4^n$, and assuming the size of each term remains fixed as $n$ increases, the size of the Hamiltonian could grow at worst as $4^n$. So we can start to see where this answer comes from.
+
+    Let's put some precise mathematics on the above conversation. First, let $H = \sum_{j=1}^L H_j$ be a more general expression for the pauli sum~\eqref{eq:pauli_sum}. The error in first order Trotter can be expressed as
+    \begin{align}\label{eq:prob4.3_troterror}
+        \prod_{j=1}^L e^{-i H_j t} - e^{-i H t} = -\frac{t^2}{2} \left(\sum_{j=1}^L H_j^2 + 2 \sum_{i < j} H_i H_j - (\sum_j H_j)^2\right) + O(t^4).
+    \end{align}
+
+    The first two terms come from expanding the Trotter formula, while the last term is from $e^{-iHt}$. Now let's quantify the Hamiltonian size. Let $h = \max_j{\norm{H_j}}$ be an upper bound on the norm of each term of the Hamiltonian. Taking the norm of~\eqref{eq:prob4.3_troterror} and taking the triangle inequality.
+    \begin{align}
+    \begin{aligned}
+        \norm{\prod_{j=1}^L e^{-i H_j t} - e^{-i H t}} &\leq \frac{t^2}{2}\left(\sum_{j=1}^L \norm{H_j}^2 + 2 \sum_{i<j} \norm{H_i} \norm{H_j} + (\sum_{j=1}^L \norm{H_j})^2\right) + O(t^4) \\
+        &\leq \frac{t^2}{2}\left(\sum_{j=1}^L h^2 + 2 \sum_{i<j} h^2 + (\sum_{j=1}^L h)^2\right) + O(t^4)\\
+        &\leq \frac{t^2}{2}\left(h^2 L + 2 h^2 \left(\frac{L(L-1)}{2}\right) + (hL )^2\right) + O((ht)^4) \\
+        &= \frac{(ht)^2}{2}(L + L^2 - L + L^2) +  O((ht)^4)\\
+        &= \frac{(Lht)^2}{2} + O((ht)^4.
+    \end{aligned}
+    \end{align}
+    Thus the error scales as $O((Lht)^2)$ as $t$ goes to zero. Making the replacement $t \rightarrow \Delta$ and $L \rightarrow 4^n$ gives that
+    \begin{align}
+        \exp(-i H \Delta) = \prod_g \exp(-i h_g g \Delta) + O(4^n h \Delta^2)
+    \end{align}
+    where $h$ satisfies
+    \begin{align}
+        h = \max_g \norm{h_g g} = \max_g \abs{h_g}.
+    \end{align}
+
+    To obtain our final result, we need to say something on how fast $h$ grows with $n$ in the worst case. What upper bound is there? One thing that can be said is that $\norm{H} < 2\pi$, since the eigenvalues are within $[0,2\pi)$. It seems like this should put restrictions on how large each component $h_g$ can be, and indeed, $h_g \in O(1)$. I will leave this more technical exercise to the interested reader, but I will just point out that it can be shown using the ``equivalent" of several different vector norms, one of which, the Frobenius norm, is directly related to the coefficients $h_g$. 
+
+    5. Recall that $U = e^{-i H} = (e^{-i H \Delta})^k$. From the result of the previous part,
+    \begin{align}
+        (e^{-i H \Delta})^k = \left(\prod_g \exp(-i h_g g \Delta) + O(4^n \Delta^2)\right)^k
+    \end{align}
+    Using the binomial theorem, we can expand this sum out, and keep only terms to lowest order of $\Delta \equiv 1/k$. Doing this, we find
+    \begin{align}
+    \begin{aligned}
+        (e^{-i H \Delta})^k &= \prod_g \exp(-i h_g g \Delta) + k O(4^n \Delta^2) + O(\Delta^2) \\
+        &= \prod_g \exp(-i h_g g \Delta) + O(4^n \Delta)
+    \end{aligned}
+    \end{align}
+    This is the result we sought.
+
+    6. Let's trace through the procedure implied by the previous work. Given $U$, we can derive its ``effective Hamiltonian" $H = i \ln(U)$, and express it in the Pauli basis on $n$ qubits. We can then perform a Trotter simulation in $k$ steps, accrueing an error $\epsilon \in O(4^n \Delta)$ for $k$ steps. This implies that
+    \begin{align}
+        k \in O\left(\frac{4^n}{\epsilon}\right)
+    \end{align}
+    steps are needed to get within the desired accuracy.
+
+    How costly is each of the $k$ steps in terms of one and two qubit gates? First of all, we need to perform $4^n$ exponentials $e^{-ih_g g \Delta}$. We worked out in part 3 that the cost of each of these is $O(n)$. Thus, each step has cost $O(4^n n)$.
+
+    To get the total cost, we multiply these two to get
+    \begin{align}
+        O\left(\frac{4^n}{\epsilon} \times 4^n n\right) = O(n 16^n/ \epsilon).
+    \end{align}
+
+    This is an asymptotic upper bound on the cost of simulating an arbitrary $n$ qubit unitary $U$.
+
+    A few final comments. The cost is exponential in $n$, and this is to be expected since, by the counting arguments of the text, simulating an arbitrary $U$ should be inefficient (meaning greater than polynomial scaling in $n$). Comparing with the universality approach of the main text, this one does comparably in terms of $n$ scaling, but worse in terms of accuracy ($1/\epsilon$ here vs $\log(1/\epsilon)$ in the text). 
+
+\section*{Problem 4.4 (Minimal Toffoli construction) (Research)}
+    \begin{enumerate}
+        \item What is the smallest number of two qubit gates that can be used to implement the Toffoli gate?
+        \item What is the smallest number of one qubit gates and CNOT gates that can be used to implement the Toffoli gate?
+        \item What is the smallest number of one qubit gates and controlled-$Z$ gates that can be used to implement the Toffoli gate?
+    \end{enumerate}
+
+    \textbf{Solution}: As a research question (which may have been solved by now?) I am going to assume this is a bit of a time sink and delay trying to find the solution (perhaps indefinitely). I welcome someone else to supply the (known or currently unknown) answer!
+
+\section*{Problem 4.5 (Research)}
+    Construct a family of Hamiltonians, $\{H_n\}$, on $n$ qubits, such that simulating $H_n$ requires a number of operations super-polynomial in $n$. (\emph{Comment:} This problem seems to be quite difficult.)
+
+    \textbf{Solution}: Interesting that we know there are families of hard Hamiltonians, but we have a hard time identifying them! I will assume this problem is a time sink and let someone else help me find answer if desired.
+
+\section*{Problem 4.6 (Universality with prior entanglement)}
+    Controlled-NOT gates and single qubit gates form a universal set of quantum logic gates. Show that an alternative universal set of resources is comprised of single qubit unitaries, the ability to perform measurements of pairs of qubits in the Bell basis, and the ability to prepare arbitrary four qubit entangled states.
+
+    \textbf{Solution}: 
 
     
 
@@ -4109,9 +4196,9 @@ This progress was last updated May 26th, 2023.
     Suppose we wish to perform a Fourier transform of a vector containing $2^n$ complex numbers on a classical computer. Verify that the straightforward method for performing the Fourier transform, based upon direct evaluation of Equation (5.1) requires $\Theta(2^{2n})$ elementary arithmetic operations. Find a method for reducing this to $\Theta(n2^n)$ operations, based upon Equation (5.4).
     There are $2^n$ complex numbers we need to compute, which are the output amplitudes of the Fourier transform. If we compute each one using (5.1), each such amplitude involves a sum which contains $2^n$ terms. Thus, there will be $2^n \times 2^n = 2^{2n}$ summations and therefore at least as many arithmetic operations.
     
-    \textbf{Solution}: Let's now consider a computation based on the factored form of the QFT, Equation (5.4). As before, this involves a computation of $2^n$ amplitudes, one for each bitstring $k = k_1k_2...k_n$. Using (5.4) the amplitude $a_{k}$ corresponding to the state $\ket{k}$ is given by
+    \textbf{Solution}: Let's now consider a computation based on the factored form of the QFT, Equation (5.4) of the text. As before, this involves a computation of $2^n$ amplitudes, one for each bitstring $k = k_1k_2...k_n$. Using (5.4) the amplitude $a_{k}$ corresponding to the state $\ket{k}$ is given by
     \begin{align}
-        \bra{k}QFT\ket{j} = \frac{1}{2^{n/2}}\big(\delta_{k_1 0}+e^{2\pi i0.j_n}\delta_{k_1 2}\big)\big(\delta_{k_2 0}+e^{2\pi i0.j_{n-1}j_n}\delta_{k_2 2}\big)...\big(\delta_{k_n 0}+e^{2\pi i0.j_1...j_n}\delta_{k_n 2}\big).
+        \bra{k}QFT\ket{j} = \frac{1}{2^{n/2}}\big(\delta_{k_1 0}+e^{2\pi i0.j_n}\delta_{k_1 1}\big)\big(\delta_{k_2 0}+e^{2\pi i0.j_{n-1}j_n}\delta_{k_2 1}\big)...\big(\delta_{k_n 0}+e^{2\pi i0.j_1...j_n}\delta_{k_n 1}\big).
     \end{align}
     where $\ket{j}$ is our input state. This involves a multiplication of $n$ terms, hence there are $n\times 2^n$ total multiplications. This is a lower bound for the number of operations. 
 
@@ -4413,18 +4500,41 @@ This progress was last updated May 26th, 2023.
 \section*{Exercise 5.20}
     Suppose $f(x+r) = f(x)$, and $0\leq x<N$ for $N$ an integer multiple of $r$. Compute
     \begin{align}
-        \hat{f}(l)\equiv \frac{1}{\sqrt{N}}\sum_{x=0}^{N-1} e^{-2\pi i l x/N} f(x),
+        \hat{f}(\ell)\equiv \frac{1}{\sqrt{N}}\sum_{x=0}^{N-1} e^{-2\pi i \ell x/N} f(x),
     \end{align}
     and relate the result to (5.63). You will need to use the fact that
-    \begin{align}
+    \begin{align} \label{eq:5.20_cases}
         \sum_{\{0,r,2r,...,N-r\}} e^{2\pi ikl/N} = 
         \begin{cases}
-            \sqrt{N/r}  & \text{if $l$ is an integer multiple of $N/r$} \\
+            N/r  & \text{if $\ell$ is an integer multiple of $N/r$} \\
             0 & \text{otherwise}.
         \end{cases}
     \end{align}
     
-    \textbf{Solution}:
+    \textbf{Solution}: A quick note: there is an error in the text, and it is corrected in my equation~\eqref{eq:5.20_cases}. In the text, equation (5.69) there is an incorrect square root over $\sqrt{N/r}$. 
+
+    To facilitate an easier analysis, it will be simpler reexpress $x$ and $N$ to exploit the facts given to us. Since $N$ is an integer multiple of $r$, let $k = N/r$ be the proportionality factor. Moreover, since $f$ is $r$-periodic, it will be helpful to write the sum over $x$ in a way that emphasizes that we only care about the remiander after ``wrapping around" $r$ times. In that spirit, let's note that $x$ can be parametrized, via division by $r$, as
+    \begin{align}
+        x = qr + s
+    \end{align}
+    where $0 \leq q < k$ is the quotient and $0 \leq s < r$ is the remainder under division by $r$. This is helpful because
+    \begin{align}
+        f(x) = f(qr + s) = f(s)
+    \end{align}
+    and also
+    $\sum_{x=0}^{N-1} = \sum_{q=0}^{k-1} \sum_{s=0}^{r-1}$.
+    Putting this all together in the expression for $\hat{f}(\ell)$,
+    \begin{align}
+    \begin{aligned}
+        \hat{f}(\ell) &= \frac{1}{\sqrt{kr}} \sum_{q=0}^{k-1} \sum_{s=0}^{r-1} e^{-2\pi i \ell (qr+s)/kr} f(qr + s) \\
+        &= \frac{1}{\sqrt{kr}} \left(\sum_{q=0}^{k-1} e^{-2\pi i \ell q/k}\right) \left(\sum_{s=0}^{r-1} e^{-2\pi i \ell s/ kr} f(s)\right).
+    \end{aligned}
+    \end{align}
+    Notice that the sum has factorized nicely. The first of these terms is something we've seen before: recall the solution to Exercise 5.1. The sum is zero unless $\ell$ is an integer multiple of $k$ (that is, $N/r$). In the case that $\ell$ is indeed $jk$ for some integer $j$, we have
+    \begin{align}
+        \hat{f}(kj) = \sqrt{\frac{k}{r}} \sum_{s=0}^{r-1} e^{-2\pi i j s/ r} f(s)
+    \end{align}
+    We recognize this as essentially the Fourier transform of $f$ on the period $r$ rather than the full domain $[N]$, captured by (5.63) of the text up to a factor of $k$.
     
 \section*{Exercise 5.21 (Period finding and phase estimation)}
     Suppose you are given a unitary operator $U_y$ which performs the transformation $U_y\ket{f(x)} = \ket{f(x+y)}$, for the periodic function described above.
@@ -5079,7 +5189,7 @@ This progress was last updated May 26th, 2023.
     \end{align}
     Use this to compute
     \begin{align}
-        \rho_a &= \Tr_b \left[K\ket{\alpha}\ket{\beta}\bra{\beta}\bra{\alpha}K^\dagger\right] \\
+        \rho_a &= \tr_b \left[K\ket{\alpha}\ket{\beta}\bra{\beta}\bra{\alpha}K^\dagger\right] \\
         &= e^{-\abs{\beta}^2} \sum_{m} \frac{\abs{\beta}^{2m}}{m!} \ket{\alpha e^{i\chi Lm}}\bra{\alpha e^{i\chi Lm}}
     \end{align}
     and show that the main contribution to the sum is for $m = \abs{\beta}^2$.
@@ -5501,6 +5611,186 @@ This progress was last updated May 26th, 2023.
         \sum_{ji}G_{ji}^\dagger G_{ji} \leq I 
     \end{align}
     is satisfied.
+
+\section*{Exercise 8.7}
+    Suppose that instead of doing a projective measurement on the combined principal system and environment we had performed a general measurement described by measurement operators $\{M_m\}$. Find operator-sum representations for the corresponding quantum operations $\mathcal{E}_m$ on the principal system, and show that the respective measurement probabilities are $\tr[\mathcal{E}_m(\rho)]$.
+
+    \textbf{Solution:} We will find that the answer is entirely the same as for the projective case, with $P_m$ replaced by $M_m$. After evolving the separable state $\rho \otimes \sigma$ by $U$, then measuring outcome $m$, the resulting state is given by
+    \begin{align}
+        M_m U \rho \otimes \sigma U^\dagger M_m^\dagger.
+    \end{align}
+    See section 2.4 of the text for more details. The quantum channel on the principal system $S$ is then obtained by tracing over the environment $E$.
+    \begin{align}
+        \mathcal{E}_m(\rho) = \tr_E(M_m U (\rho\otimes\sigma)U^\dagger M_m^\dagger)
+    \end{align}
+    Let $\ket{e_k}$ be the basis we take the trace over, and let $\sigma = \sum_j q_j \ketbra{j}$ be a diagonal decomposition. We have
+    \begin{align}
+    \begin{aligned}
+        \mathcal{E}_m(\rho) &= \sum_{jk} q_j \bra{e_k} M_m U \rho\otimes\ketbra{j} U^\dagger M_m^\dagger\ket{e_k} \\
+        &= \sum_{j,k} \left(\sqrt{q_j} \bra{e_k}M_m U \ket{j}\right) \rho \left(\sqrt{q_j} \bra{j}U^\dagger M_m^\dagger \ket{e_k}\right),
+    \end{aligned}
+    \end{align}
+    where we've pushed the $\ket{j}$ bra and kets past the state $\rho$ as is allowed. Making the identification
+    \begin{align}
+        E_{jk} \equiv \sqrt{q_j} \bra{e_k}M_m U \ket{j},
+    \end{align}
+    we see that $\mathcal{E}_m$ can be written in the usual operator sum form. The probability of outcome $m$ is given by
+    \begin{align}
+        p_m &= \tr(M_m U (\rho\otimes\sigma)U^\dagger M_m^\dagger) \\
+        &= \tr_S \tr_E (M_m U (\rho\otimes\sigma)U^\dagger M_m^\dagger) \\
+        &= \tr_S( \mathcal{E}_m(\rho)).
+    \end{align}
+    This is what we sought to show.
+
+\section*{Exercise 8.8 (Non-trace-preserving quantum operations)}
+    Explain how to construct a unitary operator for a system-environment model of a non-trace-preserving qunatum operation, by introducing an extra operator, $E_\infty$, into the set of operation elements $E_k$, chosen so that when summing over the complete set of $k$, including $k = \infty$, one obtains $\sum_k E_k^\dagger E_k = I$.
+
+    \textbf{Solution}: First, observe that such an operator can indeed be added. For if $\sum_k E_k^\dagger E_k < I$, then we can add $E_\infty$ such that $E_\infty^\dagger E_\infty = I - \sum_k E_k^\dagger E_k$. For example, we can choose \begin{align}
+        E_\infty := \sqrt{I- \sum_k E_k^\dagger E_k}. 
+    \end{align}
+    With this, we can define a $U$ for the system-environment interaction as given in the text, since $\{E_k\} \cup \{E_\infty\}$ gives rise to a trace-preserving quantum operation.
+
+    As in 8.37 of the text, let $\ket{e_k}$ be the orthonormal states of the environment corresponding to applying $E_k$ on the principal system. Similarly, let $\ket{e_\infty}$ correspond to $E_\infty$. To complete our trace-preserving quantum channel, we project onto the part orthogonal to $\ket{e_\infty}$ using $P = I - \ketbra{e_\infty}$ on the environment. This could be accomplished using a projective measurement with only distinguishes $P$ and $P_\perp = \ketbra{e_\infty}$, throwing out the result if $e_\infty$ is measured. 
+
+    The full procedure works because, after the unitary and projection are applied, we arrive at the right hand side of equation 8.37. The rest of the math carries through as before.
+
+\section*{Exercise 8.9 (Measurement model)}
+    If we are given a set of quantum operations $\{\mathcal{E}_m\}$ such that $\sum_m \mathcal{E}_m$ is trace-preserving, then it is possible to constuct a \emph{measurement model} giving rise to this set of quantum operations. For each $m$, let $E_{mk}$ be a set of operation elements for $\mathcal{E}_m$. Introduce an environmental system, $E$, with an orthonormal basis $\ket{m, k}$ in one-to-one correspondence with the set of indices for the operation elements. Analogously to the earlier construction, define an operator $U$ such that 
+    \begin{align}
+        U\ket{\psi}\ket{e_0} = \sum_{mk} E_{mk}\ket{\psi}\ket{m,k}.
+    \end{align}
+    Next, define projectors $P_m \equiv \sum_k \ketbra{m,k}$ on the environmental system, $E$. Show that performing $U$ on $\rho \otimes \ketbra{e_0}$, then measuring $P_m$ gives $m$ with probability $\tr(\mathcal{E}_m(\rho))$ and the corresponding post-measurement state of the principal system is $\mathcal{E}_m(\rho)/\tr(\mathcal{E}_m(\rho))$.
+
+    \textbf{Solution}: Let's proceed step by step, starting with the action of $U$ on $\rho \otimes \ketbra{e_0}$.
+
+    \begin{align}
+        U \rho \otimes \ketbra{e_0} U^\dagger = \sum_{mk}\sum_{m'k'} E_{mk} \rho E_{m'k'}^\dagger \otimes \ketbra{m,k}{m',k'}
+    \end{align}
+    Observe the way $U^\dagger$ acts on the right side. We could have done this by expanding $\rho$ in a diagonal decomposition, if we wanted to restrict our attention to pure states for simplicity. Now let's perform a projective measurement $\{P_m \}$. Suppose result $P_{m''}$ is obtained. Note that $P_{m''} \ket{m,k} = \ket{m,k} \delta_{m,m''}$, where $\delta$ is the Kronecker delta. Hence,
+    \begin{align}
+        P_{m''} U \rho \otimes \ketbra{e_0}U^\dagger P^\dagger_{m''} &= \sum_{mk}\sum_{m'k'} E_{mk} \rho E_{m'k'}^\dagger P_{m''} \ketbra{m,k}{m',k'} P_{m''} \\
+        &= \sum_{k}\sum_{k'} E_{m''k} \rho E_{m''k'}^\dagger \ketbra{m'',k}{m'',k'} 
+    \end{align}
+    Essentially, only those states corresponding to $m''$ remain, and we sum over the remaining indices $k, k'$. For notational simplicity, we go back to using $m$ instead of $m''$ from hereon. The resulting state on the system, unnormalized, is given by tracing over the environment. 
+    \begin{align}
+        \tr_E \left(\sum_{k}\sum_{k'} E_{mk} \rho E_{mk'}^\dagger \ketbra{m,k}{m,k'}\right) = \sum_{k} E_{mk} \rho E_{mk}^\dagger = \mathcal{E}_m(\rho).
+    \end{align}
+    This is exactly what we sought to show: the resulting action on the state is the quantum operation $\mathcal{E}_m$. The probability of this operation occurring is given by the trace over the remaining system, i.e. $\tr(\mathcal{E}_m(\rho))$. This is also the factor that will normalize the state following measurement.
+
+\section*{Exercise 8.10}
+    Give a proof of Theorem 8.3 based on the freedom in the operator-sum representation, as follows. Let $\{E_j\}$ be a set of operation elements for $\mathcal{E}$. Define a matrix $W_{jk} \equiv \tr(E_j^\dagger E_k)$. So that the matrix $W$ is Hermitian and of rank at most $d^2$, and thus there is a unitary matrix $u$ such that $uWu^\dagger$ is diagonal with at most $d^2$ non-zero entries. Use $u$ to define a new set of at most $d^2$ non-zero operation elements $\{F_j\}$ for $\mathcal{E}$.
+
+    \textbf{Solution}: Let's follow through the steps outlined in the problem statement. The matrix can be seen to be Hermitian because
+    \begin{align}
+        W_{jk} = \tr( E_j^\dagger E_k) = \tr((E_k^\dagger E_j)^\dagger) = \tr(E_k^\dagger E_j)^* = W_{kj}^*.
+    \end{align}
+    We can actually say even more, and this is related to a key insight we will use. The matrix $W$ is positive, because it is closely related to the Hilbert-Schmidt inner product. Let $N$ be the number of operator elements $E_j$, so that $W$ is $N\times N$. Let $x, y \in \mathbb{C}^N$ be column vectors. Then the sesquilinear form $x^\dagger W y$ satisfies
+    \begin{align}
+        x^\dagger W y = \sum_{jk} x_j^* W_{jk} y_k \\
+        &= \sum_{jk} \tr(x_j^* E_j^\dagger E_k y_k) \\
+        &= \tr\left(\big(\sum_j x_j E_j\big)^\dagger \big(\sum_k y_k E_k\big)\right)
+        &\equiv \langle X, Y\rangle.
+    \end{align}
+    Here, $X \equiv \sum_j x_j E_j$ and similar for $Y$. Also, $\langle\cdot , \cdot \rangle$ is the Hilbert Schmidt inner product. If $x = y$, this quantity is nonnegative, so $W$ is a positive matrix.
+
+    How can we use this relationship to an inner product to help us? Essentially, the inner product is on a space of dimension $d^2$. We will argue that there can't be more than $d^2$ orthogonal vectors (operators), and therefore $W$ can only have rank at most $d^2$. We make this more formal as follows. Let $v_1, v_2, \dots v_N$ be an orthonormal basis of eigenvectors for $W$ with eigenvalues $\lambda_j \geq 0$. Let $V_1, V_2, \dots, V_N$ be the corresponding operators as for $x \rightarrow X$ in the above argument. For example, if $v_1(j)$ is the $j$th component of $v_1$, $V_1 = \sum_j v_1(j) E_j$. By the arguments above $\langle V_j, V_k\rangle = v_j W v_k = \delta_{jk} \lambda_j$. Thus, the $V_j$ form an orthogonal set of vectors on the $d^2$ dimensional operator space. Since $d^2$ is the largest number of orthogonal nonzero vectors there can be, there can only be at most $d^2$ nonzero $V_j$. This implies there are at most $d^2$ nonzero $\lambda_j$. Hence, the rank of $W$ is upper bounded by $d^2$.
+
+    We have shown the desired properties of $W$ in the above paragraph, but we have also done more. We can readily see that the $V_1, \dots V_N$ are the desired operator elements, and at most $d^2$ are nonzero. To see this, let $e_k$ be the standard basis on $\mathbb{C}^N$, and let $u$ be the change of basis matrix relating $e_k$ to the eigenbasis $v_k$.
+    \begin{align}
+        v_k = U e_k.
+    \end{align}
+    Then we can see that $v_k (j) = U(k,j),$ i.e. the columns of $U$ are the eigenvectors. Performing the operator mapping, we see that 
+    \begin{align}
+        V_k = \sum_j U(k,j) E_j
+    \end{align}
+    hence, $\{V_k\}$ and $\{E_j\}$ are related by a unitary matrix, hence give rise to the same quantum operation. However, restricting only to those $V_k$ that are nonzero, we have at most $d^2$ operator elements.
+
+\section*{Exercise 8.11}
+    Suppose $\mathcal{E}$ is a quantum operation mapping a $d$-dimensional input space to a $d'$-dimensional output space. Show that $\mathcal{E}$ can be described using a set of at most $d d'$ operation elements $\{E_k\}$.
+
+    \textbf{Solution}: This is a strict generalization of the result from the previous exercise. And thankfully, a nearly identical reasoning carries through as from the previous exercise. To see this, observe that $\{E_k\}$ exist in a vector space of dimension $d d'$, which can be seen by thinking of them as $d' \times d$ matrices. Next, observe that $\tr(A^\dagger B)$ is still a valid inner product when $A$ and $B$ are $d'\times d$. Thus, we can form the positive matrix $W$ as before, and argue that it has rank $d' d$, since only this many vectors can be orthogonal. 
+
+    See if you can fill in the details, borrowing ideas from the previous exercise as needed. 
+
+\section*{Exercise 8.12}
+    Why can we assume that $O$ has determinant 1 in the decomposition (8.93)?
+
+    \textbf{Solution}: Since $O$ is orthogonal, it has determinant $+1$ or $-1$. A $+1$ determinant signifies a proper rotation. If $\det(O) = -1$, then $O$ is dubbed an improper rotation, which, as it happens, can be thought of as a proper rotation followed by a reflection operation. 
+
+    Let's see this more concretely. Suppose $M = O \abs{M}$ as in the text, and suppose $O$ is an improper rotation. Let $R$ be a reflection operator (unitary an Hermitian), that commutes with $\abs{M}$, and has only one $-1$ eigenvalue. Then $\det(R) = -1$. Define $O' := O R$, so that $O = O' R$. We can see that $O'$ is orthogonal, and has determinant
+    \begin{align}
+        \det(O') = \det(O)\det(R) = 1.
+    \end{align}
+    Hence, $O'$ is a proper rotation. Moreover
+    \begin{align}
+        M = O' S
+    \end{align}
+    where $S := R \abs{M} = \abs{M} R$ is symmetric, being the product of two commuting symmetric matrices (the commuting part is important here). 
+
+    As a final comment, notice that $\abs{M}$ is a positive semidefinite matrix, but $S$ is only Hermitian. So this part of the equation loses some properties on account of the reparametrization. 
+
+\section*{Exercise 8.13}
+    Show that unitary transformations correspond to rotations of the Bloch sphere. 
+
+    \textbf{Solution}: Undoubtedly you are already familiar with the notion that single qubit gates correspond to rotations on the Bloch sphere. To further the connection between gates and rotations, let $U(R)$ be the qubit gate corresponding to a rotation $R$ on the Bloch sphere for kets. It is possible to show (but we will not) that
+    \begin{align}
+        U(R) \vec{r}\cdot \sigma U(R)^\dagger = (R \vec{r}) \cdot \sigma.
+    \end{align}
+    Thus, the effect is to rotate the Bloch vector by $\vec{r}$. From the vantage point of group theory, this can be seen as arising from the correspondence between $SU(2)$ and $SO(3)$.
+
+    Having made these comments, let's take a more rigorous path by simplifying the expression (8.91) of the text for our context. There is only one operator element $U$, so the sum over $l$ drops out. For simpler notation, let's reparametrize as 
+    \begin{align}
+        U = d_0 I + \sum_i d_i \sigma_i.
+    \end{align}
+    Then, (8.91) becomes
+    \begin{align}
+    \begin{aligned}
+        M_{jk} &= d_j d_k^* + d_j^* d_k + \left(\abs{d_0}^2 - \sum_l \abs{d_l}^2\right) \delta_{jk} + i \sum_i \epsilon_{jkl}(d_0 d_l^* - d_0^* d_l) \\
+        &=2 \Re(d_j d_k^*) + (2 \abs{d_0}^2 -1)\delta_{jk} - 2 \sum_l \epsilon_{jkl} \Im (d_0 d_l^*)
+    \end{aligned}
+    \end{align}
+    Let's leave this for now and consider the translation $\vec{c}$ of equation (8.20) of the text.
+    \begin{align}
+    \begin{aligned}
+        c_k &= 2i \sum_{jp} \epsilon_{jpk} d_j d_p^* \\
+        &= 2i \sum_{jp} \epsilon_{jpk} \frac{d_j d_p^* - d_p d_j^*}{2} \\
+        &= - 2 \sum_{jp} \epsilon_{jpk} \Im(d_j d_p^*)
+    \end{aligned}
+    \end{align}
+    We sould like to show that $M_{jk}$ is an orthogonal matrix. \textbf{Needs to be finished. Not all conditions on $d_k$ have been used}
+
+\section*{Exercise 8.14}
+    Show that $\det(S)$ need not be positive.
+
+    \textbf{Solution}: Since $M = O S$, and $\det(O) = 1$, we know that
+    \begin{align}
+        \det(M) = \det(O) \det(S) = \det(S).
+    \end{align}
+    Thus, $\det(M)$ and $\det(S)$ have the same sign. \textbf{Need to finish}
+
+\section{Exercise 8.16}
+    The graphical method for understanding single qubit quantum operations was derived for trace-preserving quantum operations. Find an explicit example of a non-trace-preserving quantum operation which cannot be described as a deformation of the Bloch sphere, followed by a rotation and a displacement.
+
+    \textbf{Solution}:
+
+\section*{Exercise 8.17}
+    Verify (8.101) as follows. Define
+    \begin{align}
+        \mathcal{E}(A) \equiv \frac{A + XAX + YAY + ZAZ}{4},
+    \end{align}
+    and show that
+    \begin{align}
+        \mathcal{E}(I) = I; \quad \mathcal{E}(X) = \mathcal{E}(Y) = \mathcal{E}(Z) = 0.
+    \end{align}
+    Now use the Bloch sphere representation for single qubit density matrices to verify (8.101).
+
+    \textbf{Solution}: Observe that
+    \begin{align}
+        \mathcal{E}(I) = \frac{I + X IX + YIY + ZIZ}{4} = \frac{I + I + I + I}{4} = I.
+    \end{align}.
+    As for the others, observe that each pauli commutes with half of the paulis and anticommutes with the other half, thinking of $I$ as one of the four paulis. For example, $X$ commutes with $X$ and $I$ and anticommutes with $Y$ and $Z$. Since $\mathcal{E}$ is defined by conjugating with all paulis, and conjugation flips the sign of half the terms, the result will be zero. Thus, all paulis besides $I$ go to zero under $\mathcal{E}$.
+
+    By linearity, this implies all density matrices go to $I/2$ under $\mathcal{E}$, since the Bloch sphere representation (8.87) of the text holds.
 
 \chapter{Distance measures for quantum information}
 
