@@ -11,7 +11,7 @@ Chapter 6: 1-8 complete. \
 Chapter 7: 1-19 complete, except 16. \
 Chapter 8: 1-12 and scattered others. \
 Chapter 9: All exercises complete (end-of-chapter problems remain). \
-Chapter 10: 1-11 and 29-40 complete. \
+Chapter 10: 1-21 and 29-40 complete. \
 Chapter 11: Only first exercise. \
 Chapter 12: 1-4. \
 Appendix 1: All exercises complete! \
