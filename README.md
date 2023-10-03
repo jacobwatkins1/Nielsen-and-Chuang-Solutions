@@ -9,7 +9,7 @@ Chapter 4: 1-26, 29-43 complete \
 Chapter 5: 1-14 complete, 15-29 remain, along with 6 practice problems. \
 Chapter 6: 1-8 complete. \
 Chapter 7: 1-19 complete, except 16. \
-Chapter 8: 1-6 complete. \
+Chapter 8: 1-12 and scattered others. \
 Chapter 9: All exercises complete (end-of-chapter problems remain). \
 Chapter 10: 1-11 and 29-40 complete. \
 Chapter 11: Only first exercise. \
