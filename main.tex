@@ -21,9 +21,9 @@
 \newcommand{\mc}[1]{\mathcal{#1}}
 \newcommand{\innerprod}[2]{\langle#1,#2\rangle}
 
-\title{Guided solutions to Nielsen and Chuang: Quantum Computation and Quantum Information}
+\title{Guided Solutions to Nielsen and Chuang: Quantum Computation and Quantum Information}
 \author{Jacob Watkins}
-\date{Last updated May 2023}
+\date{Last updated October 2023}
 
 \begin{document}
 
@@ -54,9 +54,9 @@ This progress was last updated May 26th, 2023.
     \item Chapter 5: 1-14 complete, 15-29 remain, along with 6 practice problems.
     \item Chapter 6: 1-8 complete.
     \item Chapter 7: 1-19 complete, except 16.
-    \item Chapter 8: 1-6 complete.
+    \item Chapter 8: 1-10 complete and scattered others.
     \item Chapter 9: All exercises complete (end-of-chapter problems remain).
-    \item Chapter 10: 1-11 and 29-40 complete.
+    \item Chapter 10: 1-22 and 29-40 complete.
     \item Chapter 11: Only first exercise.
     \item Chapter 12: 1-4.
     \item Appendix 1: All exercises complete!
@@ -4724,131 +4724,131 @@ This progress was last updated May 26th, 2023.
         \item $\rightarrow$ some $s$ such that $f(s) = 1$ (measure the first $n$ qubits)
     \end{enumerate}
     
-    \section*{Exercise 6.5}
-        Show that the augmented oracle $O'$ may be constructed using one application of $O$, and elementary quantum gates, using the extra qubit $\ket{q}$.
+\section*{Exercise 6.5}
+    Show that the augmented oracle $O'$ may be constructed using one application of $O$, and elementary quantum gates, using the extra qubit $\ket{q}$.
         
-        \textbf{Solution}: Notice that $O'$ amounts to applying the oracle $O$ to the first $n$ qubits, conditioned on qubit $q$ being in the 0 state. We can express this schematically as
-        \begin{quantikz}
-            \lstick{q} & \gate{X} & \ctrl{1} & \gate{X} \\
-            \lstick{} & {/}\qw & \gate{O} & \qw
-        \end{quantikz}
-        Thus, we are making a single access to the oracle $O$.
+    \textbf{Solution}: Notice that $O'$ amounts to applying the oracle $O$ to the first $n$ qubits, conditioned on qubit $q$ being in the 0 state. We can express this schematically as
+    \begin{quantikz}
+        \lstick{q} & \gate{X} & \ctrl{1} & \gate{X} \\
+        \lstick{} & {/}\qw & \gate{O} & \qw
+    \end{quantikz}
+    Thus, we are making a single access to the oracle $O$.
         
-    \section*{Exercise 6.6} 
-        Verify that the gates in the dotted box in the second figure of Box 6.1 perform the conditional phase shift operation $2\ket{00}\bra{00}-I$, up to an unimportant global phase factor.
-        
-        \textbf{Solution}: Because $HXH = Z$, the $\mathrm{CNOT}$ gate sandwiched between $H$ gates is equivalent to a CZ gate. Moreover, $XZX = -Z$. Thus, the gates in the dotted box enact a controlled minus $Z$ gate, where the control is taken to be the zero state. In braket form, if $R$ is this set of gates,
-        \begin{align}
-            R = \ket{0}\bra{0} \otimes (-Z) + \ket{1}\bra{1}\otimes I.
-        \end{align}
-        Let's consider the action of $R$ on the computational basis. For states with a 1 on the top qubit, the state is unaffected. Otherwise, the top qubit is in the state 0, in which case a minus sign is applied only if the bottom qubit is also zero. Thus, $R$ applies a minus sign to $\ket{00}$ and leaves the other basis states unchanged. Hence,
-        \begin{align}
-            R = I - 2\ket{00}\bra{00}
-        \end{align}
-        which is the reflection operator up to an unimportant minus sign. 
+\section*{Exercise 6.6} 
+    Verify that the gates in the dotted box in the second figure of Box 6.1 perform the conditional phase shift operation $2\ket{00}\bra{00}-I$, up to an unimportant global phase factor.
     
-    \section*{Exercise 6.7}
-        Verify that the circuits shown in Figures 6.4 and 6.5 implement the operations $\exp(-i\ket{x}\bra{x}\Delta t)$ and $\exp(-i\ket{\psi}\bra{\psi}\Delta t)$, respectively, with $\ket{\psi}$ as in (6.24).
-        
-        \textbf{Solution}:
+    \textbf{Solution}: Because $HXH = Z$, the $\mathrm{CNOT}$ gate sandwiched between $H$ gates is equivalent to a CZ gate. Moreover, $XZX = -Z$. Thus, the gates in the dotted box enact a controlled minus $Z$ gate, where the control is taken to be the zero state. In braket form, if $R$ is this set of gates,
+    \begin{align}
+        R = \ket{0}\bra{0} \otimes (-Z) + \ket{1}\bra{1}\otimes I.
+    \end{align}
+    Let's consider the action of $R$ on the computational basis. For states with a 1 on the top qubit, the state is unaffected. Otherwise, the top qubit is in the state 0, in which case a minus sign is applied only if the bottom qubit is also zero. Thus, $R$ applies a minus sign to $\ket{00}$ and leaves the other basis states unchanged. Hence,
+    \begin{align}
+        R = I - 2\ket{00}\bra{00}
+    \end{align}
+    which is the reflection operator up to an unimportant minus sign. 
+
+\section*{Exercise 6.7}
+    Verify that the circuits shown in Figures 6.4 and 6.5 implement the operations $\exp(-i\ket{x}\bra{x}\Delta t)$ and $\exp(-i\ket{\psi}\bra{\psi}\Delta t)$, respectively, with $\ket{\psi}$ as in (6.24).
     
-    \section*{Exercise 6.8}
-        Suppose the simulation step is performed to an accuracy $O(\Delta t^r)$. Show that the number of oracle calls required to simulate $H$ to reasonable accuracy is $O(N^{r/2(r-1)})$. Note that as $r$ becomes large the exponent of $N$ approaches 1/2.
-        
-        \textbf{Solution}: If the accuracy of a single step is $O(\Delta t^r)$, then the total error of the simulation is $O((t/\Delta t) \Delta t^r)=O(t\Delta t^{r-1})$, since $t/\Delta t$ is the number of steps in the simulation. For accurate results, we require this error to be $O(1)$, and from the previous section, we see that the time of simulation $t$ is $O(\sqrt{N})$. Thus, we have $\Delta t \in O(1/N^{(r-1)/2})$. 
+    \textbf{Solution}:
+
+\section*{Exercise 6.8}
+    Suppose the simulation step is performed to an accuracy $O(\Delta t^r)$. Show that the number of oracle calls required to simulate $H$ to reasonable accuracy is $O(N^{r/2(r-1)})$. Note that as $r$ becomes large the exponent of $N$ approaches 1/2.
     
-    \section*{Exercise 6.9}
-        Verify Equation (6.25). (\emph{Hint}: see Exercise 4.15.)
-        
-        \textbf{Solution}:
+    \textbf{Solution}: If the accuracy of a single step is $O(\Delta t^r)$, then the total error of the simulation is $O((t/\Delta t) \Delta t^r)=O(t\Delta t^{r-1})$, since $t/\Delta t$ is the number of steps in the simulation. For accurate results, we require this error to be $O(1)$, and from the previous section, we see that the time of simulation $t$ is $O(\sqrt{N})$. Thus, we have $\Delta t \in O(1/N^{(r-1)/2})$. 
+
+\section*{Exercise 6.9}
+    Verify Equation (6.25). (\emph{Hint}: see Exercise 4.15.)
     
-    \section*{Exercise 6.10}
-        Show that by choosing $\Delta t$ appropriately we can obtain a quantum
-        search algorithm which uses $O(\sqrt{N})$ queries, and for which the final state is $\ket{x}$ \emph{exactly}, that is, the algorithm works with probability 1, rather than with some smaller probability.
-        
-        \textbf{Solution}:
+    \textbf{Solution}:
+
+\section*{Exercise 6.10}
+    Show that by choosing $\Delta t$ appropriately we can obtain a quantum
+    search algorithm which uses $O(\sqrt{N})$ queries, and for which the final state is $\ket{x}$ \emph{exactly}, that is, the algorithm works with probability 1, rather than with some smaller probability.
     
-    \section*{Exercise 6.11 (Multiple solution continuous quantum search)}
-        Guess a Hamiltonian with which one may solve the continuous time search problem in the case where the search problem has $M$ solutions.
-        
-        \textbf{Solution}:
+    \textbf{Solution}:
+
+\section*{Exercise 6.11 (Multiple solution continuous quantum search)}
+    Guess a Hamiltonian with which one may solve the continuous time search problem in the case where the search problem has $M$ solutions.
     
-    \section*{Exercise 6.12 (Alternative Hamiltonian for quantum search)}
-        Suppose
-        \begin{align}
-            H = \ket{x}\bra{\psi}+\ket{\psi}\bra{x}.
-        \end{align}
-        (1) Show that it takes time $O(1)$ to rotate from the state $\ket{\psi}$ to the state $\ket{x}$, given an evolution according to the Hamiltoinian $H$. \par
-        (2) Explain how a quantum simulation of the Hamiltonian $H$ may be performed, and determine the number of oracle calls your simulation technique requires to obtain the solution with high probability.
+    \textbf{Solution}:
+
+\section*{Exercise 6.12 (Alternative Hamiltonian for quantum search)}
+    Suppose
+    \begin{align}
+        H = \ket{x}\bra{\psi}+\ket{\psi}\bra{x}.
+    \end{align}
+    (1) Show that it takes time $O(1)$ to rotate from the state $\ket{\psi}$ to the state $\ket{x}$, given an evolution according to the Hamiltoinian $H$. \par
+    (2) Explain how a quantum simulation of the Hamiltonian $H$ may be performed, and determine the number of oracle calls your simulation technique requires to obtain the solution with high probability.
         
-        \textbf{Solution}:
+    \textbf{Solution}:
     
-    \section*{Exercise 6.13}
-        Consider a classical algorithm for the counting problem which samples uniformly and independently $k$ times from the search space, and let $X_1, ..., X_k$ be the results of the oracle calls, that is, $X_j = 1$ if the $j$th oracle call revealed a solution to the problem, and $X_j$=0 if the $j$th oracle call did not reveal a solution to the problem. This algorithm returns the estimate $S = N\times \sum_j X_j/k$ for the number of solutions to the search problem. Show that the standard deviation in $S$ is $\Delta S = \sqrt{M(N-M)/k}$. Prove that to obtain a probability at least 3/4 of estimating $M$ correctly to within an accuracy $\sqrt{M}$ for all values of $M$ we must have $k = \Omega(N)$.
-        
-        \textbf{Solution}:
+\section*{Exercise 6.13}
+    Consider a classical algorithm for the counting problem which samples uniformly and independently $k$ times from the search space, and let $X_1, ..., X_k$ be the results of the oracle calls, that is, $X_j = 1$ if the $j$th oracle call revealed a solution to the problem, and $X_j$=0 if the $j$th oracle call did not reveal a solution to the problem. This algorithm returns the estimate $S = N\times \sum_j X_j/k$ for the number of solutions to the search problem. Show that the standard deviation in $S$ is $\Delta S = \sqrt{M(N-M)/k}$. Prove that to obtain a probability at least 3/4 of estimating $M$ correctly to within an accuracy $\sqrt{M}$ for all values of $M$ we must have $k = \Omega(N)$.
     
-    \section*{Exercise 6.14}
-        Prove that \emph{any} classical counting algorithm with a probability at least 3/4 for estimating $M$ correctly to within an accuracy $c\sqrt{M}$ for some constant $c$ and for all values of $M$ must make $\Omega (N)$ oracle calls. 
-        
-        \textbf{Solution}:
+    \textbf{Solution}:
+
+\section*{Exercise 6.14}
+    Prove that \emph{any} classical counting algorithm with a probability at least 3/4 for estimating $M$ correctly to within an accuracy $c\sqrt{M}$ for some constant $c$ and for all values of $M$ must make $\Omega (N)$ oracle calls. 
     
-    \section*{Exercise 6.15}
-        Use the Cauchy–Schwarz inequality to show that for any normalized state vector $\ket{\psi}$ and set of $N$ orthonormal basis vectors $\ket{x}$,
-        \begin{align}
-            \sum_x \norm{\psi -x}^2 \geq 2N-2\sqrt{N}.
-        \end{align}
-        
-        \textbf{Solution}:
-        
-    \section*{Exercise 6.16}
-        Suppose we merely require that the probability of an error being made is less than 1/2 when averaged uniformly over the possible values for $x$, instead of for all values of $x$. Show that $O(\sqrt{N})$ oracle calls are still required to solve the search problem. 
-        
-        \textbf{Solution}:
-        
-    \section*{Exercise 6.17 (Optimality for multiple solutions)}
-        Suppose the search problem has $M$ solutions. Show that $O(\sqrt{N/M})$ oracle applications are required to find a solution. 
-        
-        \textbf{Solution}:
-        
-    \section*{Exercise 6.18}
-        Prove that the minimum degree polynomial representing a Boolean function $F(X)$ is unique. 
-        
-        \textbf{Solution}:
+    \textbf{Solution}:
+
+\section*{Exercise 6.15}
+    Use the Cauchy–Schwarz inequality to show that for any normalized state vector $\ket{\psi}$ and set of $N$ orthonormal basis vectors $\ket{x}$,
+    \begin{align}
+        \sum_x \norm{\psi -x}^2 \geq 2N-2\sqrt{N}.
+    \end{align}
     
-    \section*{Exercise 6.19}
-        Show that $P(X) = 1-(1-X_0)(1-X_1)...(1-X_{N-1})$ represents OR. 
-        
-        \textbf{Solution}:
+    \textbf{Solution}:
     
-    \section*{Exercise 6.20}
-        Show that $Q_0(OR)\geq N$ by constructing a polynomial which represents the OR function from the output of a quantum circuit which computes OR with zero error.
-        
-        \textbf{Solution}:
+\section*{Exercise 6.16}
+    Suppose we merely require that the probability of an error being made is less than 1/2 when averaged uniformly over the possible values for $x$, instead of for all values of $x$. Show that $O(\sqrt{N})$ oracle calls are still required to solve the search problem. 
     
-    \section*{Problem 6.1 (Finding the minimum)}
-        Suppose $x_1,...,x_N$ is a database of numbers held in memory, as in Section 6.5. Show that only $O(\log(N)\sqrt{N})$ accesses to the memory are required on a quantum computer, in order to find the smallest element on the list, with probability at least one-half. 
-        
-        \textbf{Solution}:
+    \textbf{Solution}:
     
-    \section*{Problem 6.2 (Generalized quantum searching)}
-        Let $\ket{\psi}$ be a quantum state, and define $U_{\ket{\psi}}\equiv I - 2\ket{\psi}\bra{\psi}$. That is, $U_{\ket{\psi}}$ gives the state $\ket{\psi}$ a -1 phase, and leaves the states orthogonal to $\ket{\psi}$ invariant. \par
-        
-        (1) Suppose we have a quantum circuit implementing a unitary operator $U$ such that $U\ket{0}^{\otimes n} = \ket{\psi}$. Explain how to implement $U_{\ket{\psi}}$. \par
-        (2) Let $\ket{\psi_1}=\ket{1}, \ket{\psi_2} = (\ket{0}-\ket{1})/\sqrt{2}, \ket{\psi_3}=(\ket{0}-i\ket{1})/\sqrt{2}$. Suppose an unknown oracle $O$ is selected from the set $U_{\ket{\psi_1}}, U_{\ket{\psi_2}}, U_{\ket{\psi_3}}$. Give a quantum algorithm which identifies the oracle with just \emph{one} application of the oracle. (\emph{Hint}: consider superdense coding.) \par
-        (3) \textbf{Research:} More generally, given $k$ states $\ket{\psi_1},...,\ket{\psi_k}$, and an unknown oracle selected from the set $U_{\ket{\psi_1}},...,U_{\ket{\psi_k}}$, how many oracle applications are required to identify the oracle, with high probability?
-        
-        \textbf{Solution}:
+\section*{Exercise 6.17 (Optimality for multiple solutions)}
+    Suppose the search problem has $M$ solutions. Show that $O(\sqrt{N/M})$ oracle applications are required to find a solution. 
     
-    \section*{Problem 6.3 (Database retrieval)}
-        Given a quantum oracle which returns $\ket{k,y\oplus X_k}$ given an $n$ qubit query (and one scratchpad qubit) $\ket{k,y}$, show that with high probability, all $N=2^n$ bits of $X$ can be obtained using only $N/2 + \sqrt{N}$ queries. This implies the general upper bound $Q_2(F) \leq N/2 +\sqrt{N}$ for any $F$.
-        
-        \textbf{Solution}:
+    \textbf{Solution}:
     
-    \section*{Problem 6.4 (Quantum searching and cryptography)}
-        Quantum searching can, potentially, be used to speed up the search for cryptographic keys. The idea is to search through the space of all possible keys for decryption, in each case trying the key, and checking to see whether the decrypted message makes ‘sense’. Explain why this idea doesn’t work for the Vernam cipher (Section 12.6). When might it work for cryptosystems such as DES? (For a description of DES see, for example, [MvOV96] or [Sch96a].)
-        
-        \textbf{Solution}:
+\section*{Exercise 6.18}
+    Prove that the minimum degree polynomial representing a Boolean function $F(X)$ is unique. 
+    
+    \textbf{Solution}:
+
+\section*{Exercise 6.19}
+    Show that $P(X) = 1-(1-X_0)(1-X_1)...(1-X_{N-1})$ represents OR. 
+    
+    \textbf{Solution}:
+
+\section*{Exercise 6.20}
+    Show that $Q_0(OR)\geq N$ by constructing a polynomial which represents the OR function from the output of a quantum circuit which computes OR with zero error.
+
+    \textbf{Solution}:
+
+\section*{Problem 6.1 (Finding the minimum)}
+    Suppose $x_1,...,x_N$ is a database of numbers held in memory, as in Section 6.5. Show that only $O(\log(N)\sqrt{N})$ accesses to the memory are required on a quantum computer, in order to find the smallest element on the list, with probability at least one-half. 
+    
+    \textbf{Solution}:
+
+\section*{Problem 6.2 (Generalized quantum searching)}
+    Let $\ket{\psi}$ be a quantum state, and define $U_{\ket{\psi}}\equiv I - 2\ket{\psi}\bra{\psi}$. That is, $U_{\ket{\psi}}$ gives the state $\ket{\psi}$ a -1 phase, and leaves the states orthogonal to $\ket{\psi}$ invariant. \par
+    
+    (1) Suppose we have a quantum circuit implementing a unitary operator $U$ such that $U\ket{0}^{\otimes n} = \ket{\psi}$. Explain how to implement $U_{\ket{\psi}}$. \par
+    (2) Let $\ket{\psi_1}=\ket{1}, \ket{\psi_2} = (\ket{0}-\ket{1})/\sqrt{2}, \ket{\psi_3}=(\ket{0}-i\ket{1})/\sqrt{2}$. Suppose an unknown oracle $O$ is selected from the set $U_{\ket{\psi_1}}, U_{\ket{\psi_2}}, U_{\ket{\psi_3}}$. Give a quantum algorithm which identifies the oracle with just \emph{one} application of the oracle. (\emph{Hint}: consider superdense coding.) \par
+    (3) \textbf{Research:} More generally, given $k$ states $\ket{\psi_1},...,\ket{\psi_k}$, and an unknown oracle selected from the set $U_{\ket{\psi_1}},...,U_{\ket{\psi_k}}$, how many oracle applications are required to identify the oracle, with high probability?
+    
+    \textbf{Solution}:
+
+\section*{Problem 6.3 (Database retrieval)}
+    Given a quantum oracle which returns $\ket{k,y\oplus X_k}$ given an $n$ qubit query (and one scratchpad qubit) $\ket{k,y}$, show that with high probability, all $N=2^n$ bits of $X$ can be obtained using only $N/2 + \sqrt{N}$ queries. This implies the general upper bound $Q_2(F) \leq N/2 +\sqrt{N}$ for any $F$.
+    
+    \textbf{Solution}:
+
+\section*{Problem 6.4 (Quantum searching and cryptography)}
+    Quantum searching can, potentially, be used to speed up the search for cryptographic keys. The idea is to search through the space of all possible keys for decryption, in each case trying the key, and checking to see whether the decrypted message makes ‘sense’. Explain why this idea doesn’t work for the Vernam cipher (Section 12.6). When might it work for cryptosystems such as DES? (For a description of DES see, for example, [MvOV96] or [Sch96a].)
+    
+    \textbf{Solution}:
 
 \chapter{Quantum computers: physical realization}
 
@@ -5736,29 +5736,76 @@ This progress was last updated May 26th, 2023.
     \begin{align}
         U(R) \vec{r}\cdot \sigma U(R)^\dagger = (R \vec{r}) \cdot \sigma.
     \end{align}
-    Thus, the effect is to rotate the Bloch vector by $\vec{r}$. From the vantage point of group theory, this can be seen as arising from the correspondence between $SU(2)$ and $SO(3)$.
+    Thus, the effect is to rotate the Bloch vector $\vec{r}$ by $R$. From the vantage point of group theory, this can be seen as arising from the correspondence between $SU(2)$ and $SO(3)$.
 
-    Having made these comments, let's take a more rigorous path by simplifying the expression (8.91) of the text for our context. There is only one operator element $U$, so the sum over $l$ drops out. For simpler notation, let's reparametrize as 
+    Having made these comments, let's take a more rigorous path by simplifying the expression (8.91) of the text for our context. There is only one operator element $U$, so the index $l$ is irrelevant. Moreover, we can take $U$ to be in $SU(2)$ since overall phase is irrelevant. Thus, as discussed in chapter 4, there is a rotation angle $\theta$ and unit vector $\hat{n} \in \mathbb{R}^3$ such that
     \begin{align}
-        U = d_0 I + \sum_i d_i \sigma_i.
+        U = R_{\hat{n}}(\theta) = e^{-i \hat{n}\cdot \sigma \theta/2} = c I + i s \hat{n}\cdot\sigma. 
     \end{align}
-    Then, (8.91) becomes
+    Here $c \equiv \cos \theta/2$ and $s \equiv \sin\theta/2$. In this notation, $\alpha = c$ and $a_k = i s n_k$ in (8.91) and (8.92) of the text, where we've dropped the $l$ subscript.
+
+    Let's now turn to evaluating the matrix $M$ and translation $c$, starting with $c$ since it's easier. From equation (8.92) of the text
     \begin{align}
     \begin{aligned}
-        M_{jk} &= d_j d_k^* + d_j^* d_k + \left(\abs{d_0}^2 - \sum_l \abs{d_l}^2\right) \delta_{jk} + i \sum_i \epsilon_{jkl}(d_0 d_l^* - d_0^* d_l) \\
-        &=2 \Re(d_j d_k^*) + (2 \abs{d_0}^2 -1)\delta_{jk} - 2 \sum_l \epsilon_{jkl} \Im (d_0 d_l^*)
-    \end{aligned}
+        c_k &= 2i \sum_{jp} \epsilon_{jpk} a_j a_p^* \\
+        &= 2i s^2 \sum_{jp} \epsilon_{jpk} n_j n_p = 0
+    \end{aligned}  
     \end{align}
-    Let's leave this for now and consider the translation $\vec{c}$ of equation (8.20) of the text.
+    Thus, $\vec{c} = 0$ as it is proportional to $\hat{n} \times \hat{n}$, the cross product of a vector with itself. Turning now to the matrix elements $M_{jk}$, we have from equation (8.91) that
     \begin{align}
     \begin{aligned}
-        c_k &= 2i \sum_{jp} \epsilon_{jpk} d_j d_p^* \\
-        &= 2i \sum_{jp} \epsilon_{jpk} \frac{d_j d_p^* - d_p d_j^*}{2} \\
-        &= - 2 \sum_{jp} \epsilon_{jpk} \Im(d_j d_p^*)
+        M_{jk} &= (i n_j s)(-i n_k s) + (-i n_j s) (i n_k s) + \left(c^2 - \sum_p(in_p s)(-i n_p s)\right)\delta_{jk} + i \sum_p \epsilon_{jkp} (c (-i n_p s) - c (i n_p s)) \\
+        &= 2 n_j n_k s^2 + \left(c^2 - s^2 \sum_p n_p^2\right)\delta_{jk} +i \sum_p \epsilon_{jkp} n_p (-i c s-i c s) \\
+        &= 2 n_j n_k s^2 + (c^2 - s^2) \delta_{jk} + 2 cs \sum_p \epsilon_{jkp} n_p.
     \end{aligned}
     \end{align}
-    We sould like to show that $M_{jk}$ is an orthogonal matrix. \textbf{Needs to be finished. Not all conditions on $d_k$ have been used}
+    Along the way, we recognized $\sum_p n_p^2 = 1$ since $\hat{n}$ is a unit vector. As an aside, we note that $c^2 - s^2 = \cos(\theta)$ and $ 2 cs = \sin\theta$. To check that $M$ is a rotation, we need to show that it is an orthogonal matrix. First, we write $M$ in matrix form as 
+    \begin{align}
+        M = 2 s^2 \hat{n} \hat{n}^T + \cos\theta I + \sin\theta E_{\hat{n}}
+    \end{align}
+    where $E_{\hat{n}}$ is a matrix defined by matrix elements
+    \begin{align}
+        E_{\hat{n}}(i,j) = \sum_k \epsilon_{ijk}n_k.
+    \end{align}
+    This is an antisymmetric matrix, so that $ E_{\hat{n}}^T = - E_{\hat{n}}$. We wish to compute $M M^T$, i.e.
+    \begin{align}
+        (2 s^2 \hat{n} \hat{n}^T + \cos\theta I + \sin\theta E_{\hat{n}}) (2 s^2 \hat{n} \hat{n}^T + \cos\theta I - \sin\theta E_{\hat{n}})
+    \end{align}
+    We carry out this multiplication, using the fact that $\hat{n} \hat{n}^T$ is a projection and hence equals its own square. We get 
+    \begin{align} \label{eq:8.13_comm}
+        M M^T = 4 s^4 \hat{n} \hat{n}^T + 4 s^2 \cos\theta \hat{n} \hat{n}^T + \cos^2\theta I - \sin^2\theta E_{\hat{n}}^2 + 2 s^2 \sin\theta [\hat{n} \hat{n}^T, E_{\hat{n}}].
+    \end{align}
+    From here, much simplification occurs once we learn some simple properties of $E_{\hat{n}}$. To start, we know that $E_{\hat{n}} \hat{n} = 0$, since
+    \begin{align}
+        (E_{\hat{n}} \hat{n})_i = (\hat{n}\times\hat{n})_i.
+    \end{align}
+    This implies almost immediately that the commutator in equation~\eqref{eq:8.13_comm} is zero. Next, we evalute $E_{\hat{n}}^2$.
+    \begin{align}
+    \begin{aligned}
+        E_{\hat{n}}^2(i,k) &= \sum_{j,p,p'} \epsilon_{ijp} n_p \epsilon_{jkp'} n_{p'} \\
+        &= -\sum_{p,p'} n_p n_{p'} \sum_j \epsilon_{ipj}\epsilon_{kp' j} \\
+        &= -\sum_{p,p'} n_p n_{p'}(\delta_{ik}\delta_{pp'}-\delta_{ip'}\delta_{pk}).
+    \end{aligned}
+    \end{align}
+    This last line comes from the contraction properties of two Levi Cevita symbols. Continuing to simplify, we arrive at $-\delta_{ik} \sum_p n_p^2 + n_i n_k$, so that
+    \begin{align}
+        E_{\hat{n}}^2 = \hat{n} \hat{n}^T - I.
+    \end{align}
+    Plugging this back in to equation~\eqref{eq:8.13_comm} (and dropping the commutator via the above argument) gives
+    \begin{align}
+    \begin{aligned}
+        MM^T &= 4 s^4 \hat{n} \hat{n}^T + 4 s^2 \cos\theta \hat{n}\hat{n}^T + \cos^2\theta I -\sin^2\theta \hat{n}\hat{n}^T + \sin^2\theta I \\
+        &= (4 s^4 + 4 s^2 \cos\theta - \sin^2 \theta) \hat{n}\hat{n}^T + I   
+    \end{aligned}
+    \end{align}
+    Finally, it turns out that the term in parentheses evaluates exactly to zero. Recall that $\cos\theta = c^2 - s^2$ and $\sin^2\theta = 4 s^2 c^2$ from double angle identities. With these substitutions, the expression vanishes, leaving
+    \begin{align}
+        M M^T = I
+    \end{align}
+    This shows that $M$ is a rotation matrix.
 
+    In fact, $M$ is a proper rotation. It is a continuous function of rotation angle $\theta$, hence $\det M$ is also a continuous function of theta. It can easily be seen (and understood) that $M = I$ for $\theta = 0$, so $\det M = 1$ for this value. By continuity, since $\det M = \pm 1$ for all $\theta$, we must have that $\det M = 1$ for all $\theta$. Hence, $M$ is proper. 
+    
 \section*{Exercise 8.14}
     Show that $\det(S)$ need not be positive.
 
@@ -5766,9 +5813,124 @@ This progress was last updated May 26th, 2023.
     \begin{align}
         \det(M) = \det(O) \det(S) = \det(S).
     \end{align}
-    Thus, $\det(M)$ and $\det(S)$ have the same sign. \textbf{Need to finish}
+    Thus, $\det(M)$ and $\det(S)$ have the same sign. We saw from the previous exercise that $\det(M)$ is positive for rotations. I will give some examples of quantum operations in which $\det(M) = 0$ or $\det(M) < 0$. One of these examples precede those introduced in the text, but the reader can look ahead to section 8.3 for more information. 
 
-\section{Exercise 8.16}
+    Consider the completely depolarizing channel $\mathcal{D}$, which acts as $\mathcal{D}(\rho) = I/2$ for any qubit state. This is a valid quantum operation, as is shown in section 8.3.4 (set $p = 1$ if looking ahead). Moreover, the action on the Bloch vector is evidently
+    \begin{align}
+        \vec{r} \rightarrow 0
+    \end{align}
+    for all $\vec{r}$. Thus, the matrix $M$ representing this linear operation is the zero matrix, and therefore has zero determinant. Another operation that has $\det(M) = 0$ is projective measurement without observing the result (see next exercise). 
+
+    Let's now move on to the case of $\det(M) < 0$. Roughly speaking, this linear map must reverse the orientation of the three axes, changing from a right handed to a left handed coordinate system. The simplest way to make this change would be to reverse one of the vectors, say $Z$, leaving the rest unchanged. Thus, we might guess the quantum operation $\mathcal{Q}$ would looks like 
+    \begin{align}
+        \mathcal{Q}(I) = I; \qquad \mathcal{Q}(X) = X; \qquad \mathcal{Q}(Y) = Y; \qquad \mathcal{Q}(Z) = -Z.
+    \end{align}
+    However, it turns out this doesn't define a valid quantum operation, as it is not completely positive. My intuition for this is that we are staying a little too close to the edge of the Bloch sphere. We can use the completely depolarizing channel $\mathcal{D}$ to bring us away from the edge, in combination with $\mathcal{Q}$.
+
+    How do you combine operations? A natural way for us to do it is in convex combination. Let's posit the operation
+    \begin{align}
+        \mathcal{E}(\rho) := p \mathcal{Q}(\rho) + (1-p)\mathcal{D}(\rho)
+    \end{align}
+    and leave $p\in[0,1]$ undetermined for the moment. Since both $\mathcal{Q}$ and $\mathcal{D}$ are convex linear and trace preserving, so is $\mathcal{E}$. We now need to check complete positivity. This is equivalent to the positivity of the \emph{Choi matrix} $\sigma_\mathcal{E}$, which was already defined in (8.55) of the text.
+    \begin{align}
+    \begin{aligned}
+        \sigma_\mathcal{E} &= (\mathcal{I} \otimes \mathcal{E}) \ketbra{\alpha} \\
+        &= p \sigma_\mathcal{Q} + (1-p)\sigma_\mathcal{D}
+    \end{aligned}
+    \end{align}
+    In going to the second line, we made use of convex linearity to expand in terms of the Choi matrices of $\mathcal{Q}$ and $\mathcal{D}$. These are all $4\times 4$ matrices since they act on two qubits.
+
+    Now we'll compute these Choi matrices, starting with $\sigma_\mathcal{D}$. First, we write $\ketbra{\alpha}$ as 
+    \begin{align}
+        \ketbra{\alpha} = \sum_{i,j=0}^1 \ketbra{i}{j} \otimes \ketbra{i}{j}.
+    \end{align}
+    so that
+    \begin{align}
+        (\mathcal{I} \otimes \mathcal{D}) \ketbra{\alpha} = \sum_{i,j=0}^1 \ketbra{i}{j} \otimes \mathcal{D}(\ketbra{i}{j}).
+    \end{align}
+    To evaluate terms like $\mathcal{D}(\ketbra{1}{0})$, we need to understand how $\mathcal{D}$ acts on non density matrices. To do this, we can expand $\ketbra{i}{j}$ in linear combination of Paulis, and use the fact that all Paulis besides the identity are sent to zero. Thus, for example, $\mathcal{D}(\ketbra{1}{0}) = 0$. Proceeding in this way, it's not hard to show that
+    \begin{align}
+        \sigma_\mathcal{D} = I/2
+    \end{align}
+    where $I$ is the $4\times 4$ identity. We can proceed in an exactly analogous was with $\mathcal{Q}$, and obtain
+    \begin{align}
+        \sigma_\mathcal{Q} = \begin{pmatrix}
+            0 & 0 & 0 & p \\
+            0 & p & 0 & 0 \\
+            0 & 0 & p & 0 \\
+            p & 0 & 0 & 0
+        \end{pmatrix}.
+    \end{align}
+    Thus, we finally obtain $\sigma_\mathcal{E}$.
+    \begin{align}
+        \sigma_\mathcal{E} = \begin{pmatrix}
+            \frac{1-p}{2} & 0 & 0 & p \\
+            0 & \frac{1+p}{2} & 0 & 0 \\
+            0 & 0 & \frac{1+p}{2} & 0 \\
+            p & 0 & 0 & \frac{1-p}{2}
+        \end{pmatrix}
+    \end{align}
+    We need to determine if this matrix is positive. We see that it has a block diagonal structure, with $1 \leftrightarrow 4$ and $2 \leftrightarrow 3$ being the relevant blocks. The inner block is positive for all $p$, while the outer block has the qubit structure
+    \begin{align}
+        \frac{1-p}{2} I + p X
+    \end{align}
+    and hence eigenvalues
+    \begin{align}
+        \frac{1-p}{2} \pm p = \frac{1+p}{2},\; \frac{1-3p}{2}.
+    \end{align}
+    The smaller of these eigenvalues is positive when $1 - 3p > 0$, i.e. $p<1/3$. Thus, for $p \in [0,1/3)$ $\sigma_\mathcal{E} >0$.
+
+    We conclude that $\mathcal{E}$ is completely positive, hence a valid quantum operation, when $p \in [0,1/3)$. The map corresponds to a deflation of the Bloch sphere, plus a reversal of the $Z$ axis. More precisely, the Bloch vector undergoes
+    \begin{align}
+        (r_x, r_y, r_z) \rightarrow p (r_x, r_y, -r_z). 
+    \end{align}
+    This linear transformation is given by the matrix
+    \begin{align}
+        M = p \diag(1,1,-1)
+    \end{align}
+    which has determinant $\det(M) = -p^3 < 0$. Finally, we have our example of an operation with negative determinant.
+
+    It may be possible that there is an easier path to a $\det(M) < 0$ example, but this was the first one I was able to find. It seems surprisingly uncommon among the standard examples!
+
+\section*{Exercise 8.15}
+    Suppose a projective measurement is performed on a single qubit in the basis $\ket{+}, \ket{-}$, where $\ket{\pm} \equiv (\ket{0} + \ket{1})/\sqrt{2}$. In the event that we are ignorant of the result of the measurement, the density matrix evolves according to the equation
+    \begin{align}
+        \rho \rightarrow \mathcal{E}(\rho) = \ketbra{+}\rho\ketbra{+} + \ketbra{-}\rho \ketbra{-}.
+    \end{align}
+    Illustrate this transformation on the Bloch sphere.
+
+    \textbf{Solution}: This is just a projection onto the $x$-axis. To see this, note that the resulting state can be written as
+    \begin{align}
+        \mathcal{E}(\rho) = \tr(\rho \ketbra{+}) \ketbra{+} + \tr(\rho \ketbra{-}) \ketbra{-}.
+    \end{align}
+    Making the substitutions
+    \begin{align}
+        \ketbra{+} = \frac{I + X}{2} \qquad \ketbra{-} = \frac{I - X}{2}
+    \end{align}
+    and using the Bloch representation
+    \begin{align}
+        \rho = \frac{I + \vec{r} \cdot \vec{\sigma}}{2}
+    \end{align}
+    we see from orthogonality relations of the paulis that
+    \begin{align}
+        \tr(\rho \ketbra{+}) = \frac{1 + r_x}{2} \qquad \tr(\rho \ketbra{-}) = \frac{1-r_x}{2}.
+    \end{align}
+    Hence,
+    \begin{align}
+    \begin{aligned}
+        \mathcal{E}(\rho) &= \frac{1 + r_x}{2} \frac{I + X}{2} + \frac{1 - r_x}{2} \frac{I - X}{2} \\
+        &= \frac{I + r_x X}{2}.
+    \end{aligned}
+    \end{align}
+    Thus, the Bloch vector undergoes the transformation
+    \begin{align}
+        (r_x, r_y, r_z) \rightarrow (r_x, 0,0).
+    \end{align}
+    Which corresponds exactly to an $x$-axis projection as claimed.
+
+    A few final remarks. It's important to recognize that all choices of basis are essentially equivalent, which is reflected in the symmetry of the sphere. Hence, this argument would apply to any measurement axis: the result would be a projection onto that axis. 
+
+\section*{Exercise 8.16}
     The graphical method for understanding single qubit quantum operations was derived for trace-preserving quantum operations. Find an explicit example of a non-trace-preserving quantum operation which cannot be described as a deformation of the Bloch sphere, followed by a rotation and a displacement.
 
     \textbf{Solution}:
@@ -5791,6 +5953,228 @@ This progress was last updated May 26th, 2023.
     As for the others, observe that each pauli commutes with half of the paulis and anticommutes with the other half, thinking of $I$ as one of the four paulis. For example, $X$ commutes with $X$ and $I$ and anticommutes with $Y$ and $Z$. Since $\mathcal{E}$ is defined by conjugating with all paulis, and conjugation flips the sign of half the terms, the result will be zero. Thus, all paulis besides $I$ go to zero under $\mathcal{E}$.
 
     By linearity, this implies all density matrices go to $I/2$ under $\mathcal{E}$, since the Bloch sphere representation (8.87) of the text holds.
+
+\section*{Exercise 8.18}
+    For $k\geq 1$ show that $\tr(\rho^k)$ is never increased by the action of the depolarizing channel.
+
+    \textbf{Solution}: Suppose $k \geq 1$ is real valued, and let $\mathcal{E}$ be the depolarizing channel on a $d$-dimensional vector space with variable probability $p \in [0,1]$. Our strategy will be to show that $\tr(\mathcal{E}(\rho)^k)$ decreases monotonically with $p$. Hence, the maximum value will be at $p =0$, which is no polarization at all. 
+
+    Let's flesh this out more formally. Let $\rho = \sum_{i=1}^d \lambda_i \ketbra{i}$ be any density operator on the space. Define $f_k:[0,1] \rightarrow \mathbb{R}_+$ by
+    \begin{align}
+        f_k(p) := \sum_{i=1}^d \left[\frac{p}{d} + (1-p) \lambda_i\right]^k \equiv \tr(\mathcal{E}(\rho)^k).
+    \end{align}
+    This is a smooth function of $p$, and we may take its derivative $f_k'$.
+    \begin{align}\label{eq:8.18_deriv}
+        f_k'(p) = \sum_{i=1}^d k \left[\frac{p}{d} + (1-p) \lambda_i\right]^{k-1} \left(\frac1d - \lambda_i\right)
+    \end{align}
+    We want to say something about the sign of this expression, and we see that this will depend on $d^{-1} - \lambda_i$. The collection $\lambda_i$ form a probability distribution, as does the constant $1/d$ for each $i$. So intuitively, sometimes $\lambda_i > 1/d$ and sometimes not, depending on $i$. 
+
+    Let's take a brief interlude to explore this more carefully. Let $I = \{1, \dots, d\}$ be the index set, and let $P, N$ be a partition of $I$ defined as follows.
+    \begin{align}
+        P := \{i \in I \vert \lambda_i > 1/d\}, \qquad N := I \setminus P = \{i \in I \vert \lambda_i \leq 1/d\}
+    \end{align}
+    In short, we are just grouping the probabilities of $\rho$ according to their size relative to the uniform distribution. Interestingly, and perhaps unsurprisingly, the deviation of $P$ and $N$ from $1/d$ must be the same. This follows from normalization
+    \begin{align}
+    \begin{aligned}
+        \sum_{i\in I} \lambda_i -1/d &= 0 \\
+        &= \sum_{i\in P} \lambda_i -1/d + \sum_{i\in N} \lambda_i -1/d \\
+        &= \sum_{i\in P} \abs{\lambda_i -1/d} - \sum_{i\in N} \abs{\lambda_i -1/d}
+    \end{aligned}
+    \end{align}
+    so that
+    \begin{align}
+        \sum_{i\in P} \abs{\lambda_i -1/d} = \sum_{i\in N} \abs{\lambda_i -1/d}.
+    \end{align}
+    This characterization of the spread of the probabilities will be valuable in a moment.
+
+    Let us return to the derivative~\eqref{eq:8.18_deriv}, and separate the positive and negative contributions of the sum. Negative terms are when $i \in P$, so we have
+    \begin{align}
+        f_k'(p) =  -k \sum_{i\in P }  \left[\frac{p}{d} + (1-p) \lambda_i\right]^{k-1} \abs{\frac1d - \lambda_i} + k \sum_{i\in N} \left[\frac{p}{d} + (1-p) \lambda_i\right]^{k-1} \abs{\lambda_i- \frac1d}
+    \end{align}
+    From this, we can start to see a reason why this result should be negative (or at least nonpositive). Terms in the $P$ set have higher weight because $\lambda_i$ is larger here. Moreover, we already argued that the weight factors $\abs{\lambda_i - 1/d}$ should be of comparable size, in some sense. To make these notions more precise, notice that when $i\in P$
+    \begin{align}
+        p/d + (1-p)\lambda_i > 1/d
+    \end{align}
+    while the opposite holds for $i \in N$. This allows us to put the following upper bound on $f_k'(p)$.
+    \begin{align}
+        f_k'(p) &\leq -k \sum_{i\in P} \left(\frac1d\right)^{k-1}\abs{\lambda_i- \frac1d} + k \sum_{i\in N} \left(\frac1d\right)^{k-1}\abs{\lambda_i- \frac1d} \\
+        &= k \left(\frac1d\right)^{k-1}\left[-\sum_{i\in P}\abs{\lambda_i- \frac1d} + \sum_{i\in N}\abs{\lambda_i- \frac1d}\right] \\
+        &= 0
+    \end{align}
+    Notice that it was important that $k - 1 \geq 0$, so that the inequality relations did not reverse direction.
+
+    Thus, $f_k'$ is monotonically nonincreasing on its domain. We conclude that $f_k$ takes on its maximum value at $p = 0$, which is $\tr(\rho^k)$. In short,
+    \begin{align}
+        \tr(\rho^k) \geq \tr(\mathcal{E}(\rho)^k)
+    \end{align}
+    for any depolarization probability $p \in [0,1]$.
+
+\section*{Exercise 8.19}
+    Find an operator-sum representation for a generalized depolarizing channel acting on a $d$-dimensional Hilbert space. 
+
+    \textbf{Solution}: As a reminder, the channel is given by
+    \begin{align}
+        \mathcal{E}(\rho) = p I/d + (1-p)\rho.
+    \end{align}
+    We see that is is essentially a combination of two channels: the identity operation and the completely depolarizing channel $\mathcal{D}(\rho) = I/d$. The operator elements for the identity channel are $\{I\}$. We focus now on $\mathcal{D}$, because in the end we will be able to combine the sets of operation elements to get the full channel.
+
+    We follow closely the procedure fo Theorem 8.1. Let $\sigma$ be the Choi matrix for $\mathcal{D}$, given by
+    \begin{align}
+        \sigma = \mathcal{I}\otimes\mathcal{D} \ketbra{\alpha}
+    \end{align}
+    where $\ket{\alpha}$ is the unnormalized Bell state on $d$ dimensions.
+    \begin{align}
+        \ket{\alpha} = \sum_{i=1}^d \ket{j_R}\ket{j_Q}
+    \end{align}
+    We drop the subscripts for convenience whenever the meaning is clear. Expanding out, we have
+    \begin{align}
+        \mathcal{I}\otimes\mathcal{D} \ketbra{\alpha} = \sum_{ij} \ketbra{i}{j} \otimes \mathcal{D}(\ketbra{i}{j})
+    \end{align}
+    When $i = j$, $\mathcal{D}(\ketbra{i}{j}) = I/2$, while if $i \neq j$ it is zero. This comes from the linear extension of the domain of $\mathcal{D}$ to non Hermitian operators. Thus, 
+    \begin{align}
+        \sum_{ij} \ketbra{i}{j} \otimes \mathcal{D}(\ketbra{i}{j}) = \sum_{i} \ketbra{i} \otimes I/d = I \otimes I /d.
+    \end{align}
+    In total then, we are left with 
+        \begin{align}
+        \sigma = \mathcal{I}\otimes\mathcal{D} \ketbra{\alpha} = I \otimes I/d.
+    \end{align}
+    To find the operator elements, we need to diagonalize $\sigma$. This is straighforward for the identity. Letting $\ket{i_Q}$ represent some orthonormal basis vectors on system $Q$, and similar for $R$, we have
+    \begin{align}
+        \sigma = \sum_{ij} \ketbra{s_{ij}}
+    \end{align}
+    where
+    \begin{align}
+        \ket{s_{ij}} := \frac{1}{\sqrt{d}} \ket{ij}.
+    \end{align}
+    Following the text, we define $E_{ij}$ acting on a state $\ket{\psi} = \sum_i \psi_i \ket{i}$ as 
+    \begin{align}
+        E_{ij}\ket{\psi} = \tilde{\bra{\psi}}\ket{s_{ij}} = \frac{\psi_i}{\sqrt{d}}\ket{j}.
+    \end{align}
+    Hence, we see that 
+    \begin{align}
+        E_{ij} = \frac{1}{\sqrt{d}}\ketbra{j}{i}.
+    \end{align}
+    We should check that these product the correct channel.
+    \begin{align}
+    \begin{aligned}
+        \sum_{ij} E_{ij} \rho E_{ij}^\dagger &= \frac{1}{d} \sum_{ij} \ketbra{i}{j}\rho\ketbra{j}{i} \\
+        &= \frac{1}{d} \sum_i \ketbra{i} \tr(\rho) = I/d
+    \end{aligned}
+    \end{align}
+    
+    Now we would like to get back to the full channel $\mathcal{E}$, which includes the identity part. We can just take the linear combination we need.
+    \begin{align}
+        \mathcal{E}(\rho) = (\sqrt{1-p} I )\rho (\sqrt{1-p} I ) + \sum_{ij} (\sqrt{p} E_{ij}) \rho (\sqrt{p}E_{ij})^\dagger 
+    \end{align}
+
+    This is in the desired form. Notice that there are $d^2 +1$ operator elements, so it should be possible to reduce this by one. But we have nonetheless accomplished our goal!
+
+\section*{Exercise 8.20 (Circuit model for amplitude damping)}
+    Show that the circuit in Figure 8.13 models the amplitude damping quantum operation, with $\sin^2(\theta/2) = \gamma$.
+
+    \textbf{Solution}: Let's show the appropriate action when $\rho_\mathrm{in}$ is a pure state $\ketbra{\psi}$, with $\ket{\psi} = c_0 \ket{0} + c_1 \ket{1}$. The initial joint state is then
+    \begin{align}
+        \ket{\psi}\ket{0} = c_0 \ket{00} + c_1 \ket{10}.
+    \end{align}
+    After the first $CR_y(\theta)$ gate, the state becomes
+    \begin{align}
+    \begin{aligned}
+        c_0 \ket{00} + c_1 \ket{1}R_y(\theta)\ket{0} &= c_0\ket{00} + c_1 \ket{1}(\cos\theta/2 \ket{0} - \sin\theta/2 \ket{1}) \\
+        &= (c_0\ket{0} + c_1 \cos\theta/2 \ket{1})\ket{0} - c_1 \sin\theta/2 \ket{11}.
+    \end{aligned}
+    \end{align}
+    In the second step, we rearranged terms by the basis of the lower qubit to make the next step easier: apply a CNOT. The result after this step is
+    \begin{align}
+    \begin{aligned}
+        \mathrm{CNOT}(c_0\ket{0} + c_1 \cos\theta/2 \ket{1})\ket{0} - \mathrm{CNOT }c_1 \sin\theta/2 \ket{11} &= (c_0\ket{0} + c_1 \cos\theta/2 \ket{1})\ket{0} - c_1 \sin\theta/2 \ket{01} \\
+        &= c_0 \ket{00} + c_1 (\cos\theta/2 \ket{10} - \sin\theta/2\ket{01})
+    \end{aligned}
+    \end{align}
+
+    Notice that this expression has the exact same form as the unitary operation in the text above equation (8.107) of the main text. The only differences are an irrelevant sign, the ordering convention of the states, and that $\theta$ is now $\theta/2$. Thus, all the math will carry before as before, and we will get the amplitude damping channel on the top qubit when taking a partial trace. The final measurement is actually irrelevant to the state of the system of interest.
+
+    Since the circuit implements amplitude damping for a pure state input, it will work for any mixed state $\rho_\mathrm{in}$ by convex linearity. Any mixed state is a convex combination of pure states. 
+
+    If you're bothered by the minus sign, try taking the partial trace yourself. Or, recall that the partial trace over all Bell states gives the same result: the identity matrix. This shows the phase is completely irrelevant. 
+
+\section*{Exercise 8.21 (Amplitude damping of a harmonic oscillator)}
+    Suppose that our principal system, a harmonic oscillator, interacts with an environment, modeled as another harmonic oscillator, through the Hamiltonian
+    \begin{align}
+        H = \chi (a^\dagger b + b^\dagger a)
+    \end{align}
+    where $a$ and $b$ are the annihilation operators for the respective harmonic oscillators, as defined in Section 7.3.
+
+    \begin{enumerate}
+        \item Using $U = \exp(-i H \Delta t)$, denoting the eigenstates of $b^\dagger b$ as $\ket{k_b}$, and selecting the vacuum state $\ket{0_b}$ as the initial state of the environment, show that the operation elements $E_k = \bra{k_b}U\ket{0_b}$ are found to be
+        \begin{align}
+            E_k = \sum_n \sqrt{\binom{n}{k}}\sqrt{(1-\gamma)^k \gamma^k} \ketbra{n-k}{n},
+        \end{align}
+        where $\gamma = 1- \cos^2(\chi\Delta t)$ is the probability of losing a single quantum of energy, and states such as $\ket{n}$ are eigenstates of $a^\dagger a$.
+        \item Show that the operation elements $E_k$ define a trace preserving operation.
+    \end{enumerate}
+
+    \textbf{Solution}: The first thing to notice is that this Hamiltonian conserves total oscillator excitation number. That is, if $\ket{k_a}\ket{k_b}$ and $\ket{k_a'}\ket{k_b'}$ refer to two eigenstates of $a^\dagger a + b^\dagger b$,
+    \begin{align}
+        \bra{k_a'}\bra{k_b'}H \ket{k_a}\ket{k_b} = 0
+    \end{align}
+    unless $k_a' + k_b' = k_a + k_b$. This implies $H$, and therefore $U$, has a block diagonal structure, where each block corresponds to a different total excitation number $n$. Mathematically, 
+    \begin{align}
+        H = \sum_{n=0}^\infty H^{(n)}, \qquad U = \sum_{n=0}^\infty U^{(n)} 
+    \end{align}
+    where each $H^{(n)}$ has support on the $n$ eigenspace of $a^\dagger a + b^\dagger b$, and $U^{(n)} = \exp{-i H^{(n)} \Delta t}$.
+    
+    From this fact alone we can say a lot about the structure of $E_k  = \bra{k_b}U\ket{0_b}$. In particular,
+    \begin{align}
+        \bra{n'}E_k \ket{n} = \bra{n'}\bra{k} U\ket{n}\ket{0} = 0
+    \end{align}
+    unless $n ' + k = n$, or $n' = n-k$. Therefore we can write $E_k$ as 
+    \begin{align}
+        E_k = \sum_{n=k}^\infty a_{kn} \ketbra{n-k}{n}
+    \end{align}
+    for some yet undetermined coefficients $a_{kn}$. The sum starts at $n = k$ since the oscillator count can't go below zero. We can calculate the coefficients by the formula
+    \begin{align}
+    \begin{aligned}
+        a_{kn} = \bra{n-k} E_k \ket{n} &= \bra{n-k}\bra{k} U \ket{n}\ket{0} \\
+        &= \bra{n-k}\bra{k} U^{(n)} \ket{n}\ket{0}.
+    \end{aligned}
+    \end{align}
+    In going to the second line, we reduced to the $n$-excitation subspace. 
+    
+    Based on what we accomplished so far, the remaining goal is to calculate these matrix elements, and all this can be done within the subspace of $n$ total excitations, which is of dimension $n+1$. To simplify notation, we drop the superscript from $U^{(n)}$ and call it $U$ (same for $H$). Let $\ket{e_k} := \ket{n-k}\ket{k}$ be the orthonormal basis of this subspace for $k = 0, \dots, n$. In words, $e_k$ is the $n$-excitation state with $k$ ``particles" in the environment $b$. In this notation, we want to compute $\bra{e_k} U \ket{e_0}$. We expand $U$ as a Taylor series.
+    \begin{align}
+    \begin{aligned}
+        e^{-i H \Delta t} &= \sum_{m=0}^\infty \frac{(-i\Delta t)^m}{m!} H^m \\
+        &= \sum_{m=0}^\infty \frac{-i chi\Delta t }{m!} (a^\dagger b + b^\dagger a)^m.
+    \end{aligned}
+    \end{align}
+    To get the matrix elements, we will therefore need those of $h^m$, where $h := a^\dagger b + b^\dagger a$. Let $B := a^\dagger b$, so that $h = B + B^\dagger$. 
+    A bit of thought shows that $B$ always shifts $\ket{e_k}$ to $\ket{e_{k-1}}$, and in fact
+    \begin{align}
+        B = \sum_{k=0}^n \sqrt{k(n-k+1)} \ketbra{e_{k-1}}{e_k}.
+    \end{align}
+    Thus, $B^j \ket{e_k} \propto \ket{e_{k-j}}$, or is zero when $j > k$.
+
+    \textbf{To finish}
+    
+
+\section*{Exercise 8.22 (Amplitude damping of single qubit density matrix)}
+    For the general single qubit state
+    \begin{align}
+        \begin{bmatrix}
+            a & b \\
+            b^* & c
+        \end{bmatrix}
+    \end{align}
+    show that amplitude damping leads to 
+    \begin{align}
+        \mathcal{E}_\mathrm{AD}(\rho) = 
+        \begin{bmatrix}
+            1 - (1-\gamma)(1-a) & b \sqrt{1-\gamma} \\
+            b^* \sqrt{1-\gamma} & c (1-\gamma)
+        \end{bmatrix}
+    \end{align}
+
+    \textbf{Solution}: We simply need to carry out the matrix multiplication indicated by equation (8.107) and (8.108) of the text. \textbf{I'll do later}
 
 \chapter{Distance measures for quantum information}
 
@@ -6446,61 +6830,232 @@ This progress was last updated May 26th, 2023.
     How do we know the Shor code corrects this? Assuming this error occured on a single qubit (and only one qubit), the operator elements match those we know to be correctable by the Shor code. 
 
 \section*{Exercise 10.12}
-    Show that the fidelity between the state $\ket{0}$ and $\mc{\ket{0}\bra{0}}$ is $\sqrt{1-2p/3}$, and use this to argue that the minimum fidelity for the depolarizing channel is $\sqrt{1-2p/3}$.
+    Show that the fidelity between the state $\ket{0}$ and $\mathcal{E}(\ketbra{0})$ is $\sqrt{1-2p/3}$, and use this to argue that the minimum fidelity for the depolarizing channel is $\sqrt{1-2p/3}$.
 
-    \textbf{Solution}:
+    \textbf{Solution}: Under the depolarizing channel of probability $p$, the initial state $\ket{0}$ gets mapped to 
+    \begin{align}
+    \begin{aligned}
+        \ketbra{0} &\xrightarrow{\mathcal{E}} (1-p) \ketbra{0} + p \frac{X \ketbra{0} X + Y \ketbra{0} Y + Z \ketbra{0} Z}{3} \\
+        &= (1-p) \ketbra{0} + p \frac{\ketbra{1} + \ketbra{1} + \ketbra{0}}{3} \\
+        &= (1 - 2p/3) \ketbra{0} + 2p/3 \ketbra{1}.
+    \end{aligned}
+    \end{align}
+    Meanwhile, from equation (9.60) of the text, the fidelity between $\ketbra{0}$ and $\mathcal{E}(\ketbra{0})$ is
+    \begin{align}
+    \begin{aligned}
+        \mathcal{F}(\ket{0}, \mathcal{E}(\ket{0})) &= \sqrt{\bra{0} \mathcal{E}(\ketbra{0}) \ket{0}} \\
+        &= \sqrt{1 - 2p/3}
+    \end{aligned}
+    \end{align}
+    where we used the fact that the overlap with $\ketbra{1}$ is zero.
+
+    Now we need to argue that this is the smallest possible fidelity under this channel. Let's start with pure states. I claim that we would achieve the same fidelity regardless of which initial (pure) state we started with. This can be understood geometrically, using the Bloch sphere. The operation $(X\rho X + Y\rho Y + Z\rho Z)/3$ has the effect of reflecting the Bloch vector about the origin. Thus, the vector is either left the same, with probability $1-p$, or reflected with probability $p$. The distance of the final Bloch vector to the initial is the same regardless of the point on the sphere. Thus, all pure states have the same loss in fidelity under this channel.
+
+    By concavity of the fidelity (Theorem 9.7 of the text), we can also see that pure states have minimum fidelity under this channel. Let $\rho = \sum_i p_i \ketbra{v_i}$ be a mixed state. Then, by equation 9.92 of the text,
+    \begin{align}
+    \begin{aligned}
+        F(\rho, \mathcal{E}(\rho)) &= F(\sum_i p_i \ketbra{v_i}, \sum_i p_i \mathcal{E}(\ketbra{v_i})) \\
+        &\leq_i p_i F(\ket{v_i}, \mathcal{E}(\ket{v_i})) \\
+        &= F(\ket{0}, \mathcal{E}(\ket{0})).
+    \end{aligned}
+    \end{align}
+    In the last line, we used the fact that the fidelity of $\mathcal{E}$ is the same for all pure states, and that $\sum_i p_i = 1$. Thus, the fidelity for any state $\rho$ is at least as large as for $\ket{0}$. This means the state $\ket{0}$ (and any pure state) undergoes the maximum decrease in fidelity.
+    
 
 \section*{Exercise 10.13}
     Show that the minimum fidelity $F(\ket{\psi}, \mc{\ket{\psi}\bra{\psi}}$ when $\mc{E}$ is the amplitude damping channel with parameter $\gamma$ is $\sqrt{1-\gamma}$.
 
-    \textbf{Solution}:
+    \textbf{Solution}: Before diving into the math, let's see if we can use our intuition to guess an answer. The amplitude damping channel, essentially, takes some of the probability of the 1 state into the 0 state with probability $\gamma$. This can be seen, physically, as a sort of decay process. Based on this, we might expect the maximum change of state (minimum fidelity) when $\ket{\psi} = \ket{1}$, and no change for $\ket{\psi} = 0$ For $\ket{\psi} = \ket{1}$, the channel $\mathcal{E}$ acts as
+    \begin{align}
+        \mathcal{E}(\ketbra{1}) = (1-\gamma) \ketbra{1} + \gamma \ketbra{0}.
+    \end{align}
+    Hence, the fidelity $\sqrt{\bra{1}\mathcal{E}(\ketbra{1}}\ket{1}$ equals $\sqrt{1-\gamma}$. The problem statement claims this is the minimal fidelity, and based on our reasoning we have good reason to believe it.
+
+    Let's support these claims with more firm mathematics. First of all, by concavity of the fidelity, the minimum fidelity is indeed achieved by a pure state. Let $\ket{\psi} = c_1 \ket{0} + c_2 \ket{1}$ be an arbitrary pure state of a qubit. Written as a density matrix $\rho_\psi = \ketbra{\psi}$, our state becomes
+    \begin{align}
+        \rho_\psi = \begin{pmatrix}
+            \abs{c_0}^2 & c_0 c_1^* \\
+            c_0^* c_1 & \abs{c_1}^2
+        \end{pmatrix}.
+    \end{align}
+    Under the amplitude damping channel, state transforms to 
+    \begin{align}
+        \mathcal{E}(\rho_\psi) = \begin{pmatrix}
+            \abs{c_0}^2 + \gamma \abs{c_1}^2 & c_0 c_1^*\sqrt{1-\gamma} \\
+            c_0^* c_1\sqrt{1-\gamma} & \abs{c_1}^2(1-\gamma)
+        \end{pmatrix},
+    \end{align}
+    as you should confirm. To compute the fidelity $\mathcal{F}$, we need to take the inner product $\mathcal{F}^2 = \bra{\psi} \mathcal{E}(\rho_\psi) \ket{\psi}$. This is a straightforward calculation, and you can check the result is
+    \begin{align}
+        \mathcal{F}^2 = \abs{c_0}^4 + \gamma \abs{c_0}^2 \abs{c_1}^2 + \abs{c_0}^2 \abs{c_1}^2 \sqrt{1-\gamma} + \abs{c_0}^2 \abs{c_1}^2 \sqrt{1-\gamma} + \abs{c_1}^4 (1-\gamma).
+    \end{align}
+    There are a few interesting observations about this result. Notice that all dependence on phase drops out, and only the probabilities $\abs{c_0}^2$ and $\abs{c_1}^2$ appear. This matches our intuition about how the amplitude damping channel simply shuffles probability from 1 to 0, not caring about phase information. To take advantage of this information, define $p = \abs{c_0}^2$, so that $\abs{c_1}^2 = 1- p$. Then the (squared) fidelity $\mathcal{F}(p)^2$ may be written as a function of the 0 state probability $p \in [0,1]$. 
+    \begin{align}
+        \mathcal{F}(p)^2 = p^2 + \gamma p (1-p) + 2\sqrt{1-\gamma}p(1-p) + (1-p)^2 (1-\gamma)
+    \end{align}
+    At this point, it is a good idea to use your favorite plotting software (Wolfram, TI-84, etc.) to plot $\mathcal{F}(p)^2$ on $[0,1]$ for different $\gamma$. Think about if the pictures make sense. Is the fidelity always between 0 and 1? 
+
+    From these plots, you should already see that $\mathcal{F}(p)$ increases monotonically with $p$, and from our equation you can confirm that $\mathcal{F}(1) = 1$. On the other hand, $\mathcal{F}(0) = \sqrt{1-\gamma}$, as we calculated earlier. 
+
+    From these observations, it is easy to conclude that the fidelity is minimized when $p = 0$. If you are satisfied, feel free to stop here. However, remember that a picture is not a proof. We need to prove that $\mathcal{F}^2$ increases monotonically on $[0,1]$. The rest of this explanation will be concerned with showing this. 
+
+    Let's make some observations to better understand our situation. First, notice that $\mathcal{F}(p)^2$ is, in fact, a quadratic function of $p$. Since the fidelity is concave, the leading $p^2$ coefficient must be negative, and later we will confirm this. Since $\mathcal{F}^2$ is positive for some values, the polynomial has exactly two real roots. 
+
+    To find where $\mathcal{F}(p)^2$ is increasing, we should find the vertex of the quadratic. We can write $\mathcal{F}(p)^2 = a p^2 + b p + c$, where
+    \begin{align}
+    \begin{aligned}
+        a &= -2 (\sqrt{1-\gamma}-(1-\gamma)) \\
+        b &= 3 \gamma - 2 + 2 \sqrt{1-\gamma} \\
+        c &= 1-\gamma.
+    \end{aligned}
+    \end{align}
+    For any $\gamma \in [0,1]$, one can argue that $a \leq 0$. From basic calculus, the location of the vertex is $p_* = -b/(2a)$. Hence,
+    \begin{align}
+        p_* &= \frac{1}{4} \frac{3 \gamma - 2 + 2 \sqrt{1-\gamma}}{\sqrt{1-\gamma} -(1-\gamma)}
+    \end{align}
+    This is not very a pretty expression, and if we had no intuition at this point, we might be quite lost. But remember, we have reason to believe, and want to prove that $\mathcal{F}(p)^2$ increases monotonically for $p \in [0,1]$, the region of relevance. This would mean $p_*\geq 1$. We therefore should try to prove this lower bound on $p_*$.
+
+    To simplify this, let's make a change of variable. Due to the prevalence of $\sqrt{1-\gamma}$, let $x = \sqrt{1-\gamma}$, so that $\gamma = 1- x^2$. In terms of $x\in [0,1]$, the vertex is given by
+    \begin{align}
+    \begin{aligned}
+        p_* &= \frac{1}{4} \frac{3(1-x^2) - 2 + 2x}{x - x^2} \\
+        &= \frac{1}{4} \frac{1 - 3 x^2 + 2x}{x - x^2} \\
+        &= \frac{1}{4} \frac{1 - x^2 + 2(x - x^2)}{x - x^2} \\
+        &= \frac{1}{4}\left(2 + \frac{1-x^2}{x - x^2}\right) \\
+        &= \frac{1}{2} + \frac{1}{4} \frac{1 + x}{x}.
+    \end{aligned}
+    \end{align}
+    This is a much more manageable expression. The remaining $x$ dependence has a minimum at $x = 1$, for which $p _* = 1$. Recall that $x = 1$ implies $\gamma = 0$. We see that the vertex of $\mathcal{F}(p)^2$ is always to the right of $[0,1]$. Thus, to the left of the vertex, the function is monotonically increasing. 
+    
+    With this last piece, we have formally proven that $\mathcal{F}^2$ is minimized for $\ket{\psi} = \ket{1}$, and takes the value $\sqrt{1-\gamma}$.
 
 \section*{Exercise 10.14}
     Write an expression for a generator matrix encoding $k$ bits using $r$ repetitions for each bit. This is an $[rk, k]$ linear code, and should have an $rk\times k$ generator matrix.
-    \textbf{Solution}:
+    
+    \textbf{Solution}: This is just a generalization of the three repetition code. Let $1_r = (1,1,\dots,1)$ be the binary column vector with $r$ repeated $1$'s, and $0_r$ similar but for repeated $0$'s. We can then write $G$ in the following block matrix form.
+    \begin{align}
+        G = \begin{pmatrix}
+            1_r & 0_r & 0_r & \dots & 0_r \\
+            0_r & 1_r & 0_r & \dots & 0_r \\
+            \vdots & \vdots & \ddots & \vdots \\
+            0_r & 0_r & 0_r & \dots & 1_r
+        \end{pmatrix}
+    \end{align}
+    In this representation, the number of blocks in each row and column is $k$, giving the dimensions we expect. To see that this works, let $b = b_1 b_2 \dots b_k$ be a bitstring that we wish to encode, given by the binary vector $\vec{b} = (b_1, b_2, \dots, b_k)$. Multiplying $\vec{b}$ by $G$ gives
+    \begin{align}
+        G \vec{b} = (b_1, b_1, \dots, b_1, b_2, \dots, b_2, \dots, b_k, \dots, b_k)
+    \end{align}
+    where each repetition is $r$ times. This is the expected behavior.
 
+    As a final observation: notice that $G$ has a \emph{block diagonal} structure. This is to be expected whenever a linear operator acts independently on different subspaces. In this case, the encodings on each bit are completely independent of one another. We are simply performing the $r$ repetition code for a single bit, repeated for each block. This thinking helps confirm we have the right answer.
+    
 \section*{Exercise 10.15}
     Show that adding one column of $G$ to another results in a generator matrix generating the same code.
 
-    \textbf{Solution}:
+    \textbf{Solution}: What does it mean for the matrix to generate the "same code"? The code generated by $G$ is simply the span of the columns, which is a finite set because the underlying field, $\mathbb{Z}_2$, is finite. More succinctly, the code is the column span of the generator matrix $G$.
+    
+    It is a fact of linear algebra that adding together two columns, and storing the result in one of the columns, does not change the column span. To see this, suppose $x$ and $y$ are two columns of $G$, and consider the new matrix $G'$ in which $y$ is replaced by $x + y$. Notice that $\mathrm{span}(x,y) = \mathrm{span}(x, x+y)$ (why?). This directly implies $G$ and $G'$ have the same column span. Thus, the set of codewords is the same.
 
 \section*{Exercise 10.16}
     Show that adding one row of the parity check matrix to another does not change the code. using Gaussian elimination and swapping of bits it is therefore possible to assume that the parity check matrix has the \emph{standard form} $[A\vert I_{n-k}]$ where $A$ is an $(n-k)\times k$ matrix.
 
-    \textbf{Solution}:
+    \textbf{Solution}: Let $y_1, y_2, \dots, y_{n-k}$ be the row vectors of $H$, which are $n$-dimensional vectors. Then, for any codeword $c$, $y_i^T c = 0$. This implies, by linearity, that $(y_i + y_j)^T c = 0$. This shows that adding two rows of $H$, and storing it in one of the rows, results in a parity check matrix $H'$ such that $H' c = 0$. Thus, $H'$ contains the kernel of $H$. But we can also say the reverse, because if $H' c = 0$ for some $c$, then we know that $y_i^T c = 0$ and $(y_i + y_j)^T c = 0$. But these facts together imply $y_j^T c = 0$. Thus, $H c = 0$. From this argument, we conclude that $H$ and $H'$ define the same codespace.
+
+    Because of this addition, we can perform Gaussian elimination to make an $n-k \times n-k$ identity submatrix in $H$. The remaining $(n-k)\times k$ part is called $A$. 
 
 \section*{Exercise 10.17}
     Find a parity check matrix for the $[6,2]$ repetition code defined by the generator matrix in (10.54). 
 
-    \textbf{Solution}:
+    \textbf{Solution}: We need to find a set of vectors orthogonal to the columns of $G$. Since there are two columns in six dimensions, we expect to find four such vectors. I will try to find them all by inspection (i.e., looking). 
+
+    The nice thing about $\mathbb{Z}_2$ is that $1 + 1 = 0$. So I see right away that the vectors
+    \begin{align}
+        \begin{pmatrix}
+            1 \\ 1 \\ 0 \\ 0 \\ 0\\ 0
+        \end{pmatrix}, \quad \begin{pmatrix} 0 \\ 1 \\ 1 \\ 0 \\ 0\\ 0
+        \end{pmatrix}, \quad \begin{pmatrix} 0 \\ 0 \\ 0 \\ 1 \\ 1\\ 0
+        \end{pmatrix}, \quad \begin{pmatrix} 0 \\ 0 \\ 0 \\ 0 \\ 1\\ 1
+        \end{pmatrix}
+    \end{align}
+    are each orthogonal to the columns of $G$, and are linearly independent. Thus, the parity check matrix
+    \begin{align}
+        H = \begin{pmatrix}
+                1 & 1 & 0 & 0 & 0 & 0\\
+                0 & 1 & 1 & 0 & 0 & 0\\
+                0 & 0 & 0 & 1 & 1 & 0\\
+                0 & 0 & 0 & 0 & 1 & 1      
+        \end{pmatrix}
+    \end{align}
+    generates the repetition code of $G$.
 
 \section*{Exercise 10.18}
     Show that the parity check matrix $H$ and generator matrix $G$ for the same linear code satisfy $HG = 0$. 
 
-    \textbf{Solution}:
+    \textbf{Solution}: This follows essentially from the definitions. For if $v$ is a $k$-dimensional binary vector, $Gv$ is a code word. Thus, $H(Gv)$ is zero, by definition. Since $v$ was arbitrary, $HG$ is the zero operation.
 
 \section*{Exercise 10.19}
     Suppose an $[n,k]$ linear code $C$ has a parity check matrix of the form $H = [A\vert I_{n-k}]$, for some $(n-k)\times k$ matrix $A$. Show that the corresponding generator matrix is
     \begin{align}
-        G = ??
+        G = \begin{bmatrix}
+            I_k \\
+            -A
+        \end{bmatrix}
     \end{align}
+    (Note that $-A = A$ since we are working modulo 2; however, this equation also holds for linear codes over more general fields than $\mathbb{Z}_2$.)
 
-    \textbf{Solution}:
+    \textbf{Solution}: Suppose $g \in F^n$ is a codeword over the field $F$. Then $Hg = 0$ by definition. Because we've written $H$ in standard form, it will be convenient to write $g$ as
+    \begin{align}
+        g = (v, w)
+    \end{align}
+    where $v\in F^k$ and $w\in F^{n-k}$. With this way of writing, $Hg$ is simply
+    \begin{align}
+        Hg = Av + w =0.
+    \end{align}
+    This shows that $w = -Av$. Hence,
+    \begin{align}
+        g = (v, -Av).
+    \end{align}
+    This is suggestive, because $v$ can be thought of as the word we wish to encode since it's $k$-dimensional. In particular, we can write
+    \begin{align}
+        g = Gv
+    \end{align}
+    where $G$ is of the form 
+    \begin{align}
+        G = \begin{bmatrix}
+            I_k \\
+            -A
+        \end{bmatrix}.
+    \end{align}
+    
 
 \section*{Exercise 10.20}
     Let $H$ be a parity check matrix such that any $d - 1$ columns are linearly independent, but there exists a set of $d$ linearly dependent columns. Show that the code defined by $H$ has distance $d$. 
 
-    \textbf{Solution}:
+    \textbf{Solution}: We will generalize the setting slightly, to include any finite field $F$. The Hamming weight is defined as the number of nonzero entries, and the Hamming distance is defined similarly. 
+    
+    Let $v \in F^n$ have Hamming weight $\mathrm{wt}(v) < d$, and suppose $v \neq 0$. We will first show that $v$ cannot be in the codespace $C$ defined by $\ker(H)$. This will imply that $d(C) \geq d$ by equation (10.61) of the text. Observe that $Hv$ is a linear combination of less than $d$ (but more than zero) columns of $v$. By the assumed linear independence of any $d-1$ columns, $Hv$ cannot be zero. Thus, $v$ is not in the codespace. We conclude that any codeword $c \in C$ has Hamming weight $\mathrm{wt}(c) \geq d$. Thus, $d(C) \geq d$.
+
+    However, because there is a set of $d$ linearly dependent columns of $H$, we will show that $d(C) \leq d$. Let $h_1, \dots, h_d$ be a linearly dependent subset of $d$ columns of $H$. Then there are coefficients, $c_1, \dots, c_d \in F$ such that 
+    \begin{align}
+        c_1 h_1 + \dots c_d h_d = 0.
+    \end{align}
+    This sum can be written as $Hv$, where $v$ has nonzero entries $c_1, \dots c_d$, where $c_i$ is placed in the same entry as the index for the column vector $h_i$. Thus, $v \in C$ and $\mathrm{wt}(v) = d$. By 10.61 of the text, $d(C) \leq d$.
+
+    Combining the results of the previous two paragraphs, we conclude that $d(C) = d$. 
 
 \section*{Exercise 10.21 (Singleton bound)}
     Show that an $[n, k, d]$ code must satisfy $n-k \geq d-1$. 
 
-    \textbf{Solution}:
+    \textbf{Solution}: We will make use of the previous exercise. A parity check matrix $H$ has $n$ column vectors of dimension $n - k$. Any subset of $n - k + 1$ columns is linearly dependent. Thus, if $d$ is as described in the first sentence of Exercise 10.20, then $d \leq n-k + 1$. This is precisely the Singleton bound.
 
 \section*{Exercise 10.22}
     Show that all Hamming codes have distance 3, and thus can correct an error on a single bit. The Hamming codes are therefore $[2^r - 1, 2^r - r - 1, 3]$ codes. 
     
-    \textbf{Solution}:
+    \textbf{Solution}: As the text explains, $r$-Hamming codes are defined by parity matrices whose columns are the $2^r - 1$ nonzero bitstrings of length $r$. Any two columns are linearly independent because they are distinct vectors (since the underlying field is binary, this is sufficient). However, consider the set of binary vectors (bitstrings) $b_1, b_2, b_3$ such that
+    \begin{align}
+        b_1 = (1,0,\overline{0}), \quad b_2 = (0,1,\overline{0}), \quad b_3 = (1,1,\overline{0}).
+    \end{align}
+    where $\overline{0}$ indicates that any remaining entries are zero. This set of vectors exists for any $r \geq 2.$ Moreover, $b_1 + b_2 = b_3$, so this set is linearly dependent. Because these vectors are distinct column vectors of $H$, we conclude that $d = 3$ by Exercise 10.20.
 
 \section*{Exercise 10.23}
     Prove the Gilbert-Varshamov bound. 
