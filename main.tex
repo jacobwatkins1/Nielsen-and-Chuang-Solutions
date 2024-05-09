@@ -7975,7 +7975,7 @@ This progress was last updated May 26th, 2023.
 \section*{Exercise A4.13}
     Let $a$ be an arbitrary element of $\textbf{Z}_n^*$. Show that $S\equiv \{1,a,a^2,...\}$ forms a subgroup of $\textbf{Z}_n^*$, and that the size of $S$ is the least value of $r$ such that $a^r = 1\pmod{n}$.
     
-    \textbf{Solution}: For any finite group G, if I take a single element $g\in G$ and generate a subset $S \subset G$ by repeatedly multiplying $g$ by itself, the result will be a subgroup (when I include the induced binary operation). More generally, I can have multiple generators $g_1, g_2, ..., g_m$ and the result will still be a subgroup. Note this does not hold for infinite groups such as $\mathbb{Z}$, unless we allow negative exponents.
+    \textbf{Solution}: For any finite group G, if I take a single element $g\in G$ and generate a subset $S \subset G$ by repeatedly multiplying $g$ by itself, the result will be a subgroup (when I include the induced binary operation). More generally, I can have multiple generators $g_1, g_2, \ldots, g_m$ and the result will still be a subgroup. Note this does not hold for infinite groups such as $\mathbb{Z}$, unless we allow negative exponents.
     
     If $r$ is the smallest positive integer satisfying $a^r = 1\pmod{n}$, it follows that each $a^i$ is unique for $i=0,1,...,r-1$. Otherwise, $a^i = a^j$ for some $i,j <r$, which implies $a^{j-i}=1$. This contradicts the assertion that $r$ is the \emph{least} such value. Hence, $S$ has at least $r$ values. In fact, it cannot have more than $r$ unique values, since for any $k>r$ we have
     \begin{align}
